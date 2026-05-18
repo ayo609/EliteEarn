@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EliteEarn – Sign Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --purple: #8B5CF6;
+    --purple-dark: #6D28D9;
+    --purple-light: #EDE9FE;
+    --gold: #F59E0B;
+    --gold-dark: #D97706;
+    --gold-light: #FEF3C7;
+    --white: #ffffff;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-400: #9CA3AF;
+    --gray-600: #4B5563;
+    --gray-900: #111827;
+    --radius: 16px;
+    --input-radius: 50px;
+    --btn-radius: 50px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(145deg, #1a0533 0%, #2d0a5e 40%, #4c1d95 70%, #6d28d9 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Decorative blobs */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(245,158,11,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -100px; left: -80px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* ── HERO BANNER ── */
+  .hero {
+    width: 100%;
+    padding: 48px 28px 80px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 10vw, 62px);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.05;
+    letter-spacing: -0.5px;
+  }
+  .hero-title span {
+    color: var(--gold);
+  }
+  .hero-sub {
+    margin-top: 10px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+
+  /* Decorative gold pill badge */
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(245,158,11,0.18);
+    border: 1px solid rgba(245,158,11,0.35);
+    border-radius: 50px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .hero-badge::before { content: '✦'; font-size: 9px; }
+
+  /* ── CARD ── */
+  .card {
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    border-radius: 28px 28px 0 0;
+    padding: 36px 28px 48px;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.25);
+    /* Pull card up over hero */
+    margin-top: -40px;
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .card-subtitle {
+    font-size: 13px;
+    color: var(--gray-400);
+    margin-bottom: 28px;
+  }
+
+  /* ── FORM FIELDS ── */
+  .field {
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .field-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: color 0.2s;
+  }
+  .field input {
+    width: 100%;
+    height: 56px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--input-radius);
+    padding: 0 46px 0 48px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--gray-900);
+    background: var(--gray-50);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  }
+  .field input::placeholder { color: var(--gray-400); }
+  .field input:focus {
+    border-color: var(--purple);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+  }
+  .field input:focus + .field-icon,
+  .field:focus-within .field-icon {
+    color: var(--purple);
+  }
+  /* Eye toggle */
+  .eye-toggle {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--gray-400);
+    background: none;
+    border: none;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+  }
+  .eye-toggle:hover { color: var(--purple); }
+
+  /* Referral code field – gold accent */
+  .field.referral-field input {
+    border-color: rgba(245,158,11,0.4);
+    background: #fffdf5;
+  }
+  .field.referral-field input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+  }
+  .field.referral-field .field-icon { color: var(--gold); }
+  .field.referral-field input::placeholder { color: var(--gold-dark); }
+
+  /* ── BUTTON ── */
+  .btn-primary {
+    width: 100%;
+    height: 56px;
+    background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: var(--btn-radius);
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(109,40,217,0.35);
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-primary:hover::after { opacity: 1; }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 16px;
+    color: var(--gray-400);
+    font-size: 12px;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-200);
+  }
+
+  .signin-row {
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--gray-600);
+    margin-top: 18px;
+  }
+  .signin-row a {
+    color: var(--purple);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 4px;
+  }
+  .signin-row a:hover { color: var(--gold); }
+
+  /* ── TOAST ── */
+  #toast-container {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 320px;
+  }
+  .toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--gray-900);
+    color: #fff;
+    padding: 13px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease;
+    border-left: 3px solid var(--purple);
+    line-height: 1.4;
+  }
+  .toast.success { border-left-color: #10B981; }
+  .toast.error { border-left-color: #EF4444; }
+  .toast.info { border-left-color: var(--gold); }
+  .toast-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(-20px); }
+  }
+
+  /* Loading spinner */
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Field validation indicator */
+  .field-hint {
+    font-size: 11px;
+    margin: 4px 0 0 18px;
+    display: none;
+  }
+  .field-hint.error { color: #EF4444; display: block; }
+  .field-hint.success { color: #10B981; display: block; }
+
+  @media (max-width: 520px) {
+    .hero { padding: 40px 22px 72px; }
+    .card { padding: 30px 20px 44px; border-radius: 24px 24px 0 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO BANNER -->
+<div class="hero">
+  <div class="hero-badge">Invest &amp; Earn</div>
+  <div class="hero-label">EliteEarn Platform</div>
+  <h1 class="hero-title">Welcome!<br/><span>Join EliteEarn</span></h1>
+  <p class="hero-sub">Start growing your wealth today</p>
+</div>
+
+<!-- SIGNUP CARD -->
+<div class="card">
+  <h2 class="card-title">Sign Up</h2>
+  <p class="card-subtitle">Create your free investor account</p>
+
+  <form id="signupForm" autocomplete="off" onsubmit="return false;">
+
+    <!-- Email -->
+    <div class="field">
+      <svg class="field-icon" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+      </svg>
+      <input type="email" id="email" placeholder="Email Address" required />
+    </div>
+
+    <!-- Phone -->
+    <div class="field">
+      <svg class="field-icon" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+      </svg>
+      <input type="tel" id="phone" placeholder="Phone Number (08012345678)" maxlength="11" required />
+      <div class="field-hint" id="phoneHint"></div>
+    </div>
+
+    <!-- Username -->
+    <div class="field">
+      <svg class="field-icon" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+      </svg>
+      <input type="text" id="username" placeholder="Username (your referral code)" maxlength="20" required />
+      <div class="field-hint" id="usernameHint"></div>
+    </div>
+
+    <!-- Referral Username (gold) -->
+    <div class="field referral-field">
+      <svg class="field-icon" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+        <path fill-rule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z" clip-rule="evenodd"/>
+        <path d="M9 11H3v5a2 2 0 002 2h4v-7zM11 18h4a2 2 0 002-2v-5h-6v7z"/>
+      </svg>
+      <input type="text" id="referralCode" placeholder="Referral Username (required)" required />
+      <div class="field-hint" id="referralHint"></div>
+    </div>
+
+    <!-- Password -->
+    <div class="field">
+      <svg class="field-icon" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+      </svg>
+      <input type="password" id="password" placeholder="Password (min 6 characters)" required />
+      <button type="button" class="eye-toggle" onclick="toggleEye('password','eyeIcon1')">
+        <svg id="eyeIcon1" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+          <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="field">
+      <svg class="field-icon" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+      </svg>
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+      <button type="button" class="eye-toggle" onclick="toggleEye('confirmPassword','eyeIcon2')">
+        <svg id="eyeIcon2" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+          <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </div>
+
+    <button class="btn-primary" id="signupBtn" onclick="handleSignup()">
+      <span id="btnText">Create Your Account</span>
+    </button>
+
+  </form>
+
+  <p class="signin-row">Already an investor? <a href="login.html">Sign In</a></p>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc, arrayUnion, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ── REPLACE WITH YOUR FIREBASE CONFIG ──
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Expose to global
+  window._auth = auth;
+  window._db = db;
+  window._fbFns = { doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc, arrayUnion, increment, serverTimestamp, createUserWithEmailAndPassword };
+
+  window.dispatchEvent(new Event('firebaseReady'));
+</script>
+
+<script>
+  // ── UTILITIES ──
+  function showToast(msg, type = 'info', duration = 4000) {
+    const icons = { success: '✓', error: '✕', info: '◆' };
+    const tc = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<span class="toast-icon">${icons[type]||'◆'}</span><span>${msg}</span>`;
+    tc.appendChild(t);
+    setTimeout(() => {
+      t.style.animation = 'slideOut 0.3s ease forwards';
+      setTimeout(() => t.remove(), 300);
+    }, duration);
+  }
+
+  function toggleEye(inputId, iconId) {
+    const inp = document.getElementById(inputId);
+    const isHidden = inp.type === 'password';
+    inp.type = isHidden ? 'text' : 'password';
+    document.getElementById(iconId).innerHTML = isHidden
+      ? `<path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd"/><path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z"/>`
+      : `<path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>`;
+  }
+
+  // Phone validation (Nigeria)
+  document.getElementById('phone').addEventListener('input', function() {
+    const val = this.value.trim();
+    const hint = document.getElementById('phoneHint');
+    if (!val) { hint.className = 'field-hint'; return; }
+    const valid = /^(070|080|081|090|091)\d{8}$/.test(val);
+    hint.textContent = valid ? '✓ Valid Nigerian number' : 'Must start with 070/080/081/090/091 and be 11 digits';
+    hint.className = `field-hint ${valid ? 'success' : 'error'}`;
+  });
+
+  // Username validation
+  document.getElementById('username').addEventListener('input', function() {
+    const val = this.value.trim();
+    const hint = document.getElementById('usernameHint');
+    if (!val) { hint.className = 'field-hint'; return; }
+    const valid = /^[a-zA-Z]{4,20}$/.test(val);
+    hint.textContent = valid ? '✓ Valid username' : 'Letters only, 4–20 characters';
+    hint.className = `field-hint ${valid ? 'success' : 'error'}`;
+  });
+
+  function setLoading(loading) {
+    const btn = document.getElementById('signupBtn');
+    const txt = document.getElementById('btnText');
+    btn.disabled = loading;
+    txt.innerHTML = loading ? '<span class="spinner"></span>Creating Account…' : 'Create Your Account';
+  }
+
+  async function handleSignup() {
+    if (!window._db) { showToast('App loading, please wait…', 'info'); return; }
+
+    const email    = document.getElementById('email').value.trim();
+    const phone    = document.getElementById('phone').value.trim();
+    const username = document.getElementById('username').value.trim().toUpperCase();
+    const refCode  = document.getElementById('referralCode').value.trim().toUpperCase();
+    const pass     = document.getElementById('password').value;
+    const conf     = document.getElementById('confirmPassword').value;
+
+    // Validations
+    if (!email || !phone || !username || !refCode || !pass || !conf) {
+      return showToast('Please fill in all fields.', 'error');
+    }
+    if (!/^(070|080|081|090|091)\d{8}$/.test(phone)) {
+      return showToast('Enter a valid Nigerian phone number.', 'error');
+    }
+    if (!/^[a-zA-Z]{4,20}$/.test(username)) {
+      return showToast('Username must be letters only, 4–20 chars.', 'error');
+    }
+    if (username === refCode) {
+      return showToast('You cannot refer yourself.', 'error');
+    }
+    if (pass.length < 6) {
+      return showToast('Password must be at least 6 characters.', 'error');
+    }
+    if (pass !== conf) {
+      return showToast('Passwords do not match.', 'error');
+    }
+
+    setLoading(true);
+    const { doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc, arrayUnion, increment, serverTimestamp, createUserWithEmailAndPassword } = window._fbFns;
+    const db = window._db; const auth = window._auth;
+
+    try {
+      // Check referral code exists
+      const refDocRef = doc(db, 'users', refCode);
+      const refSnap = await getDoc(refDocRef);
+      if (!refSnap.exists()) {
+        setLoading(false);
+        return showToast('Referral username not found. Check and try again.', 'error');
+      }
+
+      // Check username not taken
+      const unameRef = doc(db, 'users', username);
+      const unameSnap = await getDoc(unameRef);
+      if (unameSnap.exists()) {
+        setLoading(false);
+        return showToast('Username already taken. Choose another.', 'error');
+      }
+
+      // Create Firebase Auth user
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      const uid = cred.user.uid;
+
+      // Store user doc (username as doc ID)
+      await setDoc(doc(db, 'users', username), {
+        uid, email, phone, username,
+        ownReferralCode: username,
+        referredBy: refCode,
+        depositWallet: 0,
+        withdrawalWallet: 0,
+        balance: 0,
+        totalDeposited: 0,
+        totalWithdrawn: 0,
+        isAdmin: false,
+        createdAt: serverTimestamp()
+      });
+
+      // Also store by UID for auth lookups
+      await setDoc(doc(db, 'usersByUid', uid), { username, email });
+
+      // Update referral stats
+      const refStatRef = doc(db, 'referralStats', refCode);
+      const refStatSnap = await getDoc(refStatRef);
+      if (refStatSnap.exists()) {
+        await updateDoc(refStatRef, {
+          referrals: arrayUnion(username),
+          count: increment(1)
+        });
+      } else {
+        await setDoc(refStatRef, {
+          username: refCode,
+          referrals: [username],
+          count: 1
+        });
+      }
+
+      showToast('Account created! Redirecting…', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 1800);
+
+    } catch (err) {
+      setLoading(false);
+      const messages = {
+        'auth/email-already-in-use': 'This email is already registered.',
+        'auth/invalid-email': 'Invalid email address.',
+        'auth/weak-password': 'Password is too weak.'
+      };
+      showToast(messages[err.code] || err.message, 'error');
+    }
+  }
+
+  window.handleSignup = handleSignup;
+  window.toggleEye = toggleEye;
+</script>
+
+</body>
+</html>
