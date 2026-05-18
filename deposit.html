@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Add Funds</title>
+
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <meta name="theme-color" content="#7C3AED">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f9fafb;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Mobile wrapper identical to dashboard */
+        .app-mobile-wrapper {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 40%, #5B21B6 70%, #4C1D95 100%);
+            position: relative;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        /* Ambient glows */
+        .ambient-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: pulse 4s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.1); }
+        }
+        .glow-top-right { width: 280px; height: 280px; background: rgba(245,158,11,0.35); top: -60px; right: -60px; }
+        .glow-bottom-left { width: 320px; height: 320px; background: rgba(139,92,246,0.4); top: 20%; left: -120px; animation-delay: 2s; }
+
+        /* Particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .p1 { width: 8px; height: 8px; top: 15%; left: 10%; animation: float 6s infinite; }
+        .p2 { width: 12px; height: 12px; top: 40%; right: 15%; animation: float 8s infinite 1s; }
+        @keyframes float {
+            0%,100%{ transform: translateY(0) translateX(0); opacity: 0.3; }
+            50%{ transform: translateY(-20px) translateX(10px); opacity: 0.7; }
+        }
+
+        /* Header area */
+        .page-header {
+            padding: 30px 24px 50px 24px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+        .back-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 1.4rem;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+        .page-header p {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        /* White card */
+        .deposit-card {
+            background: white;
+            border-radius: 40px 40px 0 0;
+            padding: 28px 20px 40px;
+            margin-top: -30px;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        /* Balance row */
+        .balance-row {
+            background: #f8fafc;
+            border-radius: 28px;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .balance-label {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        .balance-amount {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        /* Quick select grid */
+        .quick-title {
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #374151;
+        }
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .quick-amount {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 60px;
+            padding: 12px 0;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-amount.active, .quick-amount:active {
+            background: #8B5CF6;
+            color: white;
+            border-color: #8B5CF6;
+        }
+
+        /* Custom amount */
+        .custom-group {
+            margin-bottom: 28px;
+        }
+        .custom-label {
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 14px;
+        }
+        .amount-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #f9fafb;
+            border: 1.5px solid #eef2ff;
+            border-radius: 60px;
+            padding: 4px 20px;
+            transition: 0.2s;
+        }
+        .amount-input-wrapper:focus-within {
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+        }
+        .currency-symbol {
+            font-size: 24px;
+            font-weight: 700;
+            color: #6b7280;
+            margin-right: 8px;
+        }
+        .amount-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 28px;
+            font-weight: 700;
+            padding: 16px 0;
+            outline: none;
+            font-family: monospace;
+        }
+        .amount-input::placeholder {
+            font-size: 20px;
+            color: #cbd5e1;
+        }
+
+        /* Proceed button */
+        .proceed-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            border: none;
+            border-radius: 60px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 12px 0 28px;
+            transition: 0.2s;
+            box-shadow: 0 8px 18px rgba(245,158,11,0.3);
+        }
+        .proceed-btn:active { transform: scale(0.98); }
+
+        /* Guidelines */
+        .guidelines {
+            background: #fffbeb;
+            padding: 20px;
+            border-radius: 28px;
+            border-left: 5px solid #F59E0B;
+        }
+        .guidelines h4 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .guidelines ul {
+            padding-left: 20px;
+            font-size: 12px;
+            color: #5b5b5b;
+            line-height: 1.6;
+        }
+        .guidelines li {
+            margin-bottom: 8px;
+        }
+
+        /* Toast */
+        .toast-notify {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            background: white;
+            border-left: 5px solid #F59E0B;
+            border-radius: 16px;
+            padding: 14px 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            z-index: 300;
+            transform: translateX(-120%);
+            transition: transform 0.3s;
+            font-weight: 600;
+            max-width: 280px;
+        }
+        .toast-notify.show { transform: translateX(0); }
+    </style>
+</head>
+<body>
+<div class="app-mobile-wrapper">
+    <div class="ambient-glow glow-top-right"></div>
+    <div class="ambient-glow glow-bottom-left"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+
+    <div class="page-header">
+        <div class="back-row">
+            <button class="back-btn" id="backBtn"><i class="ph ph-arrow-left"></i></button>
+            <span style="font-weight:600;">Add Funds</span>
+        </div>
+        <h1>INITIATE DEPOSIT</h1>
+        <p>Fund your wallet securely</p>
+    </div>
+
+    <div class="deposit-card">
+        <!-- current balance from firestore -->
+        <div class="balance-row">
+            <span class="balance-label">CURRENT BALANCE</span>
+            <span class="balance-amount">₦<span id="currentBalance">0.00</span></span>
+        </div>
+
+        <div class="quick-title">QUICK SELECT</div>
+        <div class="quick-grid" id="quickGrid">
+            <div class="quick-amount" data-amount="3000">₦3,000</div>
+            <div class="quick-amount" data-amount="5000">₦5,000</div>
+            <div class="quick-amount" data-amount="10000">₦10,000</div>
+            <div class="quick-amount" data-amount="20000">₦20,000</div>
+            <div class="quick-amount" data-amount="50000">₦50,000</div>
+            <div class="quick-amount" data-amount="100000">₦100,000</div>
+        </div>
+
+        <div class="custom-group">
+            <label class="custom-label">CUSTOM AMOUNT</label>
+            <div class="amount-input-wrapper">
+                <span class="currency-symbol">₦</span>
+                <input type="number" id="customAmount" class="amount-input" placeholder="0.00" min="3000" step="100">
+            </div>
+        </div>
+
+        <button class="proceed-btn" id="proceedBtn">
+            PROCEED TO PAYMENT <i class="ph ph-arrow-right"></i>
+        </button>
+
+        <div class="guidelines">
+            <h4><i class="ph ph-warning-circle" style="color:#F59E0B;"></i> IMPORTANT GUIDELINES</h4>
+            <ul>
+                <li>Always initiate a <strong>new transaction order</strong> for every new funding session to ensure proper routing.</li>
+                <li>Transfer amounts must <strong>match your order exactly</strong> to allow for automated payment clearing.</li>
+                <li>Payments made to <strong>expired account details</strong> will be automatically voided by the audit desk.</li>
+                <li>Minimum deposit amount is <strong>₦3,000</strong>.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="toastMsg" class="toast-notify">✅ Message</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",
+        authDomain: "earnelite-94a5e.firebaseapp.com",
+        projectId: "earnelite-94a5e",
+        storageBucket: "earnelite-94a5e.firebasestorage.app",
+        messagingSenderId: "343677058789",
+        appId: "1:343677058789:web:776faceb824158042fde0c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUserBalance = 0;
+    let selectedAmount = null;
+    let currentUsername = "";
+
+    // DOM elements
+    const balanceSpan = document.getElementById('currentBalance');
+    const customInput = document.getElementById('customAmount');
+    const proceedBtn = document.getElementById('proceedBtn');
+    const backBtn = document.getElementById('backBtn');
+    const quickBtns = document.querySelectorAll('.quick-amount');
+
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('toastMsg');
+        toast.innerHTML = `<i class="fa-regular fa-bell"></i> ${message}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // Fetch user balance and username
+    async function fetchUserData(uid) {
+        try {
+            const userByUidRef = doc(db, 'usersByUid', uid);
+            const userSnap = await getDoc(userByUidRef);
+            if (userSnap.exists()) {
+                const usernameDoc = userSnap.data().username;
+                currentUsername = usernameDoc;
+                const userMainRef = doc(db, 'users', usernameDoc);
+                const mainSnap = await getDoc(userMainRef);
+                if (mainSnap.exists()) {
+                    const data = mainSnap.data();
+                    const depositWallet = data.depositWallet || 0;
+                    currentUserBalance = depositWallet;
+                    balanceSpan.innerText = depositWallet.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                } else {
+                    balanceSpan.innerText = "0.00";
+                }
+            } else {
+                balanceSpan.innerText = "0.00";
+            }
+        } catch (err) {
+            console.error(err);
+            balanceSpan.innerText = "0.00";
+        }
+    }
+
+    // highlight quick amount
+    function setActiveQuick(amountValue) {
+        quickBtns.forEach(btn => {
+            const btnAmount = parseInt(btn.getAttribute('data-amount'));
+            if (btnAmount === amountValue) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    // get current deposit amount (priority: custom if valid, else selected quick)
+    function getDepositAmount() {
+        let customVal = parseFloat(customInput.value);
+        if (!isNaN(customVal) && customVal >= 3000) {
+            return customVal;
+        }
+        if (selectedAmount && selectedAmount >= 3000) {
+            return selectedAmount;
+        }
+        return null;
+    }
+
+    // Event: quick select
+    quickBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const amount = parseInt(btn.getAttribute('data-amount'));
+            selectedAmount = amount;
+            setActiveQuick(amount);
+            customInput.value = '';   // clear custom field
+        });
+    });
+
+    // When custom input changes, clear quick selection
+    customInput.addEventListener('input', () => {
+        let val = parseFloat(customInput.value);
+        if (!isNaN(val) && val >= 3000) {
+            selectedAmount = null;
+            quickBtns.forEach(btn => btn.classList.remove('active'));
+        } else if (customInput.value === '') {
+            // no action but keep maybe selected later
+        }
+    });
+
+    // proceed to payment page (store deposit intent in sessionStorage)
+    async function proceedToPayment() {
+        let amount = getDepositAmount();
+        if (!amount || amount < 3000) {
+            showToast("❌ Minimum deposit amount is ₦3,000", "error");
+            return;
+        }
+
+        // round to 2 decimals
+        amount = Math.floor(amount * 100) / 100;
+        
+        // generate unique reference code for this deposit (8 chars)
+        const refCode = 'EL' + Math.random().toString(36).substring(2, 10).toUpperCase();
+        
+        // store deposit intent in sessionStorage (temporary until payment page confirms)
+        const depositIntent = {
+            amount: amount,
+            reference: refCode,
+            timestamp: Date.now()
+        };
+        sessionStorage.setItem('elite_deposit_intent', JSON.stringify(depositIntent));
+        
+        // redirect to payment.html with query param
+        window.location.href = `payment.html?amount=${amount}&ref=${refCode}`;
+    }
+
+    proceedBtn.addEventListener('click', proceedToPayment);
+    
+    backBtn.addEventListener('click', () => {
+        window.location.href = 'dashboard.html';
+    });
+
+    // Authentication guard
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            window.location.href = 'login.html';
+            return;
+        }
+        await fetchUserData(user.uid);
+    });
+</script>
+</body>
+</html>
