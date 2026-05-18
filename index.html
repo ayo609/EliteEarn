@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>EliteEarn • Premium Investment | Sign Up</title>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s;
+    }
+
+    /* Import Google Font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+    /* CSS Variables - Royal Luxury Theme (Purple + Gold) */
+    :root {
+      --primary: #8B5CF6;
+      --primary-dark: #6D28D9;
+      --primary-glow: rgba(139, 92, 246, 0.3);
+      --secondary: #F59E0B;
+      --secondary-dark: #D97706;
+      --success: #10B981;
+      --danger: #EF4444;
+      --danger-dark: #DC2626;
+      --dark-bg: #0F0F1A;
+      --dark-surface: #1A1A2E;
+      --dark-card: #22223B;
+      --dark-border: #2D2D44;
+      --light-bg: #F9FAFB;
+      --light-surface: #FFFFFF;
+      --light-card: #FFFFFF;
+      --light-border: #E5E7EB;
+      --text-dark-primary: #F3F4F6;
+      --text-dark-secondary: #9CA3AF;
+      --text-light-primary: #1F2937;
+      --text-light-secondary: #6B7280;
+      --gold-grad: linear-gradient(135deg, #F59E0B, #D97706);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-color);
+      color: var(--text-primary);
+      transition: background 0.25s, color 0.2s;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Light / Dark theme classes */
+    body.light {
+      --bg-color: var(--light-bg);
+      --surface: var(--light-surface);
+      --card-bg: var(--light-card);
+      --border-color: var(--light-border);
+      --text-primary: var(--text-light-primary);
+      --text-secondary: var(--text-light-secondary);
+    }
+
+    body.dark {
+      --bg-color: var(--dark-bg);
+      --surface: var(--dark-surface);
+      --card-bg: var(--dark-card);
+      --border-color: var(--dark-border);
+      --text-primary: var(--text-dark-primary);
+      --text-secondary: var(--text-dark-secondary);
+    }
+
+    /* Floating particles canvas */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Theme toggle button (top right) */
+    .theme-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 30;
+      background: var(--surface);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      border-radius: 60px;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover {
+      transform: scale(1.02);
+      border-color: var(--primary);
+    }
+
+    /* MAIN CARD */
+    .signup-card {
+      max-width: 520px;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(2px);
+      border-radius: 2rem;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3);
+      padding: 2rem 1.8rem;
+      transition: all 0.2s;
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .logo {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .tagline {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.3rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      text-align: center;
+    }
+    .sub {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 1.8rem;
+      font-size: 0.9rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .input-icon {
+      color: var(--primary);
+    }
+    input {
+      background: var(--surface);
+      border: 1.5px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: all 0.2s;
+    }
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .password-wrapper input {
+      flex: 1;
+      padding-right: 3rem;
+    }
+    .toggle-pwd {
+      position: absolute;
+      right: 12px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+    }
+    .strength-meter {
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 4px;
+      margin-top: 6px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .strength-fill {
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s, background 0.2s;
+    }
+    .strength-text {
+      font-size: 0.7rem;
+      margin-top: 4px;
+      color: var(--text-secondary);
+    }
+    .btn-primary {
+      background: linear-gradient(95deg, var(--primary), var(--primary-dark));
+      border: none;
+      width: 100%;
+      padding: 0.9rem;
+      border-radius: 2rem;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(107, 70, 193, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .login-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .login-link a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .footer-note {
+      text-align: center;
+      margin-top: 1.8rem;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    /* MODAL TOP LEFT */
+    .toast-modal {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border-left: 5px solid var(--primary);
+      border-radius: 1rem;
+      padding: 0.9rem 1.4rem;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+      max-width: 320px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform: translateX(-120%);
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .toast-modal.show {
+      transform: translateX(0);
+    }
+    .toast-icon {
+      font-size: 1.4rem;
+    }
+
+    @media (max-width: 550px) {
+      .signup-card { padding: 1.5rem; }
+      h2 { font-size: 1.5rem; }
+      .theme-toggle { top: 1rem; right: 1rem; padding: 0.4rem 0.8rem; }
+    }
+  </style>
+</head>
+<body class="dark">
+  <canvas id="particles-canvas"></canvas>
+  
+  <!-- Theme toggle -->
+  <div class="theme-toggle" id="themeToggleBtn">
+    🌙 <span id="themeText">Dark</span>
+  </div>
+
+  <!-- Top-left toast messages -->
+  <div id="globalToast" class="toast-modal">
+    <span class="toast-icon" id="toastIcon">✅</span>
+    <span id="toastMessage">Message</span>
+  </div>
+
+  <div class="container">
+    <div class="signup-card">
+      <div class="logo-area">
+        <div class="logo">ELITE<span style="color: var(--secondary);">EARN</span></div>
+        <div class="tagline">Premium Wealth Platform</div>
+      </div>
+      <h2>Join Ananda Group</h2>
+      <div class="sub">Start your elite investment journey</div>
+
+      <!-- Signup Form -->
+      <form id="signupForm">
+        <div class="input-group">
+          <label><span class="input-icon">📧</span> Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+        <div class="input-group">
+          <label><span class="input-icon">📱</span> Phone Number (Nigeria)</label>
+          <input type="tel" id="phone" placeholder="08012345678" required>
+          <small style="font-size: 0.7rem; color: var(--text-secondary);">Format: 080XXXXXXXX (Nigeria only)</small>
+        </div>
+        <div class="input-group">
+          <label><span class="input-icon">👤</span> Username (letters only)</label>
+          <input type="text" id="username" placeholder="EliteJohn" pattern="[A-Za-z]{4,20}" required>
+          <small style="font-size: 0.7rem;">Only letters A-Z, 4-20 characters</small>
+        </div>
+        <div class="input-group">
+          <label><span class="input-icon">🔗</span> Referral Username (Upliner)</label>
+          <input type="text" id="referralUsername" placeholder="Enter upliner's username" required>
+        </div>
+        <div class="input-group">
+          <label><span class="input-icon">🔒</span> Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="password" placeholder="••••••" minlength="6" required>
+            <button type="button" class="toggle-pwd" data-target="password">👁️</button>
+          </div>
+          <div class="strength-meter"><div class="strength-fill" id="strengthFill"></div></div>
+          <div class="strength-text" id="strengthText">Weak</div>
+        </div>
+        <div class="input-group">
+          <label><span class="input-icon">✓</span> Confirm Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="confirmPwd" placeholder="Confirm password" required>
+            <button type="button" class="toggle-pwd" data-target="confirmPwd">👁️</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="submitBtn">Create Your Account</button>
+      </form>
+      <div class="login-link">
+        Already an investor? <a href="#" id="signInMockLink">Sign In</a> <span style="font-size: 12px;">(dashboard soon)</span>
+      </div>
+      <div class="footer-note">
+        By joining you agree to EliteEarn Terms • Secure & Regulated
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ------------------------- FIREBASE CONFIG -------------------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",
+      authDomain: "earnelite-94a5e.firebaseapp.com",
+      projectId: "earnelite-94a5e",
+      storageBucket: "earnelite-94a5e.firebasestorage.app",
+      messagingSenderId: "343677058789",
+      appId: "1:343677058789:web:776faceb824158042fde0c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // ------------------------- DOM Elements -------------------------
+    const toastEl = document.getElementById('globalToast');
+    const toastMsg = document.getElementById('toastMessage');
+    const toastIcon = document.getElementById('toastIcon');
+    let toastTimeout = null;
+
+    function showToast(message, type = 'success') {
+      if (toastTimeout) clearTimeout(toastTimeout);
+      if (type === 'success') toastIcon.innerText = '✅';
+      else if (type === 'error') toastIcon.innerText = '❌';
+      else if (type === 'warning') toastIcon.innerText = '⚠️';
+      else toastIcon.innerText = 'ℹ️';
+      toastMsg.innerText = message;
+      toastEl.classList.add('show');
+      toastTimeout = setTimeout(() => {
+        toastEl.classList.remove('show');
+      }, 3500);
+    }
+
+    // Theme handling (dark/light)
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const themeTextSpan = document.getElementById('themeText');
+    function applyTheme(theme) {
+      const body = document.body;
+      if (theme === 'light') {
+        body.classList.remove('dark');
+        body.classList.add('light');
+        themeTextSpan.innerText = 'Light';
+        themeBtn.innerHTML = '🌙 <span id="themeText">Light</span>';
+      } else {
+        body.classList.remove('light');
+        body.classList.add('dark');
+        themeTextSpan.innerText = 'Dark';
+        themeBtn.innerHTML = '☀️ <span id="themeText">Dark</span>';
+      }
+      localStorage.setItem('eliteearn_theme', theme);
+    }
+    const savedTheme = localStorage.getItem('eliteearn_theme');
+    if (savedTheme === 'light') applyTheme('light');
+    else applyTheme('dark');
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    });
+
+    // Password toggle visibility
+    document.querySelectorAll('.toggle-pwd').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetId = btn.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        if (input.type === 'password') {
+          input.type = 'text';
+          btn.innerText = '🙈';
+        } else {
+          input.type = 'password';
+          btn.innerText = '👁️';
+        }
+      });
+    });
+
+    // Password strength & match validation
+    const passwordInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirmPwd');
+    const strengthFill = document.getElementById('strengthFill');
+    const strengthText = document.getElementById('strengthText');
+    function evaluateStrength(pwd) {
+      let score = 0;
+      if (!pwd) return { percent: 0, text: 'Very weak' };
+      if (pwd.length >= 6) score += 1;
+      if (pwd.length >= 10) score += 1;
+      if (/[A-Z]/.test(pwd)) score += 1;
+      if (/[0-9]/.test(pwd)) score += 1;
+      if (/[^A-Za-z0-9]/.test(pwd)) score += 1;
+      let percent = Math.min(100, score * 20);
+      let text = '';
+      if (percent <= 20) text = 'Weak';
+      else if (percent <= 50) text = 'Fair';
+      else if (percent <= 80) text = 'Good';
+      else text = 'Strong';
+      if (pwd.length < 6) text = 'Too short';
+      return { percent, text };
+    }
+    passwordInput.addEventListener('input', () => {
+      const pwd = passwordInput.value;
+      const { percent, text } = evaluateStrength(pwd);
+      strengthFill.style.width = `${percent}%`;
+      if (percent <= 30) strengthFill.style.backgroundColor = '#EF4444';
+      else if (percent <= 70) strengthFill.style.backgroundColor = '#F59E0B';
+      else strengthFill.style.backgroundColor = '#10B981';
+      strengthText.innerText = text;
+    });
+
+    // Nigerian phone validation
+    function validateNigeriaPhone(phoneRaw) {
+      let cleaned = phoneRaw.replace(/\D/g, '');
+      if (cleaned.startsWith('0') && cleaned.length === 11) return true;
+      if (cleaned.startsWith('234') && cleaned.length === 13) return true;
+      if (cleaned.startsWith('+234') && cleaned.length === 14) return true;
+      return false;
+    }
+    function formatPhoneForDB(phoneRaw) {
+      let cleaned = phoneRaw.replace(/\D/g, '');
+      if (cleaned.startsWith('0') && cleaned.length === 11) {
+        return '+234' + cleaned.slice(1);
+      }
+      if (cleaned.startsWith('234') && cleaned.length === 13) return '+' + cleaned;
+      if (cleaned.startsWith('+234')) return cleaned;
+      return null;
+    }
+
+    // ---------- SIGNUP LOGIC (username referal & firestore) ----------
+    const form = document.getElementById('signupForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    async function checkUsernameUnique(username) {
+      const snapshot = await db.collection('users').where('username', '==', username.toLowerCase()).get();
+      return snapshot.empty;
+    }
+
+    async function checkReferralExists(refUsername) {
+      const refLower = refUsername.toLowerCase();
+      const snapshot = await db.collection('users').where('username', '==', refLower).get();
+      return !snapshot.empty;
+    }
+
+    async function generateOwnReferralCode() {
+      // we return username as the referral key (the username itself)
+      // but we will store upliner username relationship
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Creating...';
+
+      // gather fields
+      const email = document.getElementById('email').value.trim();
+      const phoneRaw = document.getElementById('phone').value.trim();
+      const usernameRaw = document.getElementById('username').value.trim();
+      const referralRaw = document.getElementById('referralUsername').value.trim();
+      const password = passwordInput.value;
+      const confirm = confirmInput.value;
+
+      // validation
+      if (!email || !phoneRaw || !usernameRaw || !referralRaw || !password) {
+        showToast('All fields are required', 'error');
+        submitBtn.disabled = false; submitBtn.innerText = 'Create Your Account'; return;
+      }
+      if (!validateNigeriaPhone(phoneRaw)) {
+        showToast('Invalid Nigeria phone number (e.g., 08012345678)', 'error');
+        submitBtn.disabled = false; submitBtn.innerText = 'Create Your Account'; return;
+      }
+      const usernameRegex = /^[A-Za-z]{4,20}$/;
+      if (!usernameRegex.test(usernameRaw)) {
+        showToast('Username must be 4-20 letters only (A-Z)', 'error');
+        submitBtn.disabled = false; submitBtn.innerText = 'Create Your Account'; return;
+      }
+      if (password.length < 6) {
+        showToast('Password must be at least 6 characters', 'error');
+        submitBtn.disabled = false; submitBtn.innerText = 'Create Your Account'; return;
+      }
+      if (password !== confirm) {
+        showToast('Passwords do not match', 'error');
+        submitBtn.disabled = false; submitBtn.innerText = 'Create Your Account'; return;
+      }
+      
+      // check username uniqueness
+      const isUnique = await checkUsernameUnique(usernameRaw);
+      if (!isUnique) {
+        showToast('Username already taken. Choose another one.', 'error');
+        submitBtn.disabled = false; submitBtn.innerText = 'Create Your Account'; return;
+      }
+      // check referral username existence
+      const referralExists = await checkReferralExists(referralRaw);
+      if (!referralExists) {
+        showToast(`Referral username "${referralRaw}" does not exist.`, 'error');
+        submitBtn.disabled = false; submitBtn.innerText = 'Create Your Account'; return;
+      }
+      // prevent self-referral
+      if (referralRaw.toLowerCase() === usernameRaw.toLowerCase()) {
+        showToast('You cannot refer yourself. Use another upliner.', 'error');
+        submitBtn.disabled = false; submitBtn.innerText = 'Create Your Account'; return;
+      }
+
+      const finalPhone = formatPhoneForDB(phoneRaw);
+      if (!finalPhone) {
+        showToast('Phone number format invalid (use 080 or +234...)', 'error');
+        submitBtn.disabled = false; submitBtn.innerText = 'Create Your Account'; return;
+      }
+
+      try {
+        // 1) create firebase auth user
+        const userCred = await auth.createUserWithEmailAndPassword(email, password);
+        const uid = userCred.user.uid;
+        
+        // 2) prepare user data
+        const userData = {
+          uid: uid,
+          email: email,
+          phoneNumber: finalPhone,
+          username: usernameRaw.toLowerCase(),
+          referralCodeUsed: referralRaw.toLowerCase(),   // upliner's username
+          ownReferralCode: usernameRaw.toLowerCase(),    // this user's own referral username
+          balance: 0,
+          totalDeposited: 0,
+          totalWithdrawn: 0,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          isAdmin: false,
+          upliner: referralRaw.toLowerCase()
+        };
+        
+        await db.collection('users').doc(uid).set(userData);
+        
+        // Additionally, we can store a referral mapping in a separate collection for tracking stats? optional but fine.
+        // Add to referral_stats: track that this user was referred by upliner
+        const refUpdateRef = db.collection('referralStats').doc(referralRaw.toLowerCase());
+        const refDoc = await refUpdateRef.get();
+        if (refDoc.exists) {
+          await refUpdateRef.update({
+            referrals: firebase.firestore.FieldValue.arrayUnion(usernameRaw.toLowerCase()),
+            count: firebase.firestore.FieldValue.increment(1)
+          });
+        } else {
+          await refUpdateRef.set({
+            username: referralRaw.toLowerCase(),
+            referrals: [usernameRaw.toLowerCase()],
+            count: 1
+          });
+        }
+        
+        showToast(`Account created! Welcome ${usernameRaw}. Redirecting...`, 'success');
+        setTimeout(() => {
+          // redirect placeholder to dashboard (will be built later)
+          window.location.href = "dashboard.html";
+        }, 1800);
+      } catch (err) {
+        console.error(err);
+        let errorMsg = err.message;
+        if (err.code === 'auth/email-already-in-use') errorMsg = 'Email already registered.';
+        else if (err.code === 'auth/invalid-email') errorMsg = 'Invalid email address.';
+        else if (err.code === 'auth/weak-password') errorMsg = 'Password too weak.';
+        showToast(errorMsg, 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Create Your Account';
+        // delete user if created? not necessary because failed before user creation? but if half? firestore rollback not needed
+        // fine.
+      }
+    });
+
+    // Floating Particles Animation (lightweight)
+    const canvas = document.getElementById('particles-canvas');
+    let ctx = canvas.getContext('2d');
+    let particles = [];
+    let resizeHandler;
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    function initParticles() {
+      const particleCount = 70;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 3 + 1.5,
+          alpha: Math.random() * 0.4 + 0.2,
+          speedX: (Math.random() - 0.5) * 0.3,
+          speedY: (Math.random() - 0.5) * 0.2,
+          color: `rgba(139, 92, 246, ${Math.random() * 0.5 + 0.2})`
+        });
+      }
+    }
+    function drawParticles() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+      }
+      requestAnimationFrame(drawParticles);
+    }
+    function setupParticles() {
+      resizeCanvas();
+      initParticles();
+      drawParticles();
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        particles = [];
+        initParticles();
+      });
+    }
+    setupParticles();
+
+    // mock sign in link (temporary)
+    document.getElementById('signInMockLink')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      showToast('Login page coming soon! (Dashboard under construction)', 'warning');
+    });
+  </script>
+</body>
+</html>
