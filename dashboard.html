@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Dashboard</title>
+
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <meta name="theme-color" content="#7C3AED">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f9fafb;
+            color: #1f2937;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Main mobile wrapper */
+        .app-mobile-wrapper {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 40%, #5B21B6 70%, #4C1D95 100%);
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated ambient glows */
+        .ambient-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.1); }
+        }
+
+        .glow-top-right {
+            width: 280px;
+            height: 280px;
+            background: rgba(245, 158, 11, 0.35);
+            top: -60px;
+            right: -60px;
+            animation-delay: 0s;
+        }
+
+        .glow-bottom-left {
+            width: 320px;
+            height: 320px;
+            background: rgba(139, 92, 246, 0.4);
+            top: 15%;
+            left: -120px;
+            animation-delay: 2s;
+        }
+
+        .glow-center {
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.08);
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 1s;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .p1 { width: 8px; height: 8px; top: 20%; left: 15%; animation: float 6s ease-in-out infinite; }
+        .p2 { width: 12px; height: 12px; top: 35%; right: 20%; animation: float 8s ease-in-out infinite 1s; }
+        .p3 { width: 6px; height: 6px; top: 50%; left: 25%; animation: float 7s ease-in-out infinite 2s; }
+        .p4 { width: 10px; height: 10px; top: 25%; right: 30%; animation: float 5s ease-in-out infinite 0.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            25% { transform: translateY(-20px) translateX(10px); opacity: 0.8; }
+            50% { transform: translateY(-10px) translateX(-10px); opacity: 0.5; }
+            75% { transform: translateY(-30px) translateX(5px); opacity: 0.7; }
+        }
+
+        /* Header area */
+        .dashboard-header {
+            padding: 40px 24px 60px 24px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .logo-small {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #FCD34D);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 30px;
+            padding: 8px 18px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .welcome-section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .welcome-section p {
+            font-size: 13px;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* White card container */
+        .dashboard-card {
+            background: white;
+            border-radius: 32px 32px 0 0;
+            padding: 24px 20px 40px;
+            margin-top: -30px;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.08);
+        }
+
+        /* Balance grid */
+        .balance-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .balance-item {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 16px;
+            flex: 1;
+            min-width: 120px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            border: 1px solid #f0f2f5;
+        }
+
+        .balance-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .balance-number {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .balance-number small {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+            border: none;
+            border-radius: 40px;
+            padding: 14px 0;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 6px 14px rgba(107, 70, 193, 0.2);
+        }
+
+        .action-btn.outline {
+            background: white;
+            color: #6D28D9;
+            border: 1.5px solid #8B5CF6;
+            box-shadow: none;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Horizontal scroll images */
+        .image-scroll-area {
+            margin-bottom: 32px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            border-radius: 28px;
+        }
+
+        .image-scroll-area::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .image-scroll-area::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .image-scroll-area::-webkit-scrollbar-thumb {
+            background: #8B5CF6;
+            border-radius: 10px;
+        }
+
+        .scroll-inner {
+            display: inline-flex;
+            gap: 14px;
+            padding: 4px 2px;
+        }
+
+        .promo-img {
+            width: 280px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 28px;
+            scroll-snap-align: start;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            background: #eef2ff;
+        }
+
+        /* Section titles */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 24px 0 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        /* Investment list */
+        .invest-card {
+            background: #ffffff;
+            border: 1px solid #edf2f7;
+            border-radius: 28px;
+            padding: 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .invest-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .plan-name {
+            font-weight: 800;
+            color: #8B5CF6;
+        }
+
+        .invest-amount {
+            font-weight: 800;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 20px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #F59E0B, #D97706);
+            width: 70%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .date-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        /* Transaction table */
+        .trans-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .trans-table th {
+            text-align: left;
+            font-size: 12px;
+            padding: 12px 4px 8px 0;
+            color: #6b7280;
+            border-bottom: 1px solid #eef2ff;
+        }
+
+        .trans-table td {
+            padding: 10px 4px 10px 0;
+            font-size: 13px;
+            font-weight: 500;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .status-badge {
+            background: #e6f7e6;
+            color: #10b981;
+            padding: 4px 8px;
+            border-radius: 40px;
+            font-size: 10px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .status-badge.pending {
+            background: #fff3e0;
+            color: #f59e0b;
+        }
+
+        /* Referral box */
+        .referral-box {
+            background: linear-gradient(135deg, #fef9e6, #fff7ed);
+            border-radius: 28px;
+            padding: 16px;
+            margin: 28px 0 20px;
+            border: 1px solid #ffedd5;
+        }
+
+        .ref-link {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            word-break: break-all;
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: #F59E0B;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Bottom navigation */
+        .bottom-nav {
+            background: white;
+            border-radius: 40px;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 28px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            border-top: 1px solid #f0f2f5;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #94a3b8;
+            transition: 0.2s;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            font-size: 22px;
+        }
+
+        .nav-item.active {
+            color: #8B5CF6;
+        }
+
+        /* Community Floating Button + Modal */
+        .community-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            width: 56px;
+            height: 56px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: 0.2s;
+            border: none;
+            color: white;
+            font-size: 28px;
+        }
+
+        .community-float:hover {
+            transform: scale(1.05);
+        }
+
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .community-modal {
+            background: white;
+            width: 320px;
+            border-radius: 44px;
+            padding: 28px 24px;
+            text-align: center;
+            box-shadow: 0 30px 40px rgba(0,0,0,0.2);
+            transform: scale(0.9);
+            transition: 0.2s;
+        }
+
+        .modal-overlay.active .community-modal {
+            transform: scale(1);
+        }
+
+        .community-modal h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .social-group-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .social-group-btn {
+            background: #f3f4f6;
+            padding: 12px 20px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .social-group-btn.whatsapp {
+            background: #25D36620;
+            color: #075E54;
+            border: 1px solid #25D366;
+        }
+
+        .social-group-btn.telegram {
+            background: #0088cc20;
+            color: #0088cc;
+            border: 1px solid #0088cc;
+        }
+
+        .close-modal {
+            background: #e2e8f0;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        /* misc */
+        .toast-notify {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            background: white;
+            border-left: 5px solid #F59E0B;
+            border-radius: 16px;
+            padding: 14px 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            z-index: 300;
+            transform: translateX(-120%);
+            transition: transform 0.3s;
+            font-weight: 600;
+            max-width: 280px;
+        }
+
+        .toast-notify.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 480px) {
+            .balance-number { font-size: 18px; }
+            .action-btn { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-mobile-wrapper">
+    <div class="ambient-glow glow-top-right"></div>
+    <div class="ambient-glow glow-bottom-left"></div>
+    <div class="ambient-glow glow-center"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="top-bar">
+            <div class="logo-small">ELITEEARN</div>
+            <button class="logout-btn" id="logoutBtn"><i class="ph ph-sign-out"></i> Exit</button>
+        </div>
+        <div class="welcome-section">
+            <h2>Welcome back, <span id="usernameDisplay">EliteUser</span>!</h2>
+            <p><i class="ph ph-clock"></i> Last login: <span id="lastLoginTime">Today, 09:42 AM</span></p>
+        </div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="dashboard-card">
+        <!-- Balance Cards -->
+        <div class="balance-grid">
+            <div class="balance-item"><div class="balance-label">💰 Total Balance</div><div class="balance-number">$<span id="totalBalance">0.00</span></div></div>
+            <div class="balance-item"><div class="balance-label">💳 Deposit Wallet</div><div class="balance-number">$<span id="depositWallet">0.00</span></div></div>
+            <div class="balance-item"><div class="balance-label">💸 Withdrawal Wallet</div><div class="balance-number">$<span id="withdrawWallet">0.00</span></div></div>
+            <div class="balance-item"><div class="balance-label">📈 Total Invested</div><div class="balance-number">$<span id="totalInvested">0.00</span></div></div>
+            <div class="balance-item"><div class="balance-label">🏆 Referral Bonus</div><div class="balance-number">$<span id="referralBonus">0.00</span></div></div>
+        </div>
+
+        <!-- Quick Action Buttons (redirect to separate pages) -->
+        <div class="action-buttons">
+            <button class="action-btn" id="depositPageBtn"><i class="ph ph-bank"></i> Deposit</button>
+            <button class="action-btn outline" id="withdrawPageBtn"><i class="ph ph-coins"></i> Withdraw</button>
+            <button class="action-btn outline" id="plansPageBtn"><i class="ph ph-chart-line"></i> Plans</button>
+        </div>
+
+        <!-- HORIZONTAL IMAGE SCROLL (image1.jpg & image2.jpg) -->
+        <div class="image-scroll-area">
+            <div class="scroll-inner">
+                <img src="image1.jpg" alt="Promotion 1" class="promo-img" onerror="this.src='https://placehold.co/600x400/8B5CF6/white?text=EliteEarn+Promo+1'">
+                <img src="image2.jpg" alt="Promotion 2" class="promo-img" onerror="this.src='https://placehold.co/600x400/F59E0B/white?text=EliteEarn+Promo+2'">
+                <!-- extra placeholder to show smooth scroll -->
+                <img src="image1.jpg" alt="Promo 3" class="promo-img" onerror="this.src='https://placehold.co/600x400/8B5CF6/white?text=Join+Today'">
+            </div>
+        </div>
+
+        <!-- Active Investments Section -->
+        <div class="section-title">📌 Active Investments <span style="font-size:12px;">View all</span></div>
+        <div id="activeInvestmentsContainer">
+            <div class="invest-card">
+                <div class="invest-header"><span class="plan-name">⭐ Elite Plan</span><span class="invest-amount">$2,500</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 45%;"></div></div>
+                <div class="date-row"><span>Start: Feb 01, 2025</span><span>End: Apr 01, 2025</span></div>
+                <div style="font-size:12px; margin-top:8px;">📈 Expected: +38%</div>
+            </div>
+            <div class="invest-card">
+                <div class="invest-header"><span class="plan-name">🔥 Premium Plan</span><span class="invest-amount">$1,200</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 80%;"></div></div>
+                <div class="date-row"><span>Start: Jan 15, 2025</span><span>End: Mar 15, 2025</span></div>
+                <div style="font-size:12px;">🚀 Progress: 80% complete</div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="section-title">🕒 Recent Transactions</div>
+        <table class="trans-table" id="transactionsTable">
+            <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody>
+                <tr><td>2025-05-17</td><td>Deposit</td><td>$500</td><td><span class="status-badge">Completed</span></td></tr>
+                <tr><td>2025-05-15</td><td>Withdraw</td><td>$120</td><td><span class="status-badge pending">Pending</span></td></tr>
+                <tr><td>2025-05-10</td><td>Profit</td><td>$85</td><td><span class="status-badge">Completed</span></td></tr>
+            </tbody>
+        </table>
+
+        <!-- Referral Section -->
+        <div class="referral-box">
+            <div><i class="ph ph-users"></i> <strong>Your Referral Network</strong></div>
+            <div class="ref-link" id="refLinkContainer">
+                <span id="refLinkText">eliteearn.com/signup?ref=USER123</span>
+                <button class="copy-btn" id="copyRefBtn">Copy</button>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span>👥 Total Referrals: <strong id="totalReferrals">3</strong></span>
+                <span>💰 Commission Earned: $<span id="commissionEarned">45.00</span></span>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation (UI only) -->
+        <div class="bottom-nav">
+            <div class="nav-item active"><i class="ph ph-compass"></i><span>Home</span></div>
+            <div class="nav-item"><i class="ph ph-chart-pie"></i><span>Plans</span></div>
+            <div class="nav-item"><i class="ph ph-clock"></i><span>History</span></div>
+            <div class="nav-item"><i class="ph ph-user"></i><span>Profile</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating community button (WhatsApp/Telegram popup) -->
+<button class="community-float" id="communityFloatBtn">
+    <i class="fa-regular fa-comment-dots"></i>
+</button>
+
+<!-- Modal for community links -->
+<div class="modal-overlay" id="communityModal">
+    <div class="community-modal">
+        <h3>🤝 Join Our Community</h3>
+        <p style="color:#6b7280">Connect with investors & get support</p>
+        <div class="social-group-buttons">
+            <a href="#" id="whatsappLinkBtn" class="social-group-btn whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a href="#" id="telegramLinkBtn" class="social-group-btn telegram" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+        </div>
+        <button class="close-modal" id="closeModalBtn">Close</button>
+    </div>
+</div>
+
+<!-- Toast (top-left) -->
+<div id="toastMsg" class="toast-notify">✅ Message</div>
+
+<script>
+    // -------- Simulate user session data (would come from Firebase) ----------
+    const currentUser = {
+        username: "JOHNDOE",
+        lastLogin: "May 18, 2025 - 10:30 AM",
+        balances: {
+            total: 5420.75,
+            depositWallet: 3200.00,
+            withdrawalWallet: 2220.75,
+            totalInvested: 3700.00,
+            referralBonus: 125.50
+        },
+        referral: {
+            code: "JOHNDOE",
+            totalRefs: 3,
+            commission: 125.50
+        }
+    };
+
+    // DOM elements update
+    document.getElementById('usernameDisplay').innerText = currentUser.username;
+    document.getElementById('lastLoginTime').innerText = currentUser.lastLogin;
+    document.getElementById('totalBalance').innerText = currentUser.balances.total.toFixed(2);
+    document.getElementById('depositWallet').innerText = currentUser.balances.depositWallet.toFixed(2);
+    document.getElementById('withdrawWallet').innerText = currentUser.balances.withdrawalWallet.toFixed(2);
+    document.getElementById('totalInvested').innerText = currentUser.balances.totalInvested.toFixed(2);
+    document.getElementById('referralBonus').innerText = currentUser.balances.referralBonus.toFixed(2);
+    document.getElementById('refLinkText').innerText = `eliteearn.com/signup?ref=${currentUser.referral.code}`;
+    document.getElementById('totalReferrals').innerText = currentUser.referral.totalRefs;
+    document.getElementById('commissionEarned').innerText = currentUser.referral.commission.toFixed(2);
+    
+    // Optional generate referral link copy
+    const copyBtn = document.getElementById('copyRefBtn');
+    copyBtn.addEventListener('click', () => {
+        const linkText = document.getElementById('refLinkText').innerText;
+        navigator.clipboard.writeText(linkText);
+        showToastMessage('✅ Referral link copied!', 'success');
+    });
+
+    // Logout simulation
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        showToastMessage('🔒 Logging out...', 'info');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+    });
+
+    // Redirect to separate pages (deposit/withdraw plans)
+    document.getElementById('depositPageBtn').addEventListener('click', () => {
+        window.location.href = 'deposit.html';
+    });
+    document.getElementById('withdrawPageBtn').addEventListener('click', () => {
+        window.location.href = 'withdraw.html';
+    });
+    document.getElementById('plansPageBtn').addEventListener('click', () => {
+        showToastMessage('📊 Investment plans page coming soon', 'info');
+        // window.location.href = 'plans.html';
+    });
+
+    // ----- Community Modal (WhatsApp + Telegram) ----
+    const modal = document.getElementById('communityModal');
+    const floatBtn = document.getElementById('communityFloatBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const whatsappBtn = document.getElementById('whatsappLinkBtn');
+    const telegramBtn = document.getElementById('telegramLinkBtn');
+
+    // Set your actual WhatsApp group invite link and Telegram invite link here:
+    const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/EliteEarnCommunity";   // Replace with actual
+    const TELEGRAM_GROUP_URL = "https://t.me/EliteEarnOfficial";                 // Replace with actual
+
+    whatsappBtn.href = WHATSAPP_GROUP_URL;
+    telegramBtn.href = TELEGRAM_GROUP_URL;
+
+    floatBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+
+    // Toast notification
+    function showToastMessage(message, type = 'info') {
+        const toast = document.getElementById('toastMsg');
+        toast.innerHTML = `<i class="fa-regular fa-bell"></i> ${message}`;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // Optional: assign placeholder image fallback already done via onerror
+    // Show a welcome toast after load
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            showToastMessage(`Welcome back, ${currentUser.username} 👋`, 'success');
+        }, 500);
+    });
+
+    // For bottom nav simple active style (demo)
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+            showToastMessage('Navigation demo: ' + this.innerText.trim(), 'info');
+        });
+    });
+</script>
+</body>
+</html>
