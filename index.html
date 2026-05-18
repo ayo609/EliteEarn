@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Sign Up</title>
+
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <meta name="theme-color" content="#7C3AED">
+
+    <style>
+        html,body{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif;-webkit-font-smoothing:antialiased;background-color:#f9fafb;color:#1f2937}
+        *,*::before,*::after{box-sizing:inherit}
+        body{display:flex;flex-direction:column;min-height:100vh;position:relative}
+        .brand-font{font-family:'Oswald',sans-serif}
+
+        .app-mobile-wrapper {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 40%, #5B21B6 70%, #4C1D95 100%);
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            overflow: hidden; 
+        }
+
+        /* Animated ambient glows */
+        .ambient-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: pulse 4s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.1); }
+        }
+        .glow-top-right {
+            width: 280px; height: 280px;
+            background: rgba(245, 158, 11, 0.35);
+            top: -60px; right: -60px;
+            animation-delay: 0s;
+        }
+        .glow-bottom-left {
+            width: 320px; height: 320px;
+            background: rgba(139, 92, 246, 0.4);
+            top: 15%; left: -120px;
+            animation-delay: 2s;
+        }
+        .glow-center {
+            width: 200px; height: 200px;
+            background: rgba(255, 255, 255, 0.08);
+            top: 40%; left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 1s;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .p1 { width: 8px; height: 8px; top: 20%; left: 15%; animation: float 6s ease-in-out infinite; }
+        .p2 { width: 12px; height: 12px; top: 35%; right: 20%; animation: float 8s ease-in-out infinite 1s; }
+        .p3 { width: 6px; height: 6px; top: 50%; left: 25%; animation: float 7s ease-in-out infinite 2s; }
+        .p4 { width: 10px; height: 10px; top: 25%; right: 30%; animation: float 5s ease-in-out infinite 0.5s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            25% { transform: translateY(-20px) translateX(10px); opacity: 0.8; }
+            50% { transform: translateY(-10px) translateX(-10px); opacity: 0.5; }
+            75% { transform: translateY(-30px) translateX(5px); opacity: 0.7; }
+        }
+
+        /* Top Header */
+        .app-header-area {
+            padding: 70px 32px 90px 32px; 
+            color: #ffffff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 50px;
+            padding: 6px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #FCD34D;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .header-badge::before { content: '✦'; font-size: 10px; }
+
+        .app-header-area h1 {
+            font-size: 44px; 
+            font-weight: 800; 
+            margin: 0 0 10px 0; 
+            line-height: 1.1; 
+            letter-spacing: -1px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .app-header-area p {
+            margin: 0; 
+            font-size: 16px; 
+            font-weight: 500; 
+            opacity: 0.85;
+            letter-spacing: 0.5px;
+        }
+
+        /* Overlapping Card */
+        .app-content-card {
+            flex: 1;
+            background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+            border-radius: 40px 40px 0 0;
+            padding: 40px 28px 32px 28px;
+            margin-top: -50px; 
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.12);
+        }
+
+        .card-header-row {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+            margin-bottom: 32px; 
+            position: relative;
+        }
+        .card-header-row h2 {
+            color: #D97706; 
+            font-size: 34px; 
+            font-weight: 800; 
+            margin: 0; 
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Decorative plant */
+        .plant-decoration {
+            position: absolute; 
+            right: -10px; 
+            top: -100px; 
+            z-index: 10; 
+            width: 90px; 
+            height: 140px; 
+            filter: drop-shadow(0 15px 20px rgba(0,0,0,0.1));
+            animation: sway 3s ease-in-out infinite;
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        /* Inputs */
+        .pill-input-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .pill-input-group input {
+            width: 100%;
+            height: 58px;
+            padding: 0 48px 0 54px; 
+            background: #ffffff;
+            border: 1.5px solid rgba(0,0,0,0.06);
+            border-radius: 29px; 
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            outline: none;
+            box-sizing: border-box;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04), inset 0 1px 2px rgba(0,0,0,0.02);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pill-input-group input::placeholder { 
+            color: #9ca3af; 
+            font-weight: 500;
+            font-size: 13.5px;
+        }
+
+        .pill-input-group input:focus { 
+            border-color: transparent;
+            background: #ffffff;
+            box-shadow: 0 0 0 2.5px rgba(139, 92, 246, 0.2), 0 8px 20px rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .pill-input-group i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .pill-input-group input:focus + i,
+        .pill-input-group input:not(:placeholder-shown) + i {
+            color: #8B5CF6; 
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Referral field - Gold accent (no placeholder) */
+        .pill-input-group.referral-field input {
+            color: #D97706;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff 0%, #FFFBEB 100%);
+            border: 1.5px solid rgba(245, 158, 11, 0.25);
+        }
+        .pill-input-group.referral-field input:focus {
+            box-shadow: 0 0 0 2.5px rgba(245, 158, 11, 0.2), 0 8px 20px rgba(245, 158, 11, 0.1);
+        }
+        .pill-input-group.referral-field input:focus + i,
+        .pill-input-group.referral-field input:not(:placeholder-shown) + i {
+            color: #F59E0B;
+        }
+
+        /* Eye toggle */
+        .eye-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        .eye-toggle:hover { 
+            color: #8B5CF6; 
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        /* Premium Gradient Button */
+        .btn-pill-primary {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%; 
+            height: 58px; 
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%);
+            color: #ffffff; 
+            border: none; 
+            border-radius: 29px; 
+            font-size: 16px; 
+            font-weight: 700; 
+            cursor: pointer;
+            margin-top: 12px;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35);
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-pill-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 60%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            transition: all 0.6s ease;
+        }
+
+        .btn-pill-primary:hover:not(:disabled) { 
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.45);
+        }
+
+        .btn-pill-primary:hover::before {
+            left: 200%;
+        }
+
+        .btn-pill-primary:active:not(:disabled) {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .btn-pill-primary:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 20px; height: 20px;
+            border: 2.5px solid rgba(255,255,255,0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Sign in link */
+        .signin-row {
+            margin-top: auto; 
+            text-align: center; 
+            padding-top: 28px;
+        }
+        .signin-row p {
+            font-size: 13.5px; 
+            color: #6b7280; 
+            font-weight: 600; 
+            margin: 0;
+        }
+        .signin-row a {
+            color: #D97706; 
+            font-weight: 800; 
+            text-decoration: none; 
+            margin-left: 4px;
+            position: relative;
+            transition: color 0.2s;
+        }
+        .signin-row a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; width: 0; height: 2px;
+            background: linear-gradient(90deg, #F59E0B, #D97706);
+            transition: width 0.3s ease;
+        }
+        .signin-row a:hover { 
+            color: #B45309; 
+        }
+        .signin-row a:hover::after {
+            width: 100%;
+        }
+
+        /* Field validation hints */
+        .field-hint {
+            font-size: 11.5px;
+            margin: 5px 0 0 20px;
+            display: none;
+            font-weight: 600;
+        }
+        .field-hint.error { color: #EF4444; display: block; }
+        .field-hint.success { color: #10B981; display: block; }
+
+        /* Toast Container - Top Left as requested */
+        #elite-toast-container {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+
+        .elite-toast {
+            width: max-content;
+            max-width: 380px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 15px 50px -10px rgba(0, 0, 0, 0.18);
+            display: flex;
+            align-items: flex-start;
+            padding: 18px;
+            pointer-events: auto;
+            transform: translateX(-120%);
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.3s ease;
+        }
+
+        .elite-toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .elite-toast-icon {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 16px;
+        }
+
+        .elite-toast-body {
+            flex-grow: 1;
+            margin-top: 2px;
+            padding-right: 16px;
+        }
+
+        .elite-toast-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .elite-toast-message {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .elite-toast-close {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            margin-top: -2px;
+            margin-right: -4px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .elite-toast-close:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        /* Decorative SVG in header */
+        .header-deco {
+            position: absolute; 
+            top: -10px; 
+            left: -10px; 
+            width: 140px; 
+            height: 140px; 
+            z-index: 0; 
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+            opacity: 0.7;
+        }
+
+        @media (max-width: 480px) {
+            .app-header-area { padding: 60px 24px 80px 24px; }
+            .app-header-area h1 { font-size: 38px; }
+            .app-content-card { padding: 32px 22px 28px 22px; }
+            .card-header-row h2 { font-size: 30px; }
+        }
+    </style>
+</head>
+
+<body>
+    <main style="flex:1;display:flex;flex-direction:column;width:100%;">
+        <div class="app-mobile-wrapper">
+
+            <div class="ambient-glow glow-top-right"></div>
+            <div class="ambient-glow glow-bottom-left"></div>
+            <div class="ambient-glow glow-center"></div>
+
+            <div class="particle p1"></div>
+            <div class="particle p2"></div>
+            <div class="particle p3"></div>
+            <div class="particle p4"></div>
+
+            <!-- Decorative SVG -->
+            <svg class="header-deco" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 20 0 Q 80 0 80 50 Q 80 90 20 90 Z" fill="#ffffff" opacity="0.12" /> 
+                <path d="M 0 30 Q 60 20 70 70 Q 80 120 0 110 Z" fill="#F59E0B" opacity="0.8" /> 
+            </svg>
+
+            <!-- Header -->
+            <div class="app-header-area">
+                <div class="header-badge">Invest & Earn</div>
+                <h1>Welcome!</h1>
+                <p>Join EliteEarn</p>
+            </div>
+
+            <!-- Card -->
+            <div class="app-content-card">
+
+                <div class="card-header-row">
+                    <h2>Sign Up</h2>
+
+                    <!-- Decorative Plant -->
+                    <div class="plant-decoration">
+                        <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                            <ellipse cx="50" cy="140" rx="30" ry="6" fill="rgba(0,0,0,0.15)" />
+                            <path d="M50,100 Q30,30 35,0 Q55,40 50,100" fill="#7C3AED" />
+                            <path d="M50,100 Q75,40 85,15 Q65,60 50,100" fill="#F59E0B" />
+                            <path d="M50,100 Q40,60 45,30 Q60,70 50,100" fill="#8B5CF6" />
+                            <path d="M30,95 L70,95 L62,135 Q50,145 38,135 Z" fill="#ffffff" />
+                            <path d="M30,95 L70,95 L68,105 L32,105 Z" fill="#f3f4f6" /> 
+                            <ellipse cx="50" cy="95" rx="22" ry="6" fill="#f9fafb" />
+                        </svg>
+                    </div>
+                </div>
+
+                <form id="signupForm" autocomplete="off" onsubmit="return false;">
+
+                    <!-- Email -->
+                    <div class="pill-input-group">
+                        <input type="email" id="email" placeholder="Email Address" required autocomplete="email">
+                        <i class="ph ph-envelope-simple"></i>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="pill-input-group">
+                        <input type="tel" id="phone" placeholder="Phone Number (08012345678)" maxlength="11" required autocomplete="tel">
+                        <i class="ph ph-phone"></i>
+                        <div class="field-hint" id="phoneHint"></div>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="pill-input-group">
+                        <input type="text" id="username" placeholder="Username (your referral code)" maxlength="20" required autocomplete="username">
+                        <i class="ph ph-user"></i>
+                        <div class="field-hint" id="usernameHint"></div>
+                    </div>
+
+                    <!-- Referral Username - NO placeholder, just the field -->
+                    <div class="pill-input-group referral-field">
+                        <input type="text" id="referralCode" required>
+                        <i class="ph ph-gift"></i>
+                        <div class="field-hint" id="referralHint"></div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="pill-input-group">
+                        <input type="password" id="password" placeholder="Password (min 6 characters)" required autocomplete="new-password">
+                        <i class="ph ph-lock-key"></i>
+                        <button type="button" class="eye-toggle" onclick="togglePassword('password')">
+                            <i class="ph ph-eye" id="eyeIconPassword"></i>
+                        </button>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="pill-input-group">
+                        <input type="password" id="confirmPassword" placeholder="Confirm Password" required autocomplete="new-password">
+                        <i class="ph ph-lock-key"></i>
+                        <button type="button" class="eye-toggle" onclick="togglePassword('confirmPassword')">
+                            <i class="ph ph-eye" id="eyeIconConfirm"></i>
+                        </button>
+                    </div>
+
+                    <button type="button" class="btn-pill-primary" id="signupBtn" onclick="handleSignup()">
+                        <span id="btnText">Create Your Account</span>
+                    </button>
+                </form>
+
+                <div class="signin-row">
+                    <p>
+                        Already an investor? 
+                        <a href="login.html">Sign In</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="elite-toast-container"></div>
+
+    <!-- FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc, arrayUnion, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",
+            authDomain: "earnelite-94a5e.firebaseapp.com",
+            projectId: "earnelite-94a5e",
+            storageBucket: "earnelite-94a5e.firebasestorage.app",
+            messagingSenderId: "343677058789",
+            appId: "1:343677058789:web:776faceb824158042fde0c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window._auth = auth;
+        window._db = db;
+        window._fbFns = { doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc, arrayUnion, increment, serverTimestamp, createUserWithEmailAndPassword };
+
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
+
+    <script>
+        "use strict";
+
+        // ── Toast System (Top Left) ──
+        function notify(status, message) {
+            let container = document.getElementById('elite-toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'elite-toast-container';
+                document.body.appendChild(container);
+            }
+
+            const themes = {
+                success: { icon: 'fa-solid fa-check-double', color: '#059669', bg: '#ECFDF5', title: 'Success' },
+                error:   { icon: 'fa-solid fa-circle-exclamation', color: '#DC2626', bg: '#FEF2F2', title: 'Error' },
+                warning: { icon: 'fa-solid fa-triangle-exclamation', color: '#EA580C', bg: '#FFF7ED', title: 'Warning' },
+                info:    { icon: 'fa-solid fa-bell', color: '#8B5CF6', bg: '#EDE9FE', title: 'Information' }
+            };
+
+            const theme = themes[status] || themes.info;
+
+            const toast = document.createElement('div');
+            toast.className = 'elite-toast';
+            toast.style.borderLeft = `4px solid ${theme.color}`;
+
+            toast.innerHTML = `
+                <div class="elite-toast-icon" style="color: ${theme.color}; background-color: ${theme.bg};">
+                    <i class="${theme.icon}"></i>
+                </div>
+                <div class="elite-toast-body">
+                    <div class="elite-toast-title">${theme.title}</div>
+                    <div class="elite-toast-message">${message}</div>
+                </div>
+                <button class="elite-toast-close" onclick="closeEliteToast(this)">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                closeEliteToast(toast.querySelector('.elite-toast-close'));
+            }, 5000);
+        }
+
+        function closeEliteToast(buttonElement) {
+            const toast = buttonElement.closest('.elite-toast');
+            if (toast) {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }
+        }
+
+        // ── Password Toggle (FIXED) ──
+        function togglePassword(fieldId) {
+            const input = document.getElementById(fieldId);
+            const iconId = fieldId === 'password' ? 'eyeIconPassword' : 'eyeIconConfirm';
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'ph ph-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'ph ph-eye';
+            }
+        }
+
+        // ── Phone Validation (Nigeria) ──
+        document.getElementById('phone').addEventListener('input', function() {
+            const val = this.value.trim();
+            const hint = document.getElementById('phoneHint');
+            if (!val) { hint.className = 'field-hint'; return; }
+            const valid = /^(070|080|081|090|091)\d{8}$/.test(val);
+            hint.textContent = valid ? '✓ Valid Nigerian number' : 'Must start with 070/080/081/090/091 and be 11 digits';
+            hint.className = `field-hint ${valid ? 'success' : 'error'}`;
+        });
+
+        // ── Username Validation ──
+        document.getElementById('username').addEventListener('input', function() {
+            const val = this.value.trim();
+            const hint = document.getElementById('usernameHint');
+            if (!val) { hint.className = 'field-hint'; return; }
+            const valid = /^[a-zA-Z]{4,20}$/.test(val);
+            hint.textContent = valid ? '✓ Valid username' : 'Letters only, 4–20 characters';
+            hint.className = `field-hint ${valid ? 'success' : 'error'}`;
+        });
+
+        // ── Loading State ──
+        function setLoading(loading) {
+            const btn = document.getElementById('signupBtn');
+            const txt = document.getElementById('btnText');
+            btn.disabled = loading;
+            txt.innerHTML = loading ? '<span class="spinner"></span>Creating Account…' : 'Create Your Account';
+        }
+
+        // ── Signup Handler ──
+        async function handleSignup() {
+            if (!window._db) { notify('info', 'App loading, please wait…'); return; }
+
+            const email    = document.getElementById('email').value.trim();
+            const phone    = document.getElementById('phone').value.trim();
+            const username = document.getElementById('username').value.trim().toUpperCase();
+            const refCode  = document.getElementById('referralCode').value.trim().toUpperCase();
+            const pass     = document.getElementById('password').value;
+            const conf     = document.getElementById('confirmPassword').value;
+
+            // Validations
+            if (!email || !phone || !username || !refCode || !pass || !conf) {
+                return notify('error', 'Please fill in all fields.');
+            }
+            if (!/^(070|080|081|090|091)\d{8}$/.test(phone)) {
+                return notify('error', 'Enter a valid Nigerian phone number.');
+            }
+            if (!/^[a-zA-Z]{4,20}$/.test(username)) {
+                return notify('error', 'Username must be letters only, 4–20 chars.');
+            }
+            if (username === refCode) {
+                return notify('error', 'You cannot refer yourself.');
+            }
+            if (pass.length < 6) {
+                return notify('error', 'Password must be at least 6 characters.');
+            }
+            if (pass !== conf) {
+                return notify('error', 'Passwords do not match.');
+            }
+
+            setLoading(true);
+            const { doc, setDoc, getDoc, updateDoc, arrayUnion, increment, serverTimestamp, createUserWithEmailAndPassword } = window._fbFns;
+            const db = window._db; 
+            const auth = window._auth;
+
+            try {
+                // Check referral username exists
+                const refDocRef = doc(db, 'users', refCode);
+                const refSnap = await getDoc(refDocRef);
+                if (!refSnap.exists()) {
+                    setLoading(false);
+                    return notify('error', 'Referral username not found. Check and try again.');
+                }
+
+                // Check username not taken
+                const unameRef = doc(db, 'users', username);
+                const unameSnap = await getDoc(unameRef);
+                if (unameSnap.exists()) {
+                    setLoading(false);
+                    return notify('error', 'Username already taken. Choose another.');
+                }
+
+                // Create Firebase Auth user
+                const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                const uid = cred.user.uid;
+
+                // Store user doc (username as doc ID) - WITH 2 WALLETS
+                await setDoc(doc(db, 'users', username), {
+                    uid: uid,
+                    email: email,
+                    phone: phone,
+                    username: username,
+                    ownReferralCode: username,
+                    referredBy: refCode,  // upliner username
+                    depositWallet: 0,      // deposit wallet balance
+                    withdrawalWallet: 0,   // withdrawal wallet balance
+                    balance: 0,            // total balance
+                    totalDeposited: 0,
+                    totalWithdrawn: 0,
+                    isAdmin: false,
+                    createdAt: serverTimestamp()
+                });
+
+                // Also store by UID for auth lookups
+                await setDoc(doc(db, 'usersByUid', uid), { username, email, referredBy: refCode });
+
+                // Update referral stats for upliner
+                const refStatRef = doc(db, 'referralStats', refCode);
+                const refStatSnap = await getDoc(refStatRef);
+                if (refStatSnap.exists()) {
+                    await updateDoc(refStatRef, {
+                        referrals: arrayUnion(username),
+                        count: increment(1)
+                    });
+                } else {
+                    await setDoc(refStatRef, {
+                        username: refCode,
+                        referrals: [username],
+                        count: 1
+                    });
+                }
+
+                notify('success', `Account created! You were referred by ${refCode}. Redirecting…`);
+                setTimeout(() => window.location.href = 'dashboard.html', 2000);
+
+            } catch (err) {
+                setLoading(false);
+                const messages = {
+                    'auth/email-already-in-use': 'This email is already registered.',
+                    'auth/invalid-email': 'Invalid email address.',
+                    'auth/weak-password': 'Password is too weak.'
+                };
+                notify('error', messages[err.code] || err.message);
+            }
+        }
+
+        // Make functions global
+        window.handleSignup = handleSignup;
+        window.togglePassword = togglePassword;
+        window.notify = notify;
+        window.closeEliteToast = closeEliteToast;
+    </script>
+</body>
+</html>
