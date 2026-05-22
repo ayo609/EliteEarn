@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>EliteEarn – Investment Log</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+        :root{
+            --bg:#f0ece4;
+            --card:#ffffff;
+            --card2:#f8f4ee;
+            --text:#0f0a00;
+            --text2:#7a6a55;
+            --border:#e0d8cc;
+            --gold:#B8960A;
+            --gold2:#D4A800;
+            --gold3:#F0C000;
+            --gold-bg:#FFF8E0;
+            --header:linear-gradient(150deg,#1a0505 0%,#5a0e0e 40%,#8b1a1a 70%,#a52020 100%);
+            --plan-card:linear-gradient(160deg,#2a0808 0%,#4a1010 45%,#5a1818 70%,#6a2020 100%);
+            --input-bg:#f5f0e8;
+            --overlay:rgba(0,0,0,.65);
+            --modal-bg:#ffffff;
+            --notif-bg:#ffffff;
+            --tag-bg:#f5f0e8;
+            --progress-bg:#e8e0d0;
+            --roi-drop:linear-gradient(135deg,#059669,#047857);
+        }
+        [data-theme="dark"]{
+            --bg:#0c0c18;--card:#181830;--card2:#20203a;
+            --text:#f0f0ff;--text2:#8888aa;--border:#2a2a44;
+            --gold-bg:rgba(184,150,10,.1);--input-bg:#20203a;
+            --modal-bg:#181830;--notif-bg:#181830;
+            --tag-bg:#20203a;--progress-bg:#2a2a44;
+        }
+
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+        body{display:flex;flex-direction:column;}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:110px;}
+
+        /* ═══ HEADER ═══ */
+        .page-header{background:var(--header);padding:18px 20px 100px;position:relative;overflow:hidden;}
+        .page-header::before{content:'';position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(196,154,0,.18) 0%,transparent 70%);top:-80px;right:-60px;pointer-events:none;}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+        .logo-area{display:flex;align-items:center;gap:10px;}
+        .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:900;box-shadow:0 4px 12px rgba(245,158,11,.4);font-family:'Oswald',sans-serif;}
+        .logo-text{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:white;letter-spacing:.5px;}
+        .top-actions{display:flex;gap:10px;}
+        .icon-btn{background:rgba(255,255,255,.15);border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px);position:relative;}
+        .icon-btn:hover{background:rgba(255,255,255,.28);}
+        .notif-dot{position:absolute;top:5px;right:5px;width:9px;height:9px;background:#EF4444;border-radius:50%;border:2px solid transparent;display:none;}
+        .notif-dot.active{display:block;animation:blink 1.5s infinite;}
+        @keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+        .header-title{text-align:center;color:white;}
+        .header-title h1{font-size:26px;font-weight:900;margin-bottom:6px;}
+        .header-subtitle{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase;}
+        .header-subtitle i{color:var(--gold3);}
+
+        /* ═══ CONTENT ═══ */
+        .content{padding:0 16px 20px;margin-top:-76px;position:relative;z-index:2;display:flex;flex-direction:column;gap:14px;}
+
+        /* ═══ EARNINGS SUMMARY CARD ═══ */
+        .earnings-summary{
+            background:var(--plan-card);
+            border-radius:26px;padding:24px 22px;
+            position:relative;overflow:hidden;
+            box-shadow:0 12px 40px rgba(0,0,0,.25);
+        }
+        .earnings-summary::before{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(184,150,10,.15) 0%,transparent 70%);border-radius:50%;}
+        .es-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;position:relative;z-index:1;}
+        .es-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.55);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+        .es-total{font-size:38px;font-weight:900;color:white;font-family:'Oswald',sans-serif;letter-spacing:-1px;line-height:1;}
+        .es-total span{font-size:16px;color:var(--gold3);margin-right:3px;}
+        .es-status-badge{
+            display:inline-flex;align-items:center;gap:5px;
+            background:rgba(5,150,105,.25);border:1px solid rgba(5,150,105,.4);
+            border-radius:50px;padding:6px 12px;
+            font-size:11px;font-weight:700;color:#6EE7B7;
+        }
+        .active-dot{width:7px;height:7px;background:#10B981;border-radius:50%;animation:pulse-g 1.5s infinite;}
+        @keyframes pulse-g{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.4);opacity:.6;}}
+        .es-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;position:relative;z-index:1;}
+        .es-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:11px 10px;text-align:center;backdrop-filter:blur(10px);}
+        .es-pill-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+        .es-pill-val{font-size:15px;font-weight:900;font-family:'Oswald',sans-serif;}
+        .es-pill-val.gold{color:var(--gold3);}
+        .es-pill-val.green{color:#6EE7B7;}
+        .es-pill-val.red{color:#FCA5A5;}
+
+        /* ═══ ACTIVE INVESTMENT CARD ═══ */
+        .invest-card{
+            background:var(--card);border-radius:26px;
+            overflow:hidden;
+            box-shadow:0 6px 24px rgba(0,0,0,.1);
+            transition:background .3s;
+        }
+
+        /* Product header strip */
+        .invest-card-header{
+            background:var(--plan-card);
+            padding:20px 20px 16px;
+            position:relative;overflow:hidden;
+        }
+        .invest-card-header::after{content:'';position:absolute;right:-10px;top:50%;transform:translateY(-50%);width:100px;height:100px;background:radial-gradient(circle,rgba(184,150,10,.12) 0%,transparent 70%);border-radius:50%;}
+        .ic-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+        .ic-emoji{font-size:32px;margin-right:10px;}
+        .ic-product-name{font-size:18px;font-weight:900;color:white;font-family:'Oswald',sans-serif;flex:1;}
+        .ic-category-badge{background:rgba(184,150,10,.25);border:1px solid rgba(184,150,10,.4);color:var(--gold3);font-size:10px;font-weight:800;padding:4px 10px;border-radius:50px;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+        .ic-start-date{font-size:11px;font-weight:600;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:5px;}
+
+        /* Countdown ring */
+        .countdown-section{
+            padding:20px;
+            display:flex;align-items:center;gap:20px;
+            border-bottom:1px solid var(--border);
+        }
+        .countdown-ring-wrap{position:relative;width:110px;height:110px;flex-shrink:0;}
+        .ring-svg{width:110px;height:110px;transform:rotate(-90deg);}
+        .ring-track{fill:none;stroke:var(--progress-bg);stroke-width:7;}
+        .ring-fill{fill:none;stroke:var(--gold);stroke-width:7;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .5s;}
+        .ring-fill.danger{stroke:#EF4444;}
+        .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+        .ring-digits{font-family:'Share Tech Mono',monospace;font-size:18px;font-weight:700;color:var(--text);letter-spacing:1px;}
+        .ring-lbl{font-size:9px;font-weight:700;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+        .countdown-info{flex:1;}
+        .cd-title{font-size:12px;font-weight:800;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+        .cd-next-drop{font-size:20px;font-weight:900;color:var(--text);font-family:'Oswald',sans-serif;margin-bottom:8px;}
+        .cd-drop-label{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#059669;}
+        .cd-drop-label i{font-size:14px;}
+        .cd-amount{font-size:16px;font-weight:900;color:#059669;font-family:'Oswald',sans-serif;}
+
+        /* Investment details grid */
+        .invest-details{padding:16px 20px;border-bottom:1px solid var(--border);}
+        .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+        .detail-chip{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:12px 14px;transition:background .3s;}
+        .dc-label{font-size:9px;font-weight:800;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+        .dc-value{font-size:14px;font-weight:900;color:var(--text);font-family:'Oswald',sans-serif;}
+        .dc-value.gold{color:var(--gold);}
+        .dc-value.green{color:#059669;}
+        .dc-value.red{color:#EF4444;}
+
+        /* Progress bar */
+        .progress-section{padding:16px 20px;border-bottom:1px solid var(--border);}
+        .progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+        .progress-lbl{font-size:11px;font-weight:800;color:var(--text2);letter-spacing:1px;text-transform:uppercase;}
+        .progress-pct{font-size:13px;font-weight:900;color:var(--gold);font-family:'Oswald',sans-serif;}
+        .progress-bar-wrap{height:10px;background:var(--progress-bg);border-radius:50px;overflow:hidden;}
+        .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:50px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+        .progress-sub{display:flex;justify-content:space-between;margin-top:8px;}
+        .progress-sub-txt{font-size:11px;font-weight:700;color:var(--text2);}
+
+        /* ROI drop history */
+        .roi-history{padding:16px 20px;}
+        .roi-history-title{font-size:12px;font-weight:800;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
+        .roi-drop-item{
+            display:flex;align-items:center;gap:12px;
+            padding:10px 0;border-bottom:1px solid var(--border);
+        }
+        .roi-drop-item:last-child{border-bottom:none;}
+        .roi-drop-icon{
+            width:38px;height:38px;min-width:38px;
+            background:rgba(5,150,105,.1);border-radius:11px;
+            display:flex;align-items:center;justify-content:center;
+            color:#059669;font-size:18px;
+        }
+        .roi-drop-body{flex:1;}
+        .roi-drop-title{font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px;}
+        .roi-drop-date{font-size:11px;font-weight:600;color:var(--text2);}
+        .roi-drop-amt{font-size:16px;font-weight:900;color:#059669;font-family:'Oswald',sans-serif;}
+        .roi-empty{text-align:center;padding:20px;color:var(--text2);font-size:13px;font-weight:600;}
+
+        /* ═══ NO INVESTMENT STATE ═══ */
+        .no-invest{
+            background:var(--card);border-radius:26px;
+            padding:48px 28px;text-align:center;
+            box-shadow:0 6px 24px rgba(0,0,0,.08);
+        }
+        .no-invest-icon{
+            width:90px;height:90px;border-radius:24px;
+            display:flex;align-items:center;justify-content:center;
+            margin:0 auto 20px;font-size:40px;
+            background:linear-gradient(135deg,rgba(184,150,10,.12),rgba(184,150,10,.05));
+            border:2px dashed rgba(184,150,10,.3);
+        }
+        .no-invest h3{font-size:20px;font-weight:900;color:var(--text);margin-bottom:10px;}
+        .no-invest p{font-size:13px;color:var(--text2);font-weight:600;line-height:1.7;margin-bottom:24px;}
+        .browse-plans-btn{
+            display:inline-flex;align-items:center;gap:8px;
+            background:linear-gradient(135deg,var(--gold),var(--gold2));
+            color:white;border:none;border-radius:50px;
+            padding:14px 32px;font-size:14px;font-weight:900;
+            cursor:pointer;text-decoration:none;
+            font-family:'Montserrat',sans-serif;letter-spacing:.5px;
+            box-shadow:0 6px 20px rgba(184,150,10,.35);
+            transition:all .25s;
+        }
+        .browse-plans-btn:hover{transform:translateY(-2px);}
+
+        /* ═══ PAST INVESTMENTS CARD ═══ */
+        .past-card{background:var(--card);border-radius:24px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);transition:background .3s;}
+        .past-title{font-size:13px;font-weight:800;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+        .past-title i{color:var(--gold);font-size:18px;}
+        .past-item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);}
+        .past-item:last-child{border-bottom:none;}
+        .past-icon{width:44px;height:44px;min-width:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--card2);border:1px solid var(--border);}
+        .past-body{flex:1;}
+        .past-name{font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px;}
+        .past-meta{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;}
+        .past-chips{display:flex;gap:6px;flex-wrap:wrap;}
+        .past-chip{font-size:10px;font-weight:800;padding:3px 9px;border-radius:50px;letter-spacing:.5px;}
+        .past-chip.completed{background:rgba(5,150,105,.1);color:#059669;}
+        .past-chip.expired{background:rgba(107,107,138,.1);color:var(--text2);}
+        .past-earned{text-align:right;}
+        .past-earned-val{font-size:16px;font-weight:900;color:#059669;font-family:'Oswald',sans-serif;}
+        .past-earned-lbl{font-size:10px;font-weight:700;color:var(--text2);}
+
+        /* ═══ FLOATING ═══ */
+        .float-gift{position:fixed;bottom:100px;left:20px;width:52px;height:52px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:22px;cursor:pointer;box-shadow:0 4px 15px rgba(245,158,11,.4);z-index:50;border:3px solid white;animation:bounce 2s infinite;}
+        @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+        .float-gift .badge{position:absolute;top:-4px;right:-4px;background:#EF4444;color:white;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white;}
+        .float-support{position:fixed;bottom:100px;right:20px;width:52px;height:52px;background:var(--card);border:2px solid #F59E0B;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#D97706;font-size:22px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.1);z-index:50;transition:all .3s;}
+
+        /* ═══ BOTTOM NAV ═══ */
+        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:10px 20px 24px;display:flex;justify-content:space-around;align-items:flex-end;box-shadow:0 -6px 24px rgba(0,0,0,.09);z-index:100;transition:background .3s;}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-decoration:none;color:inherit;padding:4px 8px;border-radius:12px;transition:all .2s;}
+        .nav-item i{font-size:22px;color:#9ca3af;transition:color .2s;}
+        .nav-item span{font-size:10px;font-weight:700;color:#9ca3af;transition:color .2s;}
+        .nav-item.active i,.nav-item:hover i{color:#8B5CF6;}
+        .nav-item.active span,.nav-item:hover span{color:#8B5CF6;}
+        .nav-center{position:relative;top:-26px;}
+        .nav-center-btn{width:58px;height:58px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;box-shadow:0 6px 20px rgba(245,158,11,.4);border:4px solid var(--card);cursor:pointer;transition:all .3s;}
+
+        /* ═══ NOTIFICATION PANEL ═══ */
+        .notif-overlay{position:fixed;inset:0;background:var(--overlay);z-index:200;display:none;opacity:0;transition:opacity .3s;}
+        .notif-overlay.open{display:block;opacity:1;}
+        .notif-panel{position:fixed;top:0;right:-100%;width:min(340px,92vw);height:100vh;background:var(--notif-bg);z-index:201;display:flex;flex-direction:column;box-shadow:-8px 0 30px rgba(0,0,0,.2);transition:right .35s cubic-bezier(.4,0,.2,1);}
+        .notif-panel.open{right:0;}
+        .n-hdr{background:linear-gradient(135deg,#7C3AED,#5B21B6);padding:24px 20px 20px;display:flex;align-items:center;justify-content:space-between;}
+        .n-hdr h3{color:white;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;}
+        .n-close{background:rgba(255,255,255,.2);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;}
+        .n-bar{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
+        .n-count{font-size:12px;font-weight:700;color:var(--text2);}
+        .n-markall{background:none;border:none;font-size:12px;font-weight:700;color:#7C3AED;cursor:pointer;font-family:'Montserrat',sans-serif;}
+        .n-list{flex:1;overflow-y:auto;padding:8px 0;}
+        .n-item{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;position:relative;}
+        .n-item.unread{background:rgba(124,58,237,.04);}
+        .n-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#7C3AED;border-radius:0 2px 2px 0;}
+        .n-icon{width:42px;height:42px;min-width:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+        .n-icon.plan{background:rgba(5,150,105,.1);color:#059669;}
+        .n-icon.gift{background:rgba(245,158,11,.1);color:#D97706;}
+        .n-icon.system{background:rgba(124,58,237,.1);color:#7C3AED;}
+        .n-body{flex:1;}
+        .n-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+        .n-msg{font-size:12px;color:var(--text2);line-height:1.5;}
+        .n-time{font-size:10px;color:var(--text2);margin-top:4px;font-weight:600;}
+        .n-dot{width:8px;height:8px;min-width:8px;background:#7C3AED;border-radius:50%;margin-top:6px;}
+
+        /* Gift modal */
+        .gift-overlay{position:fixed;inset:0;background:var(--overlay);z-index:260;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s;}
+        .gift-overlay.open{opacity:1;pointer-events:all;}
+        .gift-modal{background:var(--modal-bg);border-radius:32px 32px 0 0;width:100%;max-width:480px;padding:0 0 40px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);}
+        .gift-overlay.open .gift-modal{transform:translateY(0);}
+        .drag-h{width:48px;height:5px;background:var(--border);border-radius:3px;margin:16px auto 0;}
+        .g-hdr{background:linear-gradient(135deg,#F59E0B,#D97706);margin:20px 24px 0;border-radius:24px;padding:28px 24px;text-align:center;}
+        .g-big-icon{width:70px;height:70px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:34px;color:white;border:3px solid rgba(255,255,255,.4);animation:gpulse 2s infinite;}
+        @keyframes gpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.3);}50%{box-shadow:0 0 0 12px rgba(255,255,255,0);}}
+        .g-hdr h2{font-size:21px;font-weight:800;color:white;margin-bottom:5px;}
+        .g-hdr p{font-size:12px;color:rgba(255,255,255,.85);font-weight:600;}
+        .g-body{padding:24px 24px 0;}
+        .g-lbl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+        .g-inp-wrap{display:flex;align-items:center;background:var(--input-bg);border:2px solid var(--border);border-radius:16px;padding:6px 6px 6px 18px;gap:10px;transition:all .3s;margin-bottom:18px;}
+        .g-inp-wrap:focus-within{border-color:#F59E0B;box-shadow:0 0 0 3px rgba(245,158,11,.12);}
+        .g-inp-wrap i{font-size:20px;color:#D97706;}
+        .g-inp{flex:1;border:none;background:transparent;font-size:18px;font-weight:700;color:var(--text);outline:none;padding:10px 0;font-family:'Montserrat',sans-serif;letter-spacing:3px;text-transform:uppercase;}
+        .g-inp::placeholder{color:var(--text2);font-size:13px;letter-spacing:2px;font-weight:600;}
+        .g-claim{width:100%;background:linear-gradient(135deg,#F59E0B,#D97706);border:none;border-radius:50px;padding:15px;font-size:14px;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all .3s;font-family:'Montserrat',sans-serif;box-shadow:0 6px 20px rgba(245,158,11,.4);}
+        .g-claim:disabled{opacity:.6;cursor:not-allowed;}
+        .g-cancel{display:block;width:100%;margin-top:12px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;padding:10px;text-align:center;}
+        .g-result{display:none;text-align:center;padding:24px 20px;}
+        .g-result.show{display:block;}
+        .g-r-icon{font-size:54px;margin-bottom:12px;}
+        .g-r-title{font-size:20px;font-weight:800;color:var(--text);margin-bottom:8px;}
+        .g-r-amt{display:inline-block;margin:14px 0;background:linear-gradient(135deg,#059669,#047857);color:white;font-size:22px;font-weight:900;padding:10px 28px;border-radius:50px;}
+        .g-r-msg{font-size:13px;color:var(--text2);font-weight:600;line-height:1.5;}
+
+        /* ROI drop toast */
+        .roi-toast{
+            position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);
+            background:linear-gradient(135deg,#059669,#047857);
+            color:white;border-radius:20px;padding:14px 24px;
+            display:flex;align-items:center;gap:10px;
+            box-shadow:0 12px 40px rgba(5,150,105,.4);
+            z-index:350;opacity:0;pointer-events:none;
+            transition:all .4s cubic-bezier(.34,1.56,.64,1);
+            font-size:14px;font-weight:800;white-space:nowrap;
+            max-width:90vw;
+        }
+        .roi-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+        .roi-toast i{font-size:22px;}
+
+        /* Toast */
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px;}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.12);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold);}
+        .toast.show{transform:translateX(0);}
+        .toast.success{border-left-color:#059669;}
+        .toast.error{border-left-color:#EF4444;}
+        .toast.info{border-left-color:#7C3AED;}
+
+        .btn-sp{width:18px;height:18px;border:3px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+
+        .fade-up{opacity:0;transform:translateY(16px);animation:fadeUp .5s ease both;}
+        @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <div class="top-bar">
+            <div class="logo-area">
+                <div class="logo-icon">E</div>
+                <div class="logo-text">ELITEEARN</div>
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn" onclick="openNotifications()"><i class="ph ph-bell"></i><span class="notif-dot" id="notifDot"></span></button>
+                <button class="icon-btn" onclick="toggleTheme()"><i class="ph ph-moon" id="themeIcon"></i></button>
+            </div>
+        </div>
+        <div class="header-title">
+            <h1>Investment Log</h1>
+            <div class="header-subtitle"><i class="ph ph-chart-line-up"></i> TRACK YOUR EARNINGS</div>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content" id="mainContent">
+        <div style="text-align:center;padding:60px 20px;color:var(--text2);">
+            <div style="width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px;"></div>
+            <div style="font-size:13px;font-weight:600;">Loading your investments...</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ROI DROP TOAST -->
+<div class="roi-toast" id="roiToast">
+    <i class="ph ph-arrow-down"></i>
+    <span id="roiToastMsg">+₦0 credited to your wallet!</span>
+</div>
+
+<!-- FLOATING -->
+<div class="float-gift" onclick="openGiftModal()"><i class="ph ph-gift"></i><span class="badge" id="giftBadge">1</span></div>
+<div class="float-support" onclick="showToast('💬 Support coming soon!','info')"><i class="ph ph-headset"></i></div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><i class="ph ph-house"></i><span>Home</span></a>
+    <a href="referral.html" class="nav-item"><i class="ph ph-users"></i><span>Team</span></a>
+    <div class="nav-center"><div class="nav-center-btn" onclick="window.location.href='deposit.html'"><i class="ph ph-wallet"></i></div></div>
+    <a href="history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i><span>History</span></a>
+    <a href="profile.html" class="nav-item active"><i class="ph ph-user"></i><span>Profile</span></a>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-overlay" id="notifOverlay" onclick="if(event.target===this)closeNotifications()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="n-hdr"><h3><i class="ph ph-bell-ringing"></i> Notifications</h3><button class="n-close" onclick="closeNotifications()"><i class="ph ph-x"></i></button></div>
+    <div class="n-bar"><span class="n-count" id="nCount">Loading...</span><button class="n-markall" onclick="markAllRead()">Mark all as read</button></div>
+    <div class="n-list" id="nList"><div style="padding:40px;text-align:center;color:var(--text2);font-size:13px;font-weight:600;">Loading...</div></div>
+</div>
+
+<!-- GIFT MODAL -->
+<div class="gift-overlay" id="giftOverlay" onclick="if(event.target===this)closeGiftModal()">
+    <div class="gift-modal">
+        <div class="drag-h"></div>
+        <div class="g-hdr"><div class="g-big-icon"><i class="ph ph-gift"></i></div><h2>Claim Gift Code</h2><p>Enter your unique gift code to receive your reward</p></div>
+        <div class="g-body" id="gFormArea">
+            <div class="g-lbl">ENTER GIFT CODE</div>
+            <div class="g-inp-wrap"><i class="ph ph-ticket"></i><input type="text" id="gCodeInput" class="g-inp" placeholder="E.G. ELITE-XXXX-XXXX" maxlength="20" autocomplete="off" spellcheck="false"></div>
+            <button class="g-claim" id="gClaimBtn" onclick="claimGift()"><i class="ph ph-gift"></i> CLAIM REWARD</button>
+            <button class="g-cancel" onclick="closeGiftModal()">Cancel</button>
+        </div>
+        <div class="g-result" id="gResult">
+            <div class="g-r-icon">🎉</div><div class="g-r-title">Reward Claimed!</div>
+            <div id="gAmtWrap" style="display:none;"><div class="g-r-amt" id="gAmt">+₦0</div></div>
+            <div class="g-r-msg" id="gMsg">Your gift has been added.</div>
+            <button class="g-claim" style="margin-top:22px;" onclick="closeGiftModal()"><i class="ph ph-check-circle"></i> DONE</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+    getFirestore, doc, getDoc, collection,
+    query, where, getDocs, addDoc, updateDoc,
+    serverTimestamp, increment, orderBy, limit, Timestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={
+    apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",
+    authDomain:"earnelite-94a5e.firebaseapp.com",
+    projectId:"earnelite-94a5e",
+    storageBucket:"earnelite-94a5e.firebasestorage.app",
+    messagingSenderId:"343677058789",
+    appId:"1:343677058789:web:776faceb824158042fde0c"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let currentUid='', currentUsername='';
+let activeInvestment=null;
+let roiInterval=null;
+let countdownInterval=null;
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0);}
+function fmtDate(ts){
+    if(!ts) return'—';
+    let d;
+    if(ts.toDate) d=ts.toDate();
+    else if(ts.seconds) d=new Date(ts.seconds*1000);
+    else d=new Date(ts);
+    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+function fmtDateTime(ts){
+    if(!ts) return'—';
+    let d;
+    if(ts.toDate) d=ts.toDate();
+    else if(ts.seconds) d=new Date(ts.seconds*1000);
+    else d=new Date(ts);
+    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const h=String(d.getHours()).padStart(2,'0');
+    const m=String(d.getMinutes()).padStart(2,'0');
+    return`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} · ${h}:${m}`;
+}
+
+// ── MAIN LOADER ──
+async function loadPage(uid){
+    try{
+        const uidSnap=await getDoc(doc(db,'usersByUid',uid));
+        if(!uidSnap.exists()) return;
+        currentUsername=uidSnap.data().username||'';
+        window._currentUsername=currentUsername;
+
+        const userSnap=await getDoc(doc(db,'users',currentUsername));
+        const userData=userSnap.exists()?userSnap.data():{};
+        window._userData=userData;
+
+        // Load active investment
+        let active=null;
+        if(userData.activeInvestmentId){
+            const investSnap=await getDoc(doc(db,'investments',userData.activeInvestmentId));
+            if(investSnap.exists()&&investSnap.data().status==='active'){
+                active={id:investSnap.id,...investSnap.data()};
+            }
+        }
+
+        // Load past investments
+        let past=[];
+        try{
+            const q=query(collection(db,'investments'),where('userId','==',uid),where('status','!=','active'),orderBy('status'),orderBy('startDate','desc'),limit(10));
+            const pSnap=await getDocs(q);
+            past=pSnap.docs.map(d=>({id:d.id,...d.data()}));
+        }catch(e){
+            // fallback without compound index
+            try{
+                const q2=query(collection(db,'investments'),where('userId','==',uid),orderBy('startDate','desc'),limit(20));
+                const pSnap2=await getDocs(q2);
+                past=pSnap2.docs.map(d=>({id:d.id,...d.data()})).filter(d=>d.status!=='active');
+            }catch(e2){console.error(e2);}
+        }
+
+        // Load ROI drop history for active plan
+        let roiDrops=[];
+        if(active){
+            try{
+                const rq=query(collection(db,'roiDrops'),where('investmentId','==',active.id),orderBy('droppedAt','desc'),limit(30));
+                const rSnap=await getDocs(rq);
+                roiDrops=rSnap.docs.map(d=>({id:d.id,...d.data()}));
+            }catch(e){console.error(e);}
+        }
+
+        activeInvestment=active;
+        window._activeInvestment=active;
+
+        // Render page
+        renderPage(active,past,roiDrops,userData);
+
+        // Check and process ROI if needed
+        if(active) checkAndProcessROI(active);
+
+    }catch(e){
+        console.error(e);
+        showToast('Error loading investment data','error');
+        document.getElementById('mainContent').innerHTML=`<div style="text-align:center;padding:40px;color:var(--text2)"><p>Error loading data. Please refresh.</p></div>`;
+    }
+}
+
+// ══════════════════════════════════════════
+// AUTO ROI DROP LOGIC
+// Every 24hrs from startDate, drop dailyProfit to withdrawalWallet
+// ══════════════════════════════════════════
+async function checkAndProcessROI(invest){
+    if(!invest||invest.status!=='active') return;
+
+    const now=new Date();
+    const startDate=invest.startDate?.toDate?invest.startDate.toDate():new Date(invest.startDate?.seconds*1000||Date.now());
+    const endDate=invest.endDate?.toDate?invest.endDate.toDate():new Date(invest.endDate?.seconds*1000||Date.now());
+
+    // Already completed?
+    if(now>=endDate){
+        await completeInvestment(invest);
+        return;
+    }
+
+    const msPerDay=24*60*60*1000;
+    const elapsed=now-startDate;
+    const daysPassed=Math.floor(elapsed/msPerDay);
+    const alreadyEarned=invest.earned||0;
+    const expectedEarned=Math.min(daysPassed*invest.dailyProfit, invest.totalExpected-invest.price);
+    const pendingAmount=expectedEarned-alreadyEarned;
+
+    if(pendingAmount>0){
+        await creditROI(invest, pendingAmount, daysPassed);
+    }
+
+    // Start countdown to next drop
+    const nextDropTime=new Date(startDate.getTime()+(daysPassed+1)*msPerDay);
+    startCountdown(nextDropTime, invest.dailyProfit);
+}
+
+async function creditROI(invest, amount, daysPassed){
+    try{
+        // Credit to withdrawal wallet
+        await updateDoc(doc(db,'users',currentUsername),{
+            withdrawalWallet:increment(amount),
+        });
+
+        // Update investment earned
+        await updateDoc(doc(db,'investments',invest.id),{
+            earned:increment(amount),
+        });
+
+        // Record each drop in roiDrops collection
+        const dropsToRecord=[];
+        const alreadyDropped=invest.earned||0;
+        const startDate=invest.startDate?.toDate?invest.startDate.toDate():new Date(invest.startDate?.seconds*1000);
+        for(let d=Math.floor(alreadyDropped/invest.dailyProfit);d<daysPassed;d++){
+            dropsToRecord.push({
+                investmentId:invest.id,
+                userId:currentUid,
+                username:currentUsername,
+                planName:invest.planName,
+                amount:invest.dailyProfit,
+                dayNumber:d+1,
+                droppedAt:Timestamp.fromDate(new Date(startDate.getTime()+(d+1)*24*60*60*1000)),
+                autoProcessed:true,
+            });
+        }
+        for(const drop of dropsToRecord){
+            await addDoc(collection(db,'roiDrops'),drop);
+        }
+
+        // Add notification
+        await addDoc(collection(db,'notifications'),{
+            uid:currentUid,type:'plan',
+            title:`Daily ROI Credited! 💰`,
+            msg:`₦${fmt(amount)} from ${invest.planName} has been added to your withdrawal wallet.`,
+            timestamp:serverTimestamp(),read:false,
+        });
+
+        // Show ROI drop toast
+        showROIToast(amount);
+
+        // Reload page data
+        setTimeout(()=>loadPage(currentUid),1500);
+
+    }catch(e){console.error('ROI credit error:',e);}
+}
+
+async function completeInvestment(invest){
+    try{
+        const totalEarnable=invest.totalExpected-invest.price;
+        const alreadyEarned=invest.earned||0;
+        const remaining=totalEarnable-alreadyEarned;
+        if(remaining>0){
+            await updateDoc(doc(db,'users',currentUsername),{withdrawalWallet:increment(remaining)});
+            await updateDoc(doc(db,'investments',invest.id),{earned:increment(remaining)});
+        }
+        await updateDoc(doc(db,'investments',invest.id),{status:'completed',completedAt:serverTimestamp()});
+        await updateDoc(doc(db,'users',currentUsername),{activePlan:null,activeInvestmentId:null});
+        await addDoc(collection(db,'notifications'),{
+            uid:currentUid,type:'plan',
+            title:'Investment Completed! 🎉',
+            msg:`${invest.planName} has matured. Total return: ₦${fmt(invest.totalExpected)}. Browse new plans to keep earning!`,
+            timestamp:serverTimestamp(),read:false,
+        });
+        showToast(`🎉 ${invest.planName} completed! All earnings credited.`,'success');
+        setTimeout(()=>loadPage(currentUid),2000);
+    }catch(e){console.error('Complete error:',e);}
+}
+
+function startCountdown(nextDropTime, dailyProfit){
+    if(countdownInterval) clearInterval(countdownInterval);
+    const CIRCUMFERENCE=283;
+
+    function tick(){
+        const now=new Date();
+        const remaining=Math.max(0,Math.floor((nextDropTime-now)/1000));
+        const totalSecs=24*60*60;
+        const fraction=remaining/totalSecs;
+
+        const h=Math.floor(remaining/3600);
+        const m=Math.floor((remaining%3600)/60);
+        const s=remaining%60;
+        const timeStr=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+
+        const digitsEl=document.getElementById('ringDigits');
+        const fillEl=document.getElementById('ringFill');
+        const nextDropEl=document.getElementById('nextDropTime');
+
+        if(digitsEl) digitsEl.textContent=timeStr;
+        if(fillEl){
+            fillEl.style.strokeDashoffset=CIRCUMFERENCE*(1-fraction);
+            fillEl.className=remaining<3600?'ring-fill danger':'ring-fill';
+        }
+        if(nextDropEl){
+            if(remaining<=0){
+                nextDropEl.textContent='Dropping now...';
+                clearInterval(countdownInterval);
+                setTimeout(()=>loadPage(currentUid),1000);
+            } else {
+                const h2=String(h).padStart(2,'0');
+                const m2=String(m).padStart(2,'0');
+                nextDropEl.textContent=`${h2}h ${m2}m`;
+            }
+        }
+    }
+    tick();
+    countdownInterval=setInterval(tick,1000);
+}
+
+// ── ROI drop toast ──
+function showROIToast(amount){
+    const toast=document.getElementById('roiToast');
+    document.getElementById('roiToastMsg').textContent=`+₦${fmt(amount)} credited to your wallet!`;
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),4000);
+}
+
+// ── RENDER PAGE ──
+function renderPage(active, past, roiDrops, userData){
+    const content=document.getElementById('mainContent');
+
+    const totalEarned=userData.withdrawalWallet||0;
+    const totalInvested=userData.totalDeposited||0;
+    const refBonus=userData.referralBonus||0;
+
+    // Summary card always shown
+    let html=`
+    <!-- EARNINGS SUMMARY -->
+    <div class="earnings-summary fade-up" style="animation-delay:.05s;">
+        <div class="es-top">
+            <div>
+                <div class="es-label">TOTAL WITHDRAWAL WALLET</div>
+                <div class="es-total"><span>₦</span>${fmt(totalEarned)}</div>
+            </div>
+            <div class="es-status-badge">
+                <div class="active-dot"></div>
+                ${active?'EARNING':'IDLE'}
+            </div>
+        </div>
+        <div class="es-grid">
+            <div class="es-pill">
+                <div class="es-pill-lbl">Invested</div>
+                <div class="es-pill-val gold">₦${totalInvested>=1000?(totalInvested/1000).toFixed(1)+'K':fmt(totalInvested)}</div>
+            </div>
+            <div class="es-pill">
+                <div class="es-pill-lbl">Ref Bonus</div>
+                <div class="es-pill-val green">₦${refBonus>=1000?(refBonus/1000).toFixed(1)+'K':fmt(refBonus)}</div>
+            </div>
+            <div class="es-pill">
+                <div class="es-pill-lbl">Plans Done</div>
+                <div class="es-pill-val red">${past.length}</div>
+            </div>
+        </div>
+    </div>`;
+
+    if(active){
+        // Compute progress
+        const startDate=active.startDate?.toDate?active.startDate.toDate():new Date(active.startDate?.seconds*1000||Date.now());
+        const endDate=active.endDate?.toDate?active.endDate.toDate():new Date(startDate.getTime()+active.days*86400000);
+        const now=new Date();
+        const totalMs=endDate-startDate;
+        const elapsedMs=now-startDate;
+        const progressPct=Math.min(100,Math.max(0,Math.round((elapsedMs/totalMs)*100)));
+        const daysTotal=active.days||0;
+        const daysPassed=Math.min(daysTotal,Math.floor(elapsedMs/86400000));
+        const daysLeft=Math.max(0,daysTotal-daysPassed);
+        const earned=active.earned||0;
+        const earnable=active.totalExpected-active.price;
+        const nextDropMs=new Date(startDate.getTime()+(daysPassed+1)*86400000);
+
+        html+=`
+        <!-- ACTIVE INVESTMENT CARD -->
+        <div class="invest-card fade-up" style="animation-delay:.1s;">
+            <div class="invest-card-header">
+                <div class="ic-top-row">
+                    <span class="ic-emoji">${active.emoji||'📦'}</span>
+                    <div class="ic-product-name">${active.planName||'Investment Plan'}</div>
+                    <div class="ic-category-badge">${(active.category||'products').toUpperCase()}</div>
+                </div>
+                <div class="ic-start-date"><i class="ph ph-calendar"></i> Started: ${fmtDate(active.startDate)} · Ends: ${fmtDate(endDate)}</div>
+            </div>
+
+            <!-- COUNTDOWN TO NEXT DROP -->
+            <div class="countdown-section">
+                <div class="countdown-ring-wrap">
+                    <svg class="ring-svg" viewBox="0 0 100 100">
+                        <circle class="ring-track" cx="50" cy="50" r="45"/>
+                        <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="45"/>
+                    </svg>
+                    <div class="ring-center">
+                        <div class="ring-digits" id="ringDigits">00:00:00</div>
+                        <div class="ring-lbl">next drop</div>
+                    </div>
+                </div>
+                <div class="countdown-info">
+                    <div class="cd-title">NEXT ROI DROP IN</div>
+                    <div class="cd-next-drop" id="nextDropTime">Calculating...</div>
+                    <div class="cd-drop-label"><i class="ph ph-arrow-down-left"></i> Auto-credited:</div>
+                    <div class="cd-amount">+₦${fmt(active.dailyProfit)}</div>
+                    <div style="font-size:11px;font-weight:600;color:var(--text2);margin-top:4px;">→ Directly to withdrawal wallet</div>
+                </div>
+            </div>
+
+            <!-- INVESTMENT DETAILS -->
+            <div class="invest-details">
+                <div class="detail-grid">
+                    <div class="detail-chip">
+                        <div class="dc-label">Entry Price</div>
+                        <div class="dc-value">₦${fmt(active.price)}</div>
+                    </div>
+                    <div class="detail-chip">
+                        <div class="dc-label">Daily ROI</div>
+                        <div class="dc-value green">₦${fmt(active.dailyProfit)}</div>
+                    </div>
+                    <div class="detail-chip">
+                        <div class="dc-label">Duration</div>
+                        <div class="dc-value">${daysTotal} days</div>
+                    </div>
+                    <div class="detail-chip">
+                        <div class="dc-label">Days Left</div>
+                        <div class="dc-value ${daysLeft<=5?'red':'gold'}">${daysLeft} days</div>
+                    </div>
+                    <div class="detail-chip">
+                        <div class="dc-label">Earned So Far</div>
+                        <div class="dc-value green">₦${fmt(earned)}</div>
+                    </div>
+                    <div class="detail-chip">
+                        <div class="dc-label">Total Return</div>
+                        <div class="dc-value gold">₦${fmt(active.totalExpected)}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROGRESS BAR -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-lbl">Investment Progress</span>
+                    <span class="progress-pct">${progressPct}%</span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" style="width:${progressPct}%;"></div>
+                </div>
+                <div class="progress-sub">
+                    <span class="progress-sub-txt">Day ${daysPassed} of ${daysTotal}</span>
+                    <span class="progress-sub-txt">₦${fmt(earned)} / ₦${fmt(earnable)}</span>
+                </div>
+            </div>
+
+            <!-- ROI DROP HISTORY -->
+            <div class="roi-history">
+                <div class="roi-history-title">ROI DROP HISTORY (${roiDrops.length} drops)</div>
+                ${roiDrops.length===0
+                    ?'<div class="roi-empty">No drops yet. First drop is 24hrs after purchase.</div>'
+                    :roiDrops.map((d,i)=>`
+                    <div class="roi-drop-item" style="animation:fadeUp .4s ${i*.04}s ease both;">
+                        <div class="roi-drop-icon"><i class="ph ph-arrow-down-left"></i></div>
+                        <div class="roi-drop-body">
+                            <div class="roi-drop-title">Day ${d.dayNumber||i+1} ROI Drop</div>
+                            <div class="roi-drop-date">${fmtDateTime(d.droppedAt)}</div>
+                        </div>
+                        <div class="roi-drop-amt">+₦${fmt(d.amount)}</div>
+                    </div>`).join('')
+                }
+            </div>
+        </div>`;
+
+        // Start countdown
+        startCountdown(nextDropMs, active.dailyProfit);
+
+    } else {
+        html+=`
+        <!-- NO ACTIVE INVESTMENT -->
+        <div class="no-invest fade-up" style="animation-delay:.1s;">
+            <div class="no-invest-icon">📊</div>
+            <h3>No Active Investment</h3>
+            <p>You don't have an active plan right now.<br>Browse our products to start earning daily ROI automatically credited to your withdrawal wallet.</p>
+            <a href="plans.html" class="browse-plans-btn">
+                <i class="ph ph-rocket-launch"></i> Browse Investment Plans
+            </a>
+        </div>`;
+    }
+
+    // Past investments
+    if(past.length>0){
+        html+=`
+        <div class="past-card fade-up" style="animation-delay:.2s;">
+            <div class="past-title"><i class="ph ph-clock-counter-clockwise"></i> PAST INVESTMENTS</div>
+            ${past.map((p,i)=>`
+            <div class="past-item">
+                <div class="past-icon">${p.emoji||'📦'}</div>
+                <div class="past-body">
+                    <div class="past-name">${p.planName||'Investment Plan'}</div>
+                    <div class="past-meta">${fmtDate(p.startDate)} → ${fmtDate(p.endDate||p.completedAt)} · ${p.days||0} days</div>
+                    <div class="past-chips">
+                        <span class="past-chip ${p.status==='completed'?'completed':'expired'}">${(p.status||'expired').toUpperCase()}</span>
+                        <span class="past-chip completed">₦${fmt(p.price)} invested</span>
+                    </div>
+                </div>
+                <div class="past-earned">
+                    <div class="past-earned-val">₦${fmt(p.earned||0)}</div>
+                    <div class="past-earned-lbl">earned</div>
+                </div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    // Info card
+    html+=`
+    <div style="background:var(--card);border-radius:22px;padding:18px 20px;box-shadow:0 3px 12px rgba(0,0,0,.06);border:1px solid var(--border);transition:background .3s;" class="fade-up" style="animation-delay:.3s;">
+        <div style="font-size:12px;font-weight:800;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;"><i class="ph ph-info" style="color:var(--gold);font-size:18px;"></i> HOW ROI WORKS</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;gap:10px;align-items:flex-start;">
+                <div style="width:28px;height:28px;min-width:28px;background:var(--gold-bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--gold);">1</div>
+                <div style="font-size:12px;font-weight:600;color:var(--text2);line-height:1.6;">Purchase any plan — ROI starts <strong style="color:var(--text);">24 hours</strong> after your purchase time.</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;">
+                <div style="width:28px;height:28px;min-width:28px;background:var(--gold-bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--gold);">2</div>
+                <div style="font-size:12px;font-weight:600;color:var(--text2);line-height:1.6;">Every 24hrs, your <strong style="color:var(--text);">daily profit is automatically</strong> credited to your withdrawal wallet — no action needed.</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;">
+                <div style="width:28px;height:28px;min-width:28px;background:var(--gold-bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--gold);">3</div>
+                <div style="font-size:12px;font-weight:600;color:var(--text2);line-height:1.6;">Once the plan matures, all remaining earnings are credited and you're free to <strong style="color:var(--text);">withdraw or reinvest</strong>.</div>
+            </div>
+        </div>
+    </div>`;
+
+    content.innerHTML=html;
+}
+
+// Notifications
+async function loadNotifications(){
+    try{
+        const q=query(collection(db,'notifications'),where('uid','==',currentUid));
+        const snap=await getDocs(q);
+        const items=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.timestamp?.seconds||0)-(a.timestamp?.seconds||0));
+        window._renderNotifs(items.length?items:null);
+    }catch(e){window._renderNotifs(null);}
+}
+
+// Gift claim
+window.firebaseClaimGift=async function(code){
+    try{
+        const cr=doc(db,'giftCodes',code.toUpperCase());
+        const snap=await getDoc(cr);
+        if(!snap.exists()) return{success:false,msg:'Invalid gift code.'};
+        const data=snap.data();
+        if(!data.active) return{success:false,msg:'Code expired.'};
+        if(data.claimedBy&&data.claimedBy.includes(currentUsername)) return{success:false,msg:'Already claimed.'};
+        const amount=data.amount||0;
+        await updateDoc(doc(db,'users',currentUsername),{depositWallet:increment(amount)});
+        await updateDoc(cr,{claimedBy:[...(data.claimedBy||[]),currentUsername],active:data.singleUse?false:data.active});
+        return{success:true,amount};
+    }catch(e){return{success:false,msg:'Something went wrong.'};}
+};
+
+onAuthStateChanged(auth,async(user)=>{
+    if(!user){window.location.href='login.html';return;}
+    currentUid=user.uid;
+    window._currentUid=currentUid;
+    await loadPage(user.uid);
+    await loadNotifications();
+});
+</script>
+
+<script>
+// THEME
+const saved=localStorage.getItem('elite_theme')||'light';
+applyTheme(saved);
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const icon=document.getElementById('themeIcon');if(icon)icon.className=t==='dark'?'ph ph-sun':'ph ph-moon';localStorage.setItem('elite_theme',t);}
+function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme');const next=cur==='dark'?'light':'dark';applyTheme(next);showToast(next==='dark'?'🌙 Dark mode on':'☀️ Light mode on','info');}
+
+// TOAST
+function showToast(msg,type='info'){const wrap=document.getElementById('toastWrap');const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=msg;wrap.appendChild(t);setTimeout(()=>t.classList.add('show'),10);setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),350);},4500);}
+window.showToast=showToast;
+
+// NOTIFICATIONS
+const DEMO_NOTIFS=[
+    {id:'n1',type:'plan',title:'ROI Auto-Credit Active',msg:'Your daily profit is automatically credited every 24hrs — no action needed.',time:'Just now',read:false},
+    {id:'n2',type:'gift',title:'Gift Code Available 🎁',msg:'Tap the gift button to claim your reward!',time:'1 hr ago',read:true},
+];
+const N_ICONS={plan:'<i class="ph ph-chart-line-up"></i>',gift:'<i class="ph ph-gift"></i>',system:'<i class="ph ph-bell-ringing"></i>',withdrawal:'<i class="ph ph-arrow-up-right"></i>'};
+
+function _renderNotifs(items){
+    const list=document.getElementById('nList');
+    const display=items||DEMO_NOTIFS;
+    const unread=display.filter(n=>!n.read).length;
+    document.getElementById('nCount').textContent=unread>0?`${unread} unread`:'All caught up';
+    document.getElementById('notifDot').classList.toggle('active',unread>0);
+    list.innerHTML=display.map((n,i)=>`
+        <div class="n-item ${n.read?'':'unread'}" onclick="markOne(this)">
+            <div class="n-icon ${n.type||'system'}">${N_ICONS[n.type]||N_ICONS.system}</div>
+            <div class="n-body"><div class="n-title">${n.title}</div><div class="n-msg">${n.msg}</div><div class="n-time">${n.time||'Just now'}</div></div>
+            ${!n.read?'<div class="n-dot"></div>':''}
+        </div>`).join('');
+}
+window._renderNotifs=_renderNotifs;
+
+function openNotifications(){document.getElementById('notifOverlay').classList.add('open');document.getElementById('notifPanel').classList.add('open');}
+function closeNotifications(){document.getElementById('notifOverlay').classList.remove('open');document.getElementById('notifPanel').classList.remove('open');}
+function markAllRead(){document.querySelectorAll('.n-item').forEach(el=>{el.classList.remove('unread');const d=el.querySelector('.n-dot');if(d)d.remove();});document.getElementById('nCount').textContent='All caught up';document.getElementById('notifDot').classList.remove('active');showToast('✅ All marked as read','success');}
+function markOne(el){if(!el.classList.contains('unread'))return;el.classList.remove('unread');const d=el.querySelector('.n-dot');if(d)d.remove();const rem=document.querySelectorAll('.n-item.unread').length;document.getElementById('nCount').textContent=rem>0?`${rem} unread`:'All caught up';if(!rem)document.getElementById('notifDot').classList.remove('active');}
+
+// GIFT MODAL
+function openGiftModal(){document.getElementById('giftOverlay').classList.add('open');document.getElementById('gFormArea').style.display='block';document.getElementById('gResult').classList.remove('show');document.getElementById('gCodeInput').value='';document.getElementById('gClaimBtn').disabled=false;document.getElementById('gClaimBtn').innerHTML='<i class="ph ph-gift"></i> CLAIM REWARD';setTimeout(()=>document.getElementById('gCodeInput').focus(),400);}
+function closeGiftModal(){document.getElementById('giftOverlay').classList.remove('open');document.getElementById('giftBadge').style.display='none';}
+document.getElementById('gCodeInput').addEventListener('input',function(){const p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p,p);});
+document.getElementById('gCodeInput').addEventListener('keydown',e=>{if(e.key==='Enter')claimGift();});
+async function claimGift(){
+    const raw=document.getElementById('gCodeInput').value.trim();
+    if(!raw||raw.length<4){showToast('❌ Enter a valid gift code','error');return;}
+    const btn=document.getElementById('gClaimBtn');btn.disabled=true;btn.innerHTML='<div class="btn-sp"></div> Verifying...';
+    try{
+        let result;
+        if(typeof window.firebaseClaimGift==='function') result=await window.firebaseClaimGift(raw);
+        else{await new Promise(r=>setTimeout(r,1500));result=raw.startsWith('ELITE')?{success:true,amount:5000}:{success:false,msg:'Invalid gift code.'};}
+        if(result.success){document.getElementById('gFormArea').style.display='none';document.getElementById('gAmt').textContent=`+₦${result.amount.toLocaleString()}`;document.getElementById('gAmtWrap').style.display='block';document.getElementById('gResult').classList.add('show');showToast(`🎁 ₦${result.amount.toLocaleString()} added!`,'success');}
+        else{btn.disabled=false;btn.innerHTML='<i class="ph ph-gift"></i> CLAIM REWARD';showToast(`❌ ${result.msg}`,'error');}
+    }catch(e){btn.disabled=false;btn.innerHTML='<i class="ph ph-gift"></i> CLAIM REWARD';showToast('❌ Something went wrong','error');}
+}
+</script>
+</body>
+</html>
