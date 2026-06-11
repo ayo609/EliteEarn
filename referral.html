@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>EliteEarn – Referral</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+        :root{
+            --bg:#f2f2f7;--card:#ffffff;--card2:#f8f8fc;--text:#0f0f1e;--text2:#6b6b8a;
+            --border:#e4e4ef;--gold:#C49A00;--gold2:#E8B800;--gold3:#FFF0A0;
+            --red:#8b1a1a;--red2:#c0392b;
+            --header:linear-gradient(150deg,#1a0505 0%,#5a0e0e 40%,#8b1a1a 70%,#a52020 100%);
+            --lv-a:#059669;--lv-b:#7C3AED;--lv-c:#D97706;
+            --overlay:rgba(0,0,0,0.6);--input-bg:#f5f5fa;--notif-bg:#fff;--modal-bg:#fff;
+        }
+        [data-theme="dark"]{
+            --bg:#0c0c18;--card:#181830;--card2:#20203a;--text:#f0f0ff;--text2:#8888aa;
+            --border:#2a2a44;--input-bg:#20203a;--notif-bg:#181830;--modal-bg:#181830;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+        body{display:flex;flex-direction:column;}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:110px;}
+        .page-header{background:var(--header);padding:18px 20px 100px;position:relative;overflow:hidden;}
+        .page-header::before{content:'';position:absolute;width:320px;height:320px;background:radial-gradient(circle,rgba(196,154,0,0.18) 0%,transparent 70%);top:-100px;right:-80px;pointer-events:none;}
+        .page-header::after{content:'';position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);bottom:0;left:-40px;pointer-events:none;}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+        .logo-area{display:flex;align-items:center;gap:10px;}
+        .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:900;box-shadow:0 4px 12px rgba(245,158,11,0.4);font-family:'Oswald',sans-serif;}
+        .logo-text{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:white;letter-spacing:.5px;}
+        .top-actions{display:flex;gap:10px;}
+        .icon-btn{background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px);position:relative;}
+        .icon-btn:hover{background:rgba(255,255,255,0.28);}
+        .notif-dot{position:absolute;top:5px;right:5px;width:9px;height:9px;background:#EF4444;border-radius:50%;border:2px solid transparent;display:none;}
+        .notif-dot.active{display:block;animation:blink 1.5s infinite;}
+        @keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+        .header-title{text-align:center;color:white;}
+        .header-title h1{font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:.3px;}
+        .header-subtitle{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase;}
+        .header-subtitle i{color:var(--gold2);}
+        .content{padding:0 14px 20px;margin-top:-76px;position:relative;z-index:2;display:flex;flex-direction:column;gap:14px;}
+        .ref-link-card{background:var(--card);border-radius:26px;padding:22px 20px;box-shadow:0 8px 30px rgba(0,0,0,0.1);transition:background .3s;}
+        .card-label{font-size:11px;font-weight:800;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+        .card-label i{font-size:14px;color:var(--gold);}
+        .link-box{display:flex;align-items:center;gap:10px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:14px;}
+        .link-text{flex:1;font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Oswald',sans-serif;letter-spacing:.5px;}
+        .copy-btn{background:var(--gold);border:none;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:800;color:white;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'Montserrat',sans-serif;letter-spacing:.5px;}
+        .copy-btn:hover{background:var(--gold2);transform:scale(1.04);}
+        .copy-btn.copied{background:#059669;}
+        .social-row{display:flex;gap:10px;flex-wrap:wrap;}
+        .social-btn{flex:1;min-width:70px;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 8px;border-radius:12px;border:none;font-size:11px;font-weight:800;color:white;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;letter-spacing:.3px;}
+        .social-btn:hover{transform:translateY(-2px);filter:brightness(1.1);}
+        .social-btn:active{transform:scale(.96);}
+        .social-btn i{font-size:16px;}
+        .btn-wa{background:#25D366;}.btn-tg{background:#229ED9;}.btn-fb{background:#1877F2;}.btn-tw{background:#000000;}
+        .qr-card{background:var(--card);border-radius:26px;padding:22px 20px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.08);transition:background .3s;}
+        .qr-wrap{background:white;border-radius:18px;padding:16px;display:inline-block;border:3px solid var(--border);margin:14px 0;box-shadow:0 4px 14px rgba(0,0,0,.06);}
+        #qrCanvas{display:block;}
+        .qr-sub{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1px;text-transform:uppercase;}
+        .save-qr-btn{display:inline-flex;align-items:center;gap:7px;margin-top:14px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:50px;padding:9px 20px;font-size:12px;font-weight:800;color:var(--text);cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;}
+        .save-qr-btn:hover{border-color:var(--gold);color:var(--gold);}
+        .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+        .stat-card{background:var(--card);border-radius:20px;padding:16px 12px;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.07);transition:background .3s;}
+        .stat-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:20px;}
+        .stat-icon.s1{background:rgba(5,150,105,.1);color:#059669;}
+        .stat-icon.s2{background:rgba(124,58,237,.1);color:#7C3AED;}
+        .stat-icon.s3{background:rgba(217,119,6,.1);color:#D97706;}
+        .stat-val{font-size:18px;font-weight:900;color:var(--text);font-family:'Oswald',sans-serif;}
+        .stat-lbl{font-size:9px;font-weight:700;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;}
+        .income-card{background:var(--card);border-radius:26px;padding:22px 20px;box-shadow:0 4px 16px rgba(0,0,0,.07);transition:background .3s;}
+        .income-level-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);}
+        .income-level-row:last-child{border-bottom:none;}
+        .level-badge{width:48px;height:48px;min-width:48px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;}
+        .level-badge.la{background:rgba(5,150,105,.12);color:#059669;}
+        .level-badge.lb{background:rgba(124,58,237,.12);color:#7C3AED;}
+        .level-badge.lc{background:rgba(217,119,6,.12);color:#D97706;}
+        .level-badge .lv-name{font-size:13px;font-family:'Oswald',sans-serif;}
+        .level-badge .lv-pct{font-size:9px;font-weight:800;letter-spacing:.5px;opacity:.8;}
+        .level-info{flex:1;}
+        .level-title{font-size:13px;font-weight:800;color:var(--text);margin-bottom:3px;}
+        .level-desc{font-size:11px;color:var(--text2);font-weight:600;}
+        .level-income{text-align:right;}
+        .level-income-amt{font-size:16px;font-weight:900;color:var(--text);font-family:'Oswald',sans-serif;}
+        .level-income-lbl{font-size:10px;color:var(--text2);font-weight:600;}
+        .total-income-row{margin-top:14px;padding:14px 16px;background:linear-gradient(135deg,rgba(196,154,0,.1),rgba(232,184,0,.05));border:1.5px solid rgba(196,154,0,.2);border-radius:16px;display:flex;align-items:center;justify-content:space-between;}
+        .total-income-lbl{font-size:12px;font-weight:800;color:var(--gold);letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+        .total-income-amt{font-size:22px;font-weight:900;color:var(--gold);font-family:'Oswald',sans-serif;}
+        .level-tabs{display:flex;gap:0;background:var(--card);border-radius:20px;padding:5px;box-shadow:0 4px 14px rgba(0,0,0,.07);}
+        .level-tab{flex:1;text-align:center;padding:11px 6px;font-size:12px;font-weight:800;border-radius:16px;cursor:pointer;transition:all .25s;color:var(--text2);letter-spacing:.5px;user-select:none;}
+        .level-tab.active-a{background:rgba(5,150,105,.12);color:#059669;}
+        .level-tab.active-b{background:rgba(124,58,237,.12);color:#7C3AED;}
+        .level-tab.active-c{background:rgba(217,119,6,.12);color:#D97706;}
+        .team-section{background:var(--card);border-radius:26px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);transition:background .3s;}
+        .team-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+        .team-header-left{display:flex;align-items:center;gap:10px;}
+        .team-level-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+        .team-count-badge{background:var(--input-bg);border:1px solid var(--border);border-radius:50px;padding:4px 12px;font-size:11px;font-weight:800;color:var(--text2);}
+        .member-card{background:var(--card2);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:12px;transition:all .2s;}
+        .member-card:last-child{margin-bottom:0;}
+        .member-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-1px);}
+        .member-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+        .member-avatar{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:white;font-family:'Oswald',sans-serif;flex-shrink:0;}
+        .member-meta{flex:1;min-width:0;}
+        .member-name{font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px;}
+        .member-id{font-size:11px;color:var(--text2);font-weight:600;font-family:'Oswald',sans-serif;}
+        .member-commission{text-align:right;}
+        .commission-amt{font-size:15px;font-weight:900;color:#059669;font-family:'Oswald',sans-serif;}
+        .commission-lbl{font-size:10px;color:var(--text2);font-weight:600;}
+        .member-details-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+        .detail-chip{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;}
+        .detail-chip-lbl{font-size:9px;font-weight:800;color:var(--text2);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px;}
+        .detail-chip-val{font-size:12px;font-weight:800;color:var(--text);}
+        .detail-chip-val.green{color:#059669;}
+        .member-status{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:50px;font-size:10px;font-weight:800;letter-spacing:.5px;margin-top:10px;}
+        .status-active{background:rgba(5,150,105,.1);color:#059669;}
+        .status-inactive{background:rgba(107,107,138,.1);color:var(--text2);}
+        .empty-team{text-align:center;padding:40px 20px;color:var(--text2);}
+        .empty-team-icon{width:70px;height:70px;background:var(--input-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:32px;color:var(--text2);}
+        .empty-team h3{font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px;}
+        .empty-team p{font-size:12px;font-weight:600;line-height:1.6;}
+        .loading-row{display:flex;align-items:center;justify-content:center;gap:10px;padding:30px;color:var(--text2);font-size:13px;font-weight:600;}
+        .spin{width:22px;height:22px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        .float-gift{position:fixed;bottom:100px;left:20px;width:52px;height:52px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:22px;cursor:pointer;box-shadow:0 4px 15px rgba(245,158,11,.4);z-index:50;border:3px solid white;animation:bounce 2s infinite;}
+        @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+        .float-gift .badge{position:absolute;top:-4px;right:-4px;background:#EF4444;color:white;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white;}
+        .float-support{position:fixed;bottom:100px;right:20px;width:52px;height:52px;background:var(--card);border:2px solid #F59E0B;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#D97706;font-size:22px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.1);z-index:50;transition:all .3s;}
+        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:10px 20px 24px;display:flex;justify-content:space-around;align-items:flex-end;box-shadow:0 -6px 24px rgba(0,0,0,.09);z-index:100;transition:background .3s;}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-decoration:none;color:inherit;padding:4px 8px;border-radius:12px;transition:all .2s;}
+        .nav-item i{font-size:22px;color:#9ca3af;transition:color .2s;}
+        .nav-item span{font-size:10px;font-weight:700;color:#9ca3af;transition:color .2s;}
+        .nav-item.active i,.nav-item:hover i{color:#8B5CF6;}
+        .nav-item.active span,.nav-item:hover span{color:#8B5CF6;}
+        .nav-center{position:relative;top:-26px;}
+        .nav-center-btn{width:58px;height:58px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;box-shadow:0 6px 20px rgba(245,158,11,.4);border:4px solid var(--card);cursor:pointer;transition:all .3s;}
+        .nav-center-btn:hover{transform:scale(1.1);}
+        .notif-overlay{position:fixed;inset:0;background:var(--overlay);z-index:200;display:none;opacity:0;transition:opacity .3s;}
+        .notif-overlay.open{display:block;opacity:1;}
+        .notif-panel{position:fixed;top:0;right:-100%;width:min(340px,92vw);height:100vh;background:var(--notif-bg);z-index:201;display:flex;flex-direction:column;box-shadow:-8px 0 30px rgba(0,0,0,.2);transition:right .35s cubic-bezier(.4,0,.2,1);}
+        .notif-panel.open{right:0;}
+        .n-hdr{background:linear-gradient(135deg,#7C3AED,#5B21B6);padding:24px 20px 20px;display:flex;align-items:center;justify-content:space-between;}
+        .n-hdr h3{color:white;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;}
+        .n-close{background:rgba(255,255,255,.2);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;}
+        .n-bar{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
+        .n-count{font-size:12px;font-weight:700;color:var(--text2);}
+        .n-markall{background:none;border:none;font-size:12px;font-weight:700;color:#7C3AED;cursor:pointer;font-family:'Montserrat',sans-serif;}
+        .n-list{flex:1;overflow-y:auto;padding:8px 0;}
+        .n-item{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;position:relative;}
+        .n-item.unread{background:rgba(124,58,237,.04);}
+        .n-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#7C3AED;border-radius:0 2px 2px 0;}
+        .n-icon2{width:42px;height:42px;min-width:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+        .n-icon2.deposit{background:rgba(5,150,105,.1);color:#059669;}
+        .n-icon2.gift{background:rgba(245,158,11,.1);color:#D97706;}
+        .n-icon2.system{background:rgba(124,58,237,.1);color:#7C3AED;}
+        .n-body2{flex:1;min-width:0;}
+        .n-title2{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+        .n-msg2{font-size:12px;color:var(--text2);line-height:1.5;}
+        .n-time2{font-size:10px;color:var(--text2);margin-top:4px;font-weight:600;}
+        .n-dot2{width:8px;height:8px;min-width:8px;background:#7C3AED;border-radius:50%;margin-top:6px;}
+        .n-empty2{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:var(--text2);text-align:center;}
+        .n-empty2 i{font-size:48px;margin-bottom:12px;opacity:.4;}
+        .modal-ov{position:fixed;inset:0;background:var(--overlay);z-index:250;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s;}
+        .modal-ov.open{opacity:1;pointer-events:all;}
+        .gift-modal{background:var(--modal-bg);border-radius:32px 32px 0 0;width:100%;max-width:480px;padding:0 0 40px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:0 -12px 50px rgba(0,0,0,.25);}
+        .modal-ov.open .gift-modal{transform:translateY(0);}
+        .drag-h{width:48px;height:5px;background:var(--border);border-radius:3px;margin:16px auto 0;}
+        .g-hdr{background:linear-gradient(135deg,#F59E0B,#D97706);margin:20px 24px 0;border-radius:24px;padding:28px 24px;text-align:center;position:relative;overflow:hidden;}
+        .g-big-icon{width:70px;height:70px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:34px;color:white;border:3px solid rgba(255,255,255,.4);animation:gpulse 2s infinite;}
+        @keyframes gpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.3);}50%{box-shadow:0 0 0 12px rgba(255,255,255,0);}}
+        .g-hdr h2{font-size:21px;font-weight:800;color:white;margin-bottom:5px;}
+        .g-hdr p{font-size:12px;color:rgba(255,255,255,.85);font-weight:600;}
+        .g-body{padding:24px 24px 0;}
+        .g-lbl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+        .g-inp-wrap{display:flex;align-items:center;background:var(--input-bg);border:2px solid var(--border);border-radius:16px;padding:6px 6px 6px 18px;gap:10px;transition:all .3s;margin-bottom:18px;}
+        .g-inp-wrap:focus-within{border-color:#F59E0B;box-shadow:0 0 0 3px rgba(245,158,11,.12);}
+        .g-inp-wrap i{font-size:20px;color:#D97706;}
+        .g-inp{flex:1;border:none;background:transparent;font-size:18px;font-weight:700;color:var(--text);outline:none;padding:10px 0;font-family:'Montserrat',sans-serif;letter-spacing:3px;text-transform:uppercase;}
+        .g-inp::placeholder{color:var(--text2);font-size:13px;letter-spacing:2px;font-weight:600;}
+        .g-claim{width:100%;background:linear-gradient(135deg,#F59E0B,#D97706);border:none;border-radius:50px;padding:15px;font-size:14px;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all .3s;font-family:'Montserrat',sans-serif;box-shadow:0 6px 20px rgba(245,158,11,.4);}
+        .g-claim:disabled{opacity:.6;cursor:not-allowed;}
+        .g-cancel{display:block;width:100%;margin-top:12px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;padding:10px;text-align:center;}
+        .g-result{display:none;text-align:center;padding:24px 20px;}
+        .g-result.show{display:block;}
+        .g-result-icon{font-size:54px;margin-bottom:12px;}
+        .g-result-title{font-size:20px;font-weight:800;color:var(--text);margin-bottom:8px;}
+        .g-result-amt{display:inline-block;margin:14px 0;background:linear-gradient(135deg,#059669,#047857);color:white;font-size:22px;font-weight:900;padding:10px 28px;border-radius:50px;box-shadow:0 4px 15px rgba(5,150,105,.35);}
+        .g-result-msg{font-size:13px;color:var(--text2);font-weight:600;line-height:1.5;}
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:400;display:flex;flex-direction:column;gap:8px;}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.12);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold);}
+        .toast.show{transform:translateX(0);}
+        .toast.success{border-left-color:#059669;}
+        .toast.error{border-left-color:#EF4444;}
+        .toast.info{border-left-color:#7C3AED;}
+        .btn-sp{width:18px;height:18px;border:3px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <div class="logo-area"><div class="logo-icon">E</div><div class="logo-text">ELITEEARN</div></div>
+            <div class="top-actions">
+                <button class="icon-btn" onclick="openNotifications()"><i class="ph ph-bell"></i><span class="notif-dot" id="notifDot"></span></button>
+                <button class="icon-btn" onclick="toggleTheme()"><i class="ph ph-moon" id="themeIcon"></i></button>
+            </div>
+        </div>
+        <div class="header-title">
+            <h1>Referral Program</h1>
+            <div class="header-subtitle"><i class="ph ph-users-three"></i> EARN FROM YOUR TEAM</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="ref-link-card">
+            <div class="card-label"><i class="ph ph-link"></i> YOUR REFERRAL LINK</div>
+            <div class="link-box">
+                <span class="link-text" id="refLinkText">Loading your link...</span>
+                <button class="copy-btn" id="copyLinkBtn" onclick="copyRefLink()">COPY</button>
+            </div>
+            <div class="card-label" style="margin-top:4px;"><i class="ph ph-share-network"></i> SHARE ON SOCIAL</div>
+            <div class="social-row">
+                <button class="social-btn btn-wa" onclick="shareOn('whatsapp')"><i class="ph ph-whatsapp-logo"></i>WhatsApp</button>
+                <button class="social-btn btn-tg" onclick="shareOn('telegram')"><i class="ph ph-telegram-logo"></i>Telegram</button>
+                <button class="social-btn btn-fb" onclick="shareOn('facebook')"><i class="ph ph-facebook-logo"></i>FB</button>
+                <button class="social-btn btn-tw" onclick="shareOn('twitter')"><i class="ph ph-x-logo"></i>X</button>
+            </div>
+        </div>
+
+        <div class="qr-card">
+            <div class="card-label" style="justify-content:center;"><i class="ph ph-qr-code"></i> SCAN TO JOIN</div>
+            <div class="qr-wrap"><div id="qrCanvas"></div></div>
+            <div class="qr-sub">Share your QR code to invite friends</div>
+            <button class="save-qr-btn" onclick="downloadQR()"><i class="ph ph-download-simple"></i> Save QR Code</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon s1"><i class="ph ph-users"></i></div><div class="stat-val" id="totalTeamSize">0</div><div class="stat-lbl">Total Team</div></div>
+            <div class="stat-card"><div class="stat-icon s2"><i class="ph ph-activity"></i></div><div class="stat-val" id="activeTeamSize">0</div><div class="stat-lbl">Active Now</div></div>
+            <div class="stat-card"><div class="stat-icon s3"><i class="ph ph-coins"></i></div><div class="stat-val" id="totalReferralIncome">₦0</div><div class="stat-lbl">Total Earned</div></div>
+        </div>
+
+        <div class="income-card">
+            <div class="card-label"><i class="ph ph-chart-bar"></i> COMMISSION BY LEVEL</div>
+            <div class="income-level-row">
+                <div class="level-badge la"><div class="lv-name">LVL A</div><div class="lv-pct">20%</div></div>
+                <div class="level-info"><div class="level-title">Level A — Direct Referrals</div><div class="level-desc">People you personally invited</div></div>
+                <div class="level-income"><div class="level-income-amt" id="incomeA">₦0.00</div><div class="level-income-lbl">Earned</div></div>
+            </div>
+            <div class="income-level-row">
+                <div class="level-badge lb"><div class="lv-name">LVL B</div><div class="lv-pct">2%</div></div>
+                <div class="level-info"><div class="level-title">Level B — 2nd Generation</div><div class="level-desc">Referrals of your referrals</div></div>
+                <div class="level-income"><div class="level-income-amt" id="incomeB">₦0.00</div><div class="level-income-lbl">Earned</div></div>
+            </div>
+            <div class="income-level-row">
+                <div class="level-badge lc"><div class="lv-name">LVL C</div><div class="lv-pct">1%</div></div>
+                <div class="level-info"><div class="level-title">Level C — 3rd Generation</div><div class="level-desc">Deep network commissions</div></div>
+                <div class="level-income"><div class="level-income-amt" id="incomeC">₦0.00</div><div class="level-income-lbl">Earned</div></div>
+            </div>
+            <div class="total-income-row">
+                <div class="total-income-lbl"><i class="ph ph-trophy"></i> Total Commission</div>
+                <div class="total-income-amt" id="incomeTotal">₦0.00</div>
+            </div>
+        </div>
+
+        <div class="level-tabs" id="levelTabs">
+            <div class="level-tab active-a" data-level="A">Level A <span style="opacity:.7;font-size:10px;">(20%)</span></div>
+            <div class="level-tab" data-level="B">Level B <span style="opacity:.7;font-size:10px;">(2%)</span></div>
+            <div class="level-tab" data-level="C">Level C <span style="opacity:.7;font-size:10px;">(1%)</span></div>
+        </div>
+
+        <div class="team-section" id="teamSection">
+            <div class="team-header">
+                <div class="team-header-left">
+                    <div class="team-level-dot" id="teamDot" style="background:#059669;"></div>
+                    <span style="font-size:13px;font-weight:800;color:var(--text);" id="teamTitle">Level A Members</span>
+                </div>
+                <div class="team-count-badge" id="teamCountBadge">0 members</div>
+            </div>
+            <div id="memberList"><div class="loading-row"><div class="spin"></div> Loading team...</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="float-gift" onclick="openGiftModal()"><i class="ph ph-gift"></i><span class="badge" id="giftBadge">1</span></div>
+<div class="float-support" onclick="showToast('💬 Support coming soon!','info')"><i class="ph ph-headset"></i></div>
+
+<div class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><i class="ph ph-house"></i><span>Home</span></a>
+    <a href="referral.html" class="nav-item active"><i class="ph ph-users"></i><span>Team</span></a>
+    <div class="nav-center"><div class="nav-center-btn" onclick="window.location.href='deposit.html'"><i class="ph ph-wallet"></i></div></div>
+    <a href="history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i><span>History</span></a>
+    <a href="profile.html" class="nav-item"><i class="ph ph-user"></i><span>Profile</span></a>
+</div>
+
+<div class="notif-overlay" id="notifOverlay" onclick="if(event.target===this)closeNotifications()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="n-hdr"><h3><i class="ph ph-bell-ringing"></i> Notifications</h3><button class="n-close" onclick="closeNotifications()"><i class="ph ph-x"></i></button></div>
+    <div class="n-bar"><span class="n-count" id="nCount">Loading...</span><button class="n-markall" onclick="markAllRead()">Mark all as read</button></div>
+    <div class="n-list" id="nList"><div class="n-empty2"><i class="ph ph-circle-notch"></i><p>Loading...</p></div></div>
+</div>
+
+<div class="modal-ov" id="giftOv" onclick="if(event.target===this)closeGiftModal()">
+    <div class="gift-modal">
+        <div class="drag-h"></div>
+        <div class="g-hdr"><div class="g-big-icon"><i class="ph ph-gift"></i></div><h2>Claim Gift Code</h2><p>Enter your unique gift code to receive your reward</p></div>
+        <div class="g-body" id="gFormArea">
+            <div class="g-lbl">ENTER GIFT CODE</div>
+            <div class="g-inp-wrap"><i class="ph ph-ticket"></i><input type="text" id="gCodeInput" class="g-inp" placeholder="E.G. ELITE-XXXX-XXXX" maxlength="20" autocomplete="off" spellcheck="false"></div>
+            <button class="g-claim" id="gClaimBtn" onclick="claimGift()"><i class="ph ph-gift"></i> CLAIM REWARD</button>
+            <button class="g-cancel" onclick="closeGiftModal()">Cancel</button>
+        </div>
+        <div class="g-result" id="gResult">
+            <div class="g-result-icon">🎉</div><div class="g-result-title">Reward Claimed!</div>
+            <div id="gAmtWrap" style="display:none;"><div class="g-result-amt" id="gAmt">+₦0</div></div>
+            <div class="g-result-msg" id="gMsg">Your gift has been added to your wallet.</div>
+            <button class="g-claim" style="margin-top:22px;" onclick="closeGiftModal()"><i class="ph ph-check-circle"></i> DONE</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- FIREBASE - FIXED -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs, addDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let currentUid="",currentUsername="",authChecked=false;
+const COMMISSION={A:0.20,B:0.02,C:0.01};
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0);}
+function fmtShort(n){return n>=1000000?'₦'+(n/1000000).toFixed(1)+'M':n>=1000?'₦'+(n/1000).toFixed(1)+'K':'₦'+fmt(n);}
+
+function loadFromSession(){
+    const d=sessionStorage.getItem('userData');
+    if(sessionStorage.getItem('userLoggedIn')==='true'&&d){
+        try{
+            const p=JSON.parse(d);
+            currentUsername=p.username;
+            const refLink=`https://earnelite-94a5e.web.app/register.html?ref=${p.username}`;
+            window._refLink=refLink;
+            document.getElementById('refLinkText').textContent=refLink;
+            generateQR(refLink);
+            console.log('✅ Referral quick load');
+            return true;
+        }catch(e){}
+    }
+    return false;
+}
+
+async function loadData(uid){
+    try{
+        const uidSnap=await getDoc(doc(db,'usersByUid',uid));
+        if(!uidSnap.exists())return;
+        currentUsername=uidSnap.data().username||'';
+        const refLink=`https://earnelite-94a5e.web.app/register.html?ref=${currentUsername}`;
+        window._refLink=refLink;
+        document.getElementById('refLinkText').textContent=refLink;
+        generateQR(refLink);
+        await loadTeamLevel('A');
+        await loadStats();
+        await loadNotifications();
+        console.log('✅ Referral data loaded');
+    }catch(e){console.error(e);}
+}
+
+async function loadTeamLevel(level){
+    try{
+        let members=[];
+        if(level==='A'){
+            const q=query(collection(db,'users'),where('referredBy','==',currentUsername));
+            const snap=await getDocs(q);
+            members=snap.docs.map(d=>({id:d.id,...d.data()}));
+        }else if(level==='B'){
+            const qA=query(collection(db,'users'),where('referredBy','==',currentUsername));
+            const snapA=await getDocs(qA);
+            const aNames=snapA.docs.map(d=>d.id);
+            for(let i=0;i<aNames.length;i+=10){
+                const chunk=aNames.slice(i,i+10);
+                const qB=query(collection(db,'users'),where('referredBy','in',chunk));
+                const snapB=await getDocs(qB);
+                snapB.docs.forEach(d=>members.push({id:d.id,...d.data()}));
+            }
+        }else{
+            const qA=query(collection(db,'users'),where('referredBy','==',currentUsername));
+            const snapA=await getDocs(qA);
+            const aNames=snapA.docs.map(d=>d.id);
+            let bNames=[];
+            for(let i=0;i<aNames.length;i+=10){
+                const chunk=aNames.slice(i,i+10);
+                const qB=query(collection(db,'users'),where('referredBy','in',chunk));
+                const snapB=await getDocs(qB);
+                snapB.docs.forEach(d=>bNames.push(d.id));
+            }
+            for(let i=0;i<bNames.length;i+=10){
+                const chunk=bNames.slice(i,i+10);
+                const qC=query(collection(db,'users'),where('referredBy','in',chunk));
+                const snapC=await getDocs(qC);
+                snapC.docs.forEach(d=>members.push({id:d.id,...d.data()}));
+            }
+        }
+        window['_team'+level]=members;
+        if(level==='A')renderTeam('A');
+        return members;
+    }catch(e){window['_team'+level]=[];return[];}
+}
+
+async function loadStats(){
+    const teamA=window._teamA||[];
+    const[teamB,teamC]=await Promise.all([loadTeamLevel('B'),loadTeamLevel('C')]);
+    const totalTeam=teamA.length+teamB.length+teamC.length;
+    const activeTeam=[...teamA,...teamB,...teamC].filter(m=>(m.depositWallet||0)>0).length;
+    const incA=teamA.reduce((s,m)=>s+(m.totalDeposited||m.depositWallet||0)*COMMISSION.A,0);
+    const incB=teamB.reduce((s,m)=>s+(m.totalDeposited||m.depositWallet||0)*COMMISSION.B,0);
+    const incC=teamC.reduce((s,m)=>s+(m.totalDeposited||m.depositWallet||0)*COMMISSION.C,0);
+    const incTotal=incA+incB+incC;
+    document.getElementById('totalTeamSize').textContent=totalTeam;
+    document.getElementById('activeTeamSize').textContent=activeTeam;
+    document.getElementById('totalReferralIncome').textContent=fmtShort(incTotal);
+    document.getElementById('incomeA').textContent='₦'+fmt(incA);
+    document.getElementById('incomeB').textContent='₦'+fmt(incB);
+    document.getElementById('incomeC').textContent='₦'+fmt(incC);
+    document.getElementById('incomeTotal').textContent='₦'+fmt(incTotal);
+}
+
+function renderTeam(level){
+    const members=window['_team'+level]||[];
+    const pct={A:20,B:2,C:1};
+    const dotColors={A:'#059669',B:'#7C3AED',C:'#D97706'};
+    document.getElementById('teamDot').style.background=dotColors[level];
+    document.getElementById('teamTitle').textContent=`Level ${level} Members`;
+    document.getElementById('teamCountBadge').textContent=`${members.length} member${members.length!==1?'s':''}`;
+    const list=document.getElementById('memberList');
+    if(!members.length){
+        list.innerHTML=`<div class="empty-team"><div class="empty-team-icon"><i class="ph ph-users"></i></div><h3>No Level ${level} Members Yet</h3><p>Share your referral link to start building<br>your Level ${level} team and earn ${pct[level]}% commission.</p></div>`;
+        return;
+    }
+    const bgColors=['#7C3AED','#059669','#D97706','#EF4444','#0EA5E9','#8B5CF6','#F59E0B'];
+    list.innerHTML=members.map((m,i)=>{
+        const name=m.fullName||m.username||'Anonymous';
+        const initials=name.slice(0,1).toUpperCase();
+        const deposited=m.totalDeposited||m.depositWallet||0;
+        const commission=deposited*(pct[level]/100);
+        const product=m.currentPlan||m.activePlan||'Standard Plan';
+        const isActive=deposited>0;
+        let joinDate='—';
+        if(m.createdAt){let d;if(m.createdAt.toDate)d=m.createdAt.toDate();else if(m.createdAt?.seconds)d=new Date(m.createdAt.seconds*1000);else d=new Date(m.createdAt);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];joinDate=`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()}`;}
+        let investTime='—';
+        if(m.lastDeposit){let d;if(m.lastDeposit.toDate)d=m.lastDeposit.toDate();else if(m.lastDeposit?.seconds)d=new Date(m.lastDeposit.seconds*1000);else d=new Date(m.lastDeposit);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];investTime=`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()}`;}
+        return`<div class="member-card"><div class="member-top"><div class="member-avatar" style="background:${bgColors[i%7]};">${initials}</div><div class="member-meta"><div class="member-name">${name}</div><div class="member-id">ID: ${(m.username||m.id||'').toUpperCase()}</div></div><div class="member-commission"><div class="commission-amt">+₦${fmt(commission)}</div><div class="commission-lbl">Your ${pct[level]}% comm.</div></div></div><div class="member-details-grid"><div class="detail-chip"><div class="detail-chip-lbl">Amount Deposited</div><div class="detail-chip-val green">₦${fmt(deposited)}</div></div><div class="detail-chip"><div class="detail-chip-lbl">Product / Plan</div><div class="detail-chip-val">${product}</div></div><div class="detail-chip"><div class="detail-chip-lbl">Investment Time</div><div class="detail-chip-val">${investTime}</div></div><div class="detail-chip"><div class="detail-chip-lbl">Joined</div><div class="detail-chip-val">${joinDate}</div></div></div><span class="member-status ${isActive?'status-active':'status-inactive'}"><i class="ph ph-${isActive?'check-circle':'clock'}"></i>${isActive?'Active Investor':'Not Yet Active'}</span></div>`;
+    }).join('');
+}
+
+async function loadNotifications(){
+    try{
+        const q=query(collection(db,'notifications'),where('uid','==',currentUid));
+        const snap=await getDocs(q);
+        const items=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.timestamp?.seconds||0)-(a.timestamp?.seconds||0));
+        window._renderNotifs(items.length?items:null);
+    }catch(e){window._renderNotifs(null);}
+}
+
+window.firebaseClaimGift=async function(code){
+    try{
+        const r=doc(db,'giftCodes',code.toUpperCase());
+        const s=await getDoc(r);
+        if(!s.exists())return{success:false,msg:'Invalid gift code.'};
+        const d=s.data();
+        if(!d.active)return{success:false,msg:'Code expired or used.'};
+        if(d.claimedBy&&d.claimedBy.includes(currentUsername))return{success:false,msg:'Already claimed.'};
+        const a=d.amount||0;
+        await updateDoc(doc(db,'users',currentUsername),{depositWallet:increment(a)});
+        await updateDoc(r,{claimedBy:[...(d.claimedBy||[]),currentUsername],active:d.singleUse?false:d.active});
+        await addDoc(collection(db,'notifications'),{uid:currentUid,type:'gift',title:'Gift Claimed! 🎁',msg:`₦${a.toLocaleString()} added.`,timestamp:serverTimestamp(),read:false});
+        return{success:true,amount:a};
+    }catch(e){return{success:false,msg:'Error.'};}
+};
+
+const hasSession=loadFromSession();
+onAuthStateChanged(auth,async(user)=>{
+    authChecked=true;
+    if(!user){if(!hasSession&&!sessionStorage.getItem('userLoggedIn')){sessionStorage.clear();window.location.href='login.html';return;}console.log('⚠️ No auth but session exists');return;}
+    currentUid=user.uid;
+    await loadData(user.uid);
+});
+setTimeout(()=>{if(!authChecked&&hasSession)console.log('⚠️ Auth timeout');},3000);
+</script>
+
+<script>
+const st=localStorage.getItem('elite_theme')||'light';applyTheme(st);
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const i=document.getElementById('themeIcon');if(i)i.className=t==='dark'?'ph ph-sun':'ph ph-moon';localStorage.setItem('elite_theme',t);}
+function toggleTheme(){const c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';applyTheme(n);showToast(n==='dark'?'🌙 Dark mode on':'☀️ Light mode on','info');}
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350);},4000);}
+window.showToast=showToast;
+function generateQR(url){const el=document.getElementById('qrCanvas');el.innerHTML='';new QRCode(el,{text:url,width:180,height:180,colorDark:'#0f0f1e',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});}
+function downloadQR(){const c=document.querySelector('#qrCanvas canvas');if(!c){showToast('QR not ready','error');return;}const a=document.createElement('a');a.download='EliteEarn-QR.png';a.href=c.toDataURL();a.click();showToast('✅ QR saved!','success');}
+function copyRefLink(){const l=document.getElementById('refLinkText').textContent;if(!l||l==='Loading your link...'){showToast('Link not ready','error');return;}navigator.clipboard.writeText(l).then(()=>{const b=document.getElementById('copyLinkBtn');b.textContent='COPIED ✓';b.classList.add('copied');showToast('✅ Link copied!','success');setTimeout(()=>{b.textContent='COPY';b.classList.remove('copied');},2500);}).catch(()=>showToast('❌ Copy failed','error'));}
+function shareOn(p){const l=document.getElementById('refLinkText').textContent;if(!l||l==='Loading your link...'){showToast('Link not ready','error');return;}const m=encodeURIComponent(`💰 Join EliteEarn and earn daily! Use my link:\n${l}`);const u={whatsapp:`https://wa.me/?text=${m}`,telegram:`https://t.me/share/url?url=${encodeURIComponent(l)}&text=${encodeURIComponent('💰 Join EliteEarn!')}`,facebook:`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(l)}`,twitter:`https://twitter.com/intent/tweet?text=${m}`};if(u[p])window.open(u[p],'_blank');}
+
+let currentLevel='A';
+document.getElementById('levelTabs').addEventListener('click',(e)=>{
+    const tab=e.target.closest('.level-tab');if(!tab)return;
+    const level=tab.getAttribute('data-level');if(level===currentLevel)return;
+    currentLevel=level;
+    document.querySelectorAll('.level-tab').forEach(t=>{t.classList.remove('active-a','active-b','active-c');});
+    tab.classList.add(`active-${level.toLowerCase()}`);
+    renderTeam(level);
+});
+
+const DN=[{id:'n1',type:'system',title:'Referral Active',msg:'Share your link! 20% Lvl A, 2% B, 1% C.',time:'Now',read:false},{id:'n2',type:'gift',title:'Gift Available 🎁',msg:'Claim your reward!',time:'1h ago',read:false}];
+const NI={deposit:'<i class="ph ph-arrow-down-left"></i>',gift:'<i class="ph ph-gift"></i>',system:'<i class="ph ph-bell-ringing"></i>',warning:'<i class="ph ph-warning"></i>'};
+function _renderNotifs(i){const l=document.getElementById('nList'),d=i||DN,u=d.filter(n=>!n.read).length;document.getElementById('nCount').textContent=u>0?`${u} unread`:'All caught up';document.getElementById('notifDot').classList.toggle('active',u>0);if(!d.length){l.innerHTML='<div class="n-empty2"><i class="ph ph-bell-slash"></i><p>No notifications</p></div>';return;}l.innerHTML=d.map((n,i)=>`<div class="n-item ${n.read?'':'unread'}" onclick="markOne('${n.id||i}',this)"><div class="n-icon2 ${n.type}">${NI[n.type]||NI.system}</div><div class="n-body2"><div class="n-title2">${n.title}</div><div class="n-msg2">${n.msg}</div><div class="n-time2">${n.time||'Now'}</div></div>${!n.read?'<div class="n-dot2"></div>':''}</div>`).join('');}
+window._renderNotifs=_renderNotifs;
+function openNotifications(){document.getElementById('notifOverlay').classList.add('open');document.getElementById('notifPanel').classList.add('open');}
+function closeNotifications(){document.getElementById('notifOverlay').classList.remove('open');document.getElementById('notifPanel').classList.remove('open');}
+function markAllRead(){document.querySelectorAll('.n-item').forEach(e=>{e.classList.remove('unread');const d=e.querySelector('.n-dot2');if(d)d.remove();});document.getElementById('nCount').textContent='All caught up';document.getElementById('notifDot').classList.remove('active');showToast('✅ Marked read','success');}
+function markOne(id,e){if(!e.classList.contains('unread'))return;e.classList.remove('unread');const d=e.querySelector('.n-dot2');if(d)d.remove();const r=document.querySelectorAll('.n-item.unread').length;document.getElementById('nCount').textContent=r>0?`${r} unread`:'All caught up';if(!r)document.getElementById('notifDot').classList.remove('active');}
+function openGiftModal(){document.getElementById('giftOv').classList.add('open');document.getElementById('gFormArea').style.display='block';document.getElementById('gResult').classList.remove('show');document.getElementById('gCodeInput').value='';document.getElementById('gClaimBtn').disabled=false;document.getElementById('gClaimBtn').innerHTML='<i class="ph ph-gift"></i> CLAIM REWARD';setTimeout(()=>document.getElementById('gCodeInput').focus(),400);}
+function closeGiftModal(){document.getElementById('giftOv').classList.remove('open');document.getElementById('giftBadge').style.display='none';}
+document.getElementById('gCodeInput').addEventListener('input',function(){const p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p,p);});
+document.getElementById('gCodeInput').addEventListener('keydown',e=>{if(e.key==='Enter')claimGift();});
+async function claimGift(){const r=document.getElementById('gCodeInput').value.trim();if(!r||r.length<4){showToast('❌ Enter valid code','error');return;}const b=document.getElementById('gClaimBtn');b.disabled=true;b.innerHTML='<div class="btn-sp"></div> Verifying...';try{let res;if(typeof window.firebaseClaimGift==='function')res=await window.firebaseClaimGift(r);else{await new Promise(r=>setTimeout(r,1500));res=r.startsWith('ELITE')?{success:true,amount:5000}:{success:false,msg:'Invalid code.'};}if(res.success){document.getElementById('gFormArea').style.display='none';document.getElementById('gAmt').textContent=`+₦${res.amount.toLocaleString()}`;document.getElementById('gAmtWrap').style.display='block';document.getElementById('gResult').classList.add('show');showToast(`🎁 ₦${res.amount.toLocaleString()} added!`,'success');}else{b.disabled=false;b.innerHTML='<i class="ph ph-gift"></i> CLAIM REWARD';showToast(`❌ ${res.msg}`,'error');}}catch(e){b.disabled=false;b.innerHTML='<i class="ph ph-gift"></i> CLAIM REWARD';showToast('❌ Error','error');}}
+console.log('✅ Referral page ready');
+</script>
+</body>
+</html>
