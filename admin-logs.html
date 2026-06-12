@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Activity Logs</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#0a0a14;--card:#141428;--card2:#1a1a30;--text:#f0f0ff;--text2:#8888aa;
+            --border:#222240;--gold:#D4A017;--gold2:#F0C030;
+            --green:#059669;--red:#EF4444;--purple:#7C3AED;--blue:#0EA5E9;--orange:#F59E0B;
+            --header:linear-gradient(160deg,#0a0202 0%,#1a0505 30%,#2a0808 60%,#3a0a0a 100%);
+            --overlay:rgba(0,0,0,0.85);--modal-bg:#141428;--input-bg:#1a1a30;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;color:var(--text)}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:20px}
+        .page-header{background:var(--header);padding:16px 18px 24px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(5,150,105,0.08) 0%,transparent 70%);top:-30px;right:-30px}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        .back-btn{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;text-decoration:none}
+        .page-title{font-size:20px;font-weight:900;color:white;font-family:'Oswald',sans-serif}
+        .header-badge{font-size:9px;font-weight:800;color:var(--green);background:rgba(5,150,105,0.15);padding:4px 10px;border-radius:50px;text-transform:uppercase}
+        .search-bar{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+        .search-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;color:white;outline:none;font-family:'Montserrat',sans-serif}
+        .search-input::placeholder{color:rgba(255,255,255,0.4)}
+        .search-input:focus{border-color:var(--gold)}
+        .filter-tabs{display:flex;gap:0;background:rgba(255,255,255,0.05);border-radius:12px;padding:4px}
+        .filter-tab{flex:1;text-align:center;padding:10px 6px;border-radius:10px;font-size:10px;font-weight:800;cursor:pointer;transition:all .2s;color:var(--text2);user-select:none}
+        .filter-tab.active{background:var(--gold);color:#1a0505}
+        .stats-bar{display:flex;gap:8px;padding:0 14px;margin-top:-10px;position:relative;z-index:2}
+        .stat-mini{flex:1;background:var(--card);border-radius:14px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+        .stat-mini-val{font-size:16px;font-weight:900;font-family:'Oswald',sans-serif;color:var(--text)}
+        .stat-mini-lbl{font-size:8px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+        .content{padding:14px;display:flex;flex-direction:column;gap:10px}
+        .delete-all-btn{width:100%;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:12px;font-size:12px;font-weight:800;color:var(--red);cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px}
+        .delete-all-btn:hover{background:rgba(239,68,68,0.2)}
+
+        /* Log Card */
+        .log-card{background:var(--card);border-radius:14px;padding:12px 14px;border:1px solid var(--border);transition:all .2s}
+        .log-card.fund{border-left:3px solid var(--gold)}
+        .log-card.approve{border-left:3px solid var(--green)}
+        .log-card.reject{border-left:3px solid var(--red)}
+        .log-card.system{border-left:3px solid var(--purple)}
+        .log-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px}
+        .log-icon{width:34px;height:34px;min-width:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+        .log-icon.fund{background:rgba(212,160,23,0.15);color:var(--gold)}
+        .log-icon.approve{background:rgba(5,150,105,0.15);color:var(--green)}
+        .log-icon.reject{background:rgba(239,68,68,0.15);color:var(--red)}
+        .log-icon.system{background:rgba(124,58,237,0.15);color:var(--purple)}
+        .log-info{flex:1;min-width:0}
+        .log-action{font-size:12px;font-weight:800;color:var(--text);margin-bottom:2px}
+        .log-detail{font-size:9px;color:var(--text2);line-height:1.4}
+        .log-meta{display:flex;align-items:center;justify-content:space-between;font-size:9px;color:var(--text2);margin-top:6px;padding-top:6px;border-top:1px solid var(--border)}
+        .log-admin{color:var(--gold);font-weight:700}
+        .log-date{font-weight:600}
+        .log-actions{display:flex;gap:4px;margin-top:6px}
+        .log-action-btn{flex:1;padding:6px 4px;border-radius:8px;border:1px solid var(--border);font-size:8px;font-weight:800;cursor:pointer;text-align:center;transition:all .2s;font-family:'Montserrat',sans-serif;background:var(--card2);color:var(--text2)}
+        .log-action-btn.red{color:var(--red);border-color:rgba(239,68,68,0.3)}
+        .log-action-btn.red:hover{background:rgba(239,68,68,0.1)}
+        .empty-state{text-align:center;padding:40px;color:var(--text2)}
+        .empty-state i{font-size:48px;margin-bottom:12px;opacity:.4}
+
+        /* Modal */
+        .modal-overlay{position:fixed;inset:0;background:var(--overlay);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+        .modal-overlay.open{opacity:1;pointer-events:all}
+        .modal-box{background:var(--modal-bg);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:0 0 30px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:0 -12px 40px rgba(0,0,0,0.4);max-height:85vh;overflow-y:auto}
+        .modal-overlay.open .modal-box{transform:translateY(0)}
+        .modal-drag{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+        .modal-hdr{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+        .modal-hdr h3{font-size:16px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+        .modal-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px}
+        .modal-body{padding:16px 20px}
+        .detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+        .detail-lbl{font-size:10px;font-weight:600;color:var(--text2)}
+        .detail-val{font-size:12px;font-weight:800;color:var(--text);font-family:'Oswald',sans-serif}
+        .detail-val.green{color:var(--green)}.detail-val.red{color:var(--red)}.detail-val.gold{color:var(--gold)}.detail-val.purple{color:var(--purple)}
+        .btn-red{width:100%;background:linear-gradient(135deg,#EF4444,#DC2626);border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:800;color:white;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif}
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}
+        .spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.2);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .action-badge{display:inline-block;padding:2px 6px;border-radius:6px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+        .action-badge.fund{background:rgba(212,160,23,0.2);color:var(--gold)}
+        .action-badge.approve{background:rgba(5,150,105,0.2);color:var(--green)}
+        .action-badge.reject{background:rgba(239,68,68,0.2);color:var(--red)}
+        .action-badge.system{background:rgba(124,58,237,0.2);color:var(--purple)}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <a href="dashboard.html" class="back-btn"><i class="ph ph-arrow-left"></i></a>
+            <span class="page-title">Activity Logs</span>
+            <span class="header-badge"><i class="ph ph-clock-counter-clockwise"></i> AUDIT</span>
+        </div>
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search by admin, user, or action..." oninput="filterLogs()">
+        </div>
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all" onclick="switchFilter('all',this)">ALL</div>
+            <div class="filter-tab" data-filter="fund" onclick="switchFilter('fund',this)">FUND</div>
+            <div class="filter-tab" data-filter="approve" onclick="switchFilter('approve',this)">APPROVE</div>
+            <div class="filter-tab" data-filter="reject" onclick="switchFilter('reject',this)">REJECT</div>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-mini"><div class="stat-mini-val" id="totalLogs">0</div><div class="stat-mini-lbl">Total Logs</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--gold)" id="fundCount">0</div><div class="stat-mini-lbl">Fund Actions</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--green)" id="approveCount">0</div><div class="stat-mini-lbl">Approved</div></div>
+    </div>
+
+    <div class="content">
+        <button class="delete-all-btn" onclick="openDeleteAllModal()"><i class="ph ph-trash"></i> DELETE ALL LOGS</button>
+        <div id="logList"><div style="text-align:center;padding:30px;color:var(--text2)"><div class="spinner"></div><p style="margin-top:8px;font-size:12px">Loading logs...</p></div></div>
+    </div>
+</div>
+
+<!-- LOG DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this)closeModal('detailModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-clock-counter-clockwise"></i> Log Details</h3><button class="modal-close" onclick="closeModal('detailModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body" id="detailBody"></div>
+    </div>
+</div>
+
+<!-- DELETE ALL MODAL -->
+<div class="modal-overlay" id="deleteAllModal" onclick="if(event.target===this)closeModal('deleteAllModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-trash"></i> Delete All Logs</h3><button class="modal-close" onclick="closeModal('deleteAllModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body" style="text-align:center">
+            <p style="font-size:13px;color:var(--red);margin-bottom:16px">This will permanently delete <b>ALL activity logs</b>. This cannot be undone.</p>
+            <button class="btn-red" id="deleteAllBtn" onclick="executeDeleteAll()"><i class="ph ph-trash"></i> DELETE ALL LOGS</button>
+        </div>
+    </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal" onclick="if(event.target===this)closeModal('confirmModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-warning"></i> Confirm</h3><button class="modal-close" onclick="closeModal('confirmModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body" style="text-align:center">
+            <p style="font-size:13px;color:var(--text2);margin-bottom:16px" id="confirmMsg">Are you sure?</p>
+            <div style="display:flex;gap:10px">
+                <button class="form-input" style="flex:1;text-align:center;cursor:pointer;background:var(--card2)" onclick="closeModal('confirmModal')">CANCEL</button>
+                <button class="btn-red" style="flex:1" id="confirmActionBtn">CONFIRM</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+window._db=db;window._allLogs=[];let currentFilter='all';
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)}
+function fmtShort(n){return n>=1000000?'₦'+(n/1000000).toFixed(1)+'M':n>=1000?'₦'+(n/1000).toFixed(1)+'K':'₦'+fmt(n)}
+function fmtDate(ts){if(!ts)return'—';let d;if(ts.toDate)d=ts.toDate();else if(ts?.seconds)d=new Date(ts.seconds*1000);else d=new Date(ts);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+
+if(sessionStorage.getItem('adminLoggedIn')!=='true'){window.location.href='../admin-login.html'}
+
+async function loadLogs(){
+    try{
+        const snap=await getDocs(collection(db,'adminLogs'));
+        const logs=snap.docs.map(d=>({id:d.id,...d.data()}));
+        logs.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+        window._allLogs=logs;
+        updateStats();
+        renderLogs(currentFilter);
+    }catch(e){console.error(e)}
+}
+
+function updateStats(){
+    const logs=window._allLogs||[];
+    document.getElementById('totalLogs').textContent=logs.length;
+    document.getElementById('fundCount').textContent=logs.filter(l=>l.action?.includes('fund')).length;
+    document.getElementById('approveCount').textContent=logs.filter(l=>l.action?.includes('approve')).length;
+}
+
+window.switchFilter=function(filter,el){
+    currentFilter=filter;
+    document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    renderLogs(filter);
+};
+
+window.filterLogs=function(){renderLogs(currentFilter)};
+
+function getActionCategory(action){
+    if(!action)return' system';
+    if(action.includes('fund')||action.includes('wallet')||action.includes('deduct'))return' fund';
+    if(action.includes('approve'))return' approve';
+    if(action.includes('reject'))return' reject';
+    return' system';
+}
+
+function getActionIcon(cat){
+    const icons={fund:'<i class="ph ph-plus-circle"></i>',approve:'<i class="ph ph-check-circle"></i>',reject:'<i class="ph ph-x-circle"></i>',system:'<i class="ph ph-gear"></i>'};
+    return icons[cat.trim()]||icons.system;
+}
+
+function renderLogs(filter){
+    let logs=window._allLogs||[];
+    const search=document.getElementById('searchInput')?.value?.toLowerCase()||'';
+    if(filter!=='all'){
+        if(filter==='fund')logs=logs.filter(l=>l.action?.includes('fund')||l.action?.includes('wallet')||l.action?.includes('deduct'));
+        else if(filter==='approve')logs=logs.filter(l=>l.action?.includes('approve'));
+        else if(filter==='reject')logs=logs.filter(l=>l.action?.includes('reject'));
+    }
+    if(search)logs=logs.filter(l=>(l.adminUsername||'').toLowerCase().includes(search)||(l.targetUser||'').toLowerCase().includes(search)||(l.action||'').toLowerCase().includes(search)||(l.note||'').toLowerCase().includes(search));
+
+    const list=document.getElementById('logList');
+    if(!logs.length){list.innerHTML=`<div class="empty-state"><i class="ph ph-inbox"></i><p>No logs found</p></div>`;return}
+
+    list.innerHTML=logs.map(l=>{
+        const cat=getActionCategory(l.action);
+        const actionLabel=(l.action||'action').replace(/_/g,' ').toUpperCase();
+        const amount=l.amount?`₦${fmt(l.amount||0)}`:'';
+        const target=l.targetUser?`@${l.targetUser}`:'';
+        const note=l.note?` · Note: ${l.note}`:'';
+        const planName=l.planName?` · Plan: ${l.planName}`:'';
+        const walletType=l.walletType?` · Wallet: ${l.walletType}`:'';
+
+        return`<div class="log-card${cat}">
+            <div class="log-top">
+                <div class="log-icon${cat}">${getActionIcon(cat)}</div>
+                <div class="log-info">
+                    <div class="log-action"><span class="action-badge${cat}">${actionLabel}</span> ${amount} ${target}</div>
+                    <div class="log-detail">${note}${planName}${walletType}</div>
+                </div>
+            </div>
+            <div class="log-meta">
+                <span class="log-admin"><i class="ph ph-shield-check"></i> ${l.adminUsername||'admin'}</span>
+                <span class="log-date"><i class="ph ph-clock"></i> ${fmtDate(l.createdAt)}</span>
+            </div>
+            <div class="log-actions">
+                <button class="log-action-btn" onclick="openDetailModal('${l.id}')"><i class="ph ph-eye"></i> View</button>
+                <button class="log-action-btn red" onclick="deleteLog('${l.id}')"><i class="ph ph-trash"></i> Delete</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// 👁️ Detail
+window.openDetailModal=function(id){
+    const l=window._allLogs.find(x=>x.id===id);if(!l)return;
+    document.getElementById('detailBody').innerHTML=`
+        <div class="detail-row"><span class="detail-lbl">Action</span><span class="detail-val gold">${(l.action||'—').replace(/_/g,' ').toUpperCase()}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Admin</span><span class="detail-val">${l.adminUsername||'—'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Target User</span><span class="detail-val">${l.targetUser||'—'}</span></div>
+        ${l.amount?`<div class="detail-row"><span class="detail-lbl">Amount</span><span class="detail-val gold">₦${fmt(l.amount)}</span></div>`:''}
+        ${l.walletType?`<div class="detail-row"><span class="detail-lbl">Wallet</span><span class="detail-val">${l.walletType}</span></div>`:''}
+        ${l.planName?`<div class="detail-row"><span class="detail-lbl">Plan</span><span class="detail-val purple">${l.planName}</span></div>`:''}
+        ${l.note?`<div class="detail-row"><span class="detail-lbl">Note</span><span class="detail-val" style="color:var(--text2)">${l.note}</span></div>`:''}
+        <div class="detail-row"><span class="detail-lbl">Date</span><span class="detail-val">${fmtDate(l.createdAt)}</span></div>
+    `;
+    openModal('detailModal');
+};
+
+// 🗑️ Delete single
+window.deleteLog=function(id){
+    document.getElementById('confirmMsg').textContent='Delete this log entry?';
+    document.getElementById('confirmActionBtn').onclick=async()=>{
+        try{await deleteDoc(doc(db,'adminLogs',id));
+            const snap=await getDocs(collection(db,'adminLogs'));window._allLogs=snap.docs.map(d=>({id:d.id,...d.data()}));
+            updateStats();renderLogs(currentFilter);
+            showToast('✅ Log deleted','success');closeModal('confirmModal');
+        }catch(e){showToast('❌ Failed','error')}
+    };
+    openModal('confirmModal');
+};
+
+// 🗑️ Delete ALL
+window.openDeleteAllModal=function(){openModal('deleteAllModal')};
+window.executeDeleteAll=async function(){
+    const btn=document.getElementById('deleteAllBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Deleting...';
+    try{
+        const snap=await getDocs(collection(db,'adminLogs'));
+        const batch=writeBatch(db);
+        snap.docs.forEach(d=>batch.delete(d.ref));
+        await batch.commit();
+        window._allLogs=[];updateStats();renderLogs(currentFilter);
+        showToast(`✅ ${snap.docs.length} logs deleted!`,'success');
+        closeModal('deleteAllModal');
+    }catch(e){console.error(e);showToast('❌ Failed','error');btn.disabled=false;btn.innerHTML='<i class="ph ph-trash"></i> DELETE ALL LOGS'}
+};
+
+loadLogs();
+</script>
+
+<script>
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},4000)}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+window.closeModal=closeModal;window.openModal=openModal;
+</script>
+</body>
+</html>
