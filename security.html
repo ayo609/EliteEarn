@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>EliteEarn – Security Settings</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#f2f2f7;--card:#ffffff;--card2:#f8f8fc;--text:#0f0f1e;--text2:#6b6b8a;
+            --border:#e4e4ef;--gold:#B8960A;--gold2:#D4A800;--gold3:#F0C000;
+            --header:linear-gradient(150deg,#1a0505 0%,#5a0e0e 40%,#8b1a1a 70%,#a52020 100%);
+            --input-bg:#f5f5fa;--overlay:rgba(0,0,0,0.65);--modal-bg:#ffffff;--notif-bg:#ffffff;
+            --danger-bg:#fff0f0;--danger-border:#ffd0d8;--success-bg:#ecfdf5;--success-border:#a7f3d0;
+            --toggle-on:#059669;--toggle-off:#d1d5db;
+        }
+        [data-theme="dark"]{
+            --bg:#0c0c18;--card:#181830;--card2:#20203a;--text:#f0f0ff;--text2:#8888aa;
+            --border:#2a2a44;--input-bg:#20203a;--modal-bg:#181830;--notif-bg:#181830;
+            --danger-bg:#2a1010;--danger-border:#4a1a1a;--success-bg:#0a2a1a;--success-border:#1a4a2a;
+            --toggle-off:#4a4a6a;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:110px}
+        .page-header{background:var(--header);padding:18px 20px 80px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(196,154,0,.18) 0%,transparent 70%);top:-80px;right:-60px;pointer-events:none}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+        .logo-area{display:flex;align-items:center;gap:10px}
+        .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:900;box-shadow:0 4px 12px rgba(245,158,11,.4);font-family:'Oswald',sans-serif}
+        .logo-text{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:white;letter-spacing:.5px}
+        .top-actions{display:flex;gap:10px}
+        .icon-btn{background:rgba(255,255,255,.15);border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
+        .icon-btn:hover{background:rgba(255,255,255,.28)}
+        .header-title{text-align:center;color:white}
+        .header-title h1{font-size:26px;font-weight:900;margin-bottom:6px}
+        .header-subtitle{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase}
+        .content{padding:0 16px 20px;margin-top:-60px;position:relative;z-index:2;display:flex;flex-direction:column;gap:14px}
+
+        /* Cards */
+        .section-card{background:var(--card);border-radius:24px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);transition:background .3s}
+        .section-title{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:800;color:var(--text);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+        .section-title i{color:var(--gold);font-size:20px}
+        .section-sub{font-size:12px;color:var(--text2);font-weight:600;margin-bottom:16px;line-height:1.5}
+
+        /* Form elements */
+        .form-group{margin-bottom:16px}
+        .form-label{font-size:10px;font-weight:800;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:6px}
+        .form-input{width:100%;background:var(--input-bg);border:1.5px solid var(--border);border-radius:14px;padding:13px 16px;font-size:14px;font-weight:600;color:var(--text);font-family:'Montserrat',sans-serif;outline:none;transition:all .25s}
+        .form-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,150,10,.12)}
+        .form-input::placeholder{color:var(--text2);font-weight:500}
+        .input-icon-wrap{position:relative}
+        .input-icon-wrap .form-input{padding-right:44px}
+        .input-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text2);font-size:18px;transition:color .2s}
+        .input-eye:hover{color:var(--gold)}
+
+        /* Buttons */
+        .btn-primary{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:50px;padding:14px;font-size:14px;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .3s;font-family:'Montserrat',sans-serif;letter-spacing:.5px;box-shadow:0 6px 20px rgba(184,150,10,.35)}
+        .btn-primary:hover{transform:translateY(-2px)}
+        .btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
+        .btn-danger{width:100%;background:linear-gradient(135deg,#EF4444,#DC2626);border:none;border-radius:50px;padding:14px;font-size:14px;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .3s;font-family:'Montserrat',sans-serif;letter-spacing:.5px;box-shadow:0 6px 20px rgba(239,68,68,.3)}
+        .btn-danger:hover{transform:translateY(-2px)}
+        .btn-outline{width:100%;background:transparent;border:1.5px solid var(--border);border-radius:50px;padding:13px;font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif}
+        .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+
+        /* Toggle Switch */
+        .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+        .toggle-info{flex:1}
+        .toggle-label{font-size:13px;font-weight:800;color:var(--text);margin-bottom:3px}
+        .toggle-desc{font-size:11px;color:var(--text2);font-weight:600}
+        .toggle-switch{position:relative;width:52px;height:28px;flex-shrink:0}
+        .toggle-switch input{opacity:0;width:0;height:0}
+        .toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--toggle-off);border-radius:28px;transition:.3s}
+        .toggle-slider::before{content:'';position:absolute;height:22px;width:22px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
+        .toggle-switch input:checked+.toggle-slider{background:var(--toggle-on)}
+        .toggle-switch input:checked+.toggle-slider::before{transform:translateX(24px)}
+
+        /* Status badges */
+        .status-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:50px;font-size:10px;font-weight:800;letter-spacing:.5px}
+        .status-badge.verified{background:var(--success-bg);color:#059669;border:1px solid var(--success-border)}
+        .status-badge.unverified{background:var(--danger-bg);color:#EF4444;border:1px solid var(--danger-border)}
+        .status-badge.active{background:var(--success-bg);color:#059669}
+        .status-badge.frozen{background:var(--danger-bg);color:#EF4444}
+
+        /* Session list */
+        .session-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+        .session-item:last-child{border-bottom:none}
+        .session-icon{width:40px;height:40px;min-width:40px;border-radius:12px;background:var(--input-bg);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text2)}
+        .session-info{flex:1;min-width:0}
+        .session-device{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+        .session-meta{font-size:11px;color:var(--text2);font-weight:600}
+        .session-current{font-size:10px;font-weight:800;color:#059669;background:rgba(5,150,105,.1);padding:3px 8px;border-radius:50px}
+
+        /* Activity log */
+        .activity-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+        .activity-item:last-child{border-bottom:none}
+        .activity-dot{width:8px;height:8px;min-width:8px;border-radius:50%;margin-top:5px}
+        .activity-dot.success{background:#059669}
+        .activity-dot.warning{background:#F59E0B}
+        .activity-dot.danger{background:#EF4444}
+        .activity-body{flex:1}
+        .activity-action{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px}
+        .activity-meta{font-size:10px;color:var(--text2);font-weight:600}
+
+        /* Tips */
+        .tip-item{display:flex;gap:10px;align-items:flex-start;padding:8px 0}
+        .tip-icon{width:24px;height:24px;min-width:24px;border-radius:8px;background:rgba(184,150,10,.1);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--gold)}
+        .tip-text{font-size:11px;color:var(--text2);font-weight:600;line-height:1.5}
+
+        /* PIN Modal */
+        .pin-overlay{position:fixed;inset:0;background:var(--overlay);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s}
+        .pin-overlay.open{opacity:1;pointer-events:all}
+        .pin-modal{background:var(--modal-bg);border-radius:32px 32px 0 0;width:100%;max-width:480px;padding:0 0 40px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:0 -12px 50px rgba(0,0,0,.25)}
+        .pin-overlay.open .pin-modal{transform:translateY(0)}
+        .drag-h{width:48px;height:5px;background:var(--border);border-radius:3px;margin:16px auto 0}
+        .pin-modal-hdr{padding:20px 24px 10px;text-align:center}
+        .pin-modal-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:28px;color:white;animation:pop .5s both}
+        @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+        .pin-modal-hdr h2{font-size:18px;font-weight:900;color:var(--text);margin-bottom:4px}
+        .pin-modal-hdr p{font-size:12px;color:var(--text2);font-weight:600}
+        .pin-dots-row{display:flex;justify-content:center;gap:14px;padding:16px 0 6px}
+        .pin-dot{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--border);background:transparent;transition:all .2s}
+        .pin-dot.filled{background:var(--gold);border-color:var(--gold);transform:scale(1.15)}
+        .pin-dot.error{background:#EF4444;border-color:#EF4444;animation:shake .4s ease}
+        .pin-dot.success{background:#059669;border-color:#059669}
+        @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+        .pin-step-label{text-align:center;font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+        .pin-error-msg{text-align:center;font-size:11px;font-weight:700;color:#EF4444;min-height:16px;margin-bottom:4px}
+        .pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px 28px 0}
+        .pin-key{height:58px;border-radius:16px;border:none;background:var(--card2);font-size:20px;font-weight:700;color:var(--text);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+        .pin-key:active{transform:scale(.92);background:var(--border)}
+        .pin-key.del{font-size:20px;color:var(--text2)}
+        .pin-key.empty{background:transparent;box-shadow:none;cursor:default}
+        .pin-cancel{display:block;width:100%;margin-top:10px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;padding:8px;text-align:center}
+
+        /* Confirm Modal */
+        .confirm-overlay{position:fixed;inset:0;background:var(--overlay);z-index:350;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+        .confirm-overlay.open{opacity:1;pointer-events:all}
+        .confirm-box{background:var(--modal-bg);border-radius:28px;padding:28px 24px;max-width:300px;width:90%;text-align:center;transform:scale(.85);transition:transform .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 16px 50px rgba(0,0,0,.2)}
+        .confirm-overlay.open .confirm-box{transform:scale(1)}
+        .confirm-icon{font-size:44px;margin-bottom:12px}
+        .confirm-box h3{font-size:17px;font-weight:900;color:var(--text);margin-bottom:8px}
+        .confirm-box p{font-size:12px;color:var(--text2);font-weight:600;line-height:1.5;margin-bottom:20px}
+        .confirm-btns{display:flex;gap:10px}
+        .confirm-cancel{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:50px;padding:12px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;font-family:'Montserrat',sans-serif}
+        .confirm-action{flex:1;background:#EF4444;border:none;border-radius:50px;padding:12px;font-size:13px;font-weight:700;color:white;cursor:pointer;font-family:'Montserrat',sans-serif}
+
+        /* Toast */
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.12);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:#059669}.toast.error{border-left-color:#EF4444}
+        .btn-sp{width:18px;height:18px;border:3px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:10px 20px 24px;display:flex;justify-content:space-around;align-items:flex-end;box-shadow:0 -6px 24px rgba(0,0,0,.09);z-index:100;transition:background .3s}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-decoration:none;color:inherit;padding:4px 8px;border-radius:12px;transition:all .2s}
+        .nav-item i{font-size:22px;color:#9ca3af;transition:color .2s}
+        .nav-item span{font-size:10px;font-weight:700;color:#9ca3af;transition:color .2s}
+        .nav-item.active i,.nav-item:hover i{color:#8B5CF6}
+        .nav-item.active span,.nav-item:hover span{color:#8B5CF6}
+        .nav-center{position:relative;top:-26px}
+        .nav-center-btn{width:58px;height:58px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;box-shadow:0 6px 20px rgba(245,158,11,.4);border:4px solid var(--card);cursor:pointer;transition:all .3s}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <div class="logo-area"><div class="logo-icon">E</div><div class="logo-text">ELITEEARN</div></div>
+            <div class="top-actions"><button class="icon-btn" onclick="toggleTheme()"><i class="ph ph-moon" id="themeIcon"></i></button></div>
+        </div>
+        <div class="header-title"><h1>Security Settings</h1><div class="header-subtitle"><i class="ph ph-shield-check"></i> PROTECT YOUR ACCOUNT</div></div>
+    </div>
+
+    <div class="content">
+        <!-- Account Status -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-shield-check"></i> Account Status</div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+                <div>
+                    <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px" id="accountStatusLabel">Account Active</div>
+                    <div style="font-size:11px;color:var(--text2);font-weight:600" id="accountStatusDesc">Your account is fully operational</div>
+                </div>
+                <span class="status-badge active" id="accountStatusBadge"><i class="ph ph-check-circle"></i> ACTIVE</span>
+            </div>
+            <button class="btn-danger" style="margin-top:16px" id="freezeAccountBtn" onclick="openConfirmModal('freeze')">
+                <i class="ph ph-snowflake"></i> FREEZE ACCOUNT
+            </button>
+            <button class="btn-outline" style="margin-top:8px;display:none" id="unfreezeAccountBtn" onclick="openConfirmModal('unfreeze')">
+                <i class="ph ph-lock-open"></i> UNFREEZE ACCOUNT
+            </button>
+        </div>
+
+        <!-- Change Password -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-lock-key"></i> Change Password</div>
+            <div class="form-group"><label class="form-label">Current Password</label><div class="input-icon-wrap"><input type="password" id="currentPassword" class="form-input" placeholder="Enter current password"><i class="ph ph-eye input-eye" onclick="togglePass('currentPassword',this)"></i></div></div>
+            <div class="form-group"><label class="form-label">New Password</label><div class="input-icon-wrap"><input type="password" id="newPassword" class="form-input" placeholder="Min 6 characters"><i class="ph ph-eye input-eye" onclick="togglePass('newPassword',this)"></i></div></div>
+            <div class="form-group"><label class="form-label">Confirm New Password</label><div class="input-icon-wrap"><input type="password" id="confirmNewPassword" class="form-input" placeholder="Re-enter new password"><i class="ph ph-eye input-eye" onclick="togglePass('confirmNewPassword',this)"></i></div></div>
+            <button class="btn-primary" onclick="changePassword()"><i class="ph ph-floppy-disk"></i> UPDATE PASSWORD</button>
+        </div>
+
+        <!-- Change PIN -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-lock-simple"></i> Withdrawal PIN</div>
+            <div class="section-sub">Change your 4-digit withdrawal PIN used for securing payouts.</div>
+            <button class="btn-primary" onclick="openPinModal('change')"><i class="ph ph-arrows-clockwise"></i> CHANGE WITHDRAWAL PIN</button>
+        </div>
+
+        <!-- 2FA Toggle -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-fingerprint"></i> Two-Factor Authentication</div>
+            <div class="toggle-row">
+                <div class="toggle-info">
+                    <div class="toggle-label">Enable 2FA</div>
+                    <div class="toggle-desc">Add an extra layer of security to your account</div>
+                </div>
+                <label class="toggle-switch"><input type="checkbox" id="twoFAToggle" onchange="toggle2FA()"><span class="toggle-slider"></span></label>
+            </div>
+            <div id="twoFAStatus" style="font-size:11px;font-weight:600;color:var(--text2);margin-top:4px">2FA is currently disabled</div>
+        </div>
+
+        <!-- Email Verification -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-envelope"></i> Email Verification</div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+                <div>
+                    <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px" id="emailVerifyText">Email Verified ✓</div>
+                    <div style="font-size:11px;color:var(--text2);font-weight:600" id="emailVerifyDesc">Your email is confirmed</div>
+                </div>
+                <span class="status-badge verified" id="emailVerifyBadge"><i class="ph ph-check-circle"></i> VERIFIED</span>
+            </div>
+            <button class="btn-outline" style="margin-top:12px;display:none" id="resendVerifyBtn" onclick="resendVerification()">
+                <i class="ph ph-paper-plane-tilt"></i> RESEND VERIFICATION EMAIL
+            </button>
+        </div>
+
+        <!-- Active Sessions -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-monitor"></i> Login History</div>
+            <div id="sessionList">
+                <div class="session-item"><div class="session-icon"><i class="ph ph-device-mobile"></i></div><div class="session-info"><div class="session-device">Current Device</div><div class="session-meta">Lagos, Nigeria · Just now</div></div><span class="session-current">CURRENT</span></div>
+            </div>
+            <button class="btn-outline" style="margin-top:12px" onclick="showToast('✅ All other sessions logged out','success')">
+                <i class="ph ph-sign-out"></i> LOGOUT ALL OTHER DEVICES
+            </button>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-clock-counter-clockwise"></i> Activity Log</div>
+            <div id="activityList">
+                <div class="activity-item"><div class="activity-dot success"></div><div class="activity-body"><div class="activity-action">Login successful</div><div class="activity-meta">Today · Lagos, Nigeria</div></div></div>
+                <div class="activity-item"><div class="activity-dot warning"></div><div class="activity-body"><div class="activity-action">Password changed</div><div class="activity-meta">2 days ago</div></div></div>
+                <div class="activity-item"><div class="activity-dot success"></div><div class="activity-body"><div class="activity-action">Account created</div><div class="activity-meta" id="accountCreatedDate">Recently</div></div></div>
+            </div>
+        </div>
+
+        <!-- Security Tips -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-lightbulb"></i> Security Tips</div>
+            <div class="tip-item"><div class="tip-icon">1</div><div class="tip-text">Use a <strong style="color:var(--text)">strong, unique password</strong> that you don't use on other sites.</div></div>
+            <div class="tip-item"><div class="tip-icon">2</div><div class="tip-text">Never <strong style="color:var(--text)">share your PIN or password</strong> with anyone, including support staff.</div></div>
+            <div class="tip-item"><div class="tip-icon">3</div><div class="tip-text">Always <strong style="color:var(--text)">verify payment details</strong> before making transfers.</div></div>
+            <div class="tip-item"><div class="tip-icon">4</div><div class="tip-text"><strong style="color:var(--text)">Logout after each session</strong> when using shared or public devices.</div></div>
+            <div class="tip-item"><div class="tip-icon">5</div><div class="tip-text">Enable <strong style="color:var(--text)">2FA</strong> for an extra layer of account protection.</div></div>
+        </div>
+
+        <!-- Export Data -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-download-simple"></i> Export My Data</div>
+            <div class="section-sub">Download a copy of your profile, transactions, and investment history.</div>
+            <button class="btn-outline" onclick="exportData()">
+                <i class="ph ph-download-simple"></i> DOWNLOAD MY DATA (JSON)
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><i class="ph ph-house"></i><span>Home</span></a>
+    <a href="referral.html" class="nav-item"><i class="ph ph-users"></i><span>Team</span></a>
+    <div class="nav-center"><div class="nav-center-btn" onclick="window.location.href='deposit.html'"><i class="ph ph-wallet"></i></div></div>
+    <a href="history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i><span>History</span></a>
+    <a href="profile.html" class="nav-item active"><i class="ph ph-user"></i><span>Profile</span></a>
+</div>
+
+<!-- PIN MODAL -->
+<div class="pin-overlay" id="pinOverlay" onclick="if(event.target===this)closePinModal()">
+    <div class="pin-modal">
+        <div class="drag-h"></div>
+        <div class="pin-modal-hdr"><div class="pin-modal-icon" id="pinModalIcon"><i class="ph ph-lock-key"></i></div><h2 id="pinModalTitle">Change Withdrawal PIN</h2><p id="pinModalDesc">Enter your current PIN first</p></div>
+        <div class="pin-step-label" id="pinStepLabel">ENTER CURRENT PIN</div>
+        <div class="pin-dots-row" id="pinDotsRow"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+        <div class="pin-error-msg" id="pinErrorMsg"></div>
+        <div class="pin-keypad">
+            <button class="pin-key" onclick="pinKey('1')">1</button><button class="pin-key" onclick="pinKey('2')">2</button><button class="pin-key" onclick="pinKey('3')">3</button>
+            <button class="pin-key" onclick="pinKey('4')">4</button><button class="pin-key" onclick="pinKey('5')">5</button><button class="pin-key" onclick="pinKey('6')">6</button>
+            <button class="pin-key" onclick="pinKey('7')">7</button><button class="pin-key" onclick="pinKey('8')">8</button><button class="pin-key" onclick="pinKey('9')">9</button>
+            <button class="pin-key empty"></button><button class="pin-key" onclick="pinKey('0')">0</button><button class="pin-key del" onclick="pinDelete()"><i class="ph ph-backspace"></i></button>
+        </div>
+        <button class="pin-cancel" onclick="closePinModal()">Cancel</button>
+    </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="confirm-overlay" id="confirmOverlay" onclick="if(event.target===this)closeConfirmModal()">
+    <div class="confirm-box">
+        <div class="confirm-icon" id="confirmIcon">⚠️</div>
+        <h3 id="confirmTitle">Confirm Action</h3>
+        <p id="confirmMsg">Are you sure?</p>
+        <div class="confirm-btns">
+            <button class="confirm-cancel" onclick="closeConfirmModal()">CANCEL</button>
+            <button class="confirm-action" id="confirmActionBtn" onclick="executeConfirmAction()">CONFIRM</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+let currentUid="",currentUsername="",userData={},authChecked=false;
+
+function loadFromSession(){const d=sessionStorage.getItem('userData');if(sessionStorage.getItem('userLoggedIn')==='true'&&d){try{currentUsername=JSON.parse(d).username;return true}catch(e){}}return false}
+
+async function loadPage(uid){
+    const us=await getDoc(doc(db,'usersByUid',uid));if(!us.exists())return;
+    currentUsername=us.data().username||'';
+    const ud=await getDoc(doc(db,'users',currentUsername));
+    userData=ud.exists()?ud.data():{};
+    sessionStorage.setItem('userLoggedIn','true');
+    // Account status
+    const frozen=userData.accountStatus==='frozen';
+    document.getElementById('accountStatusLabel').textContent=frozen?'Account Frozen':'Account Active';
+    document.getElementById('accountStatusDesc').textContent=frozen?'Your account is temporarily frozen. Contact support.':'Your account is fully operational';
+    document.getElementById('accountStatusBadge').className=frozen?'status-badge frozen':'status-badge active';
+    document.getElementById('accountStatusBadge').innerHTML=frozen?'<i class="ph ph-snowflake"></i> FROZEN':'<i class="ph ph-check-circle"></i> ACTIVE';
+    document.getElementById('freezeAccountBtn').style.display=frozen?'none':'block';
+    document.getElementById('unfreezeAccountBtn').style.display=frozen?'block':'none';
+    // Email verification
+    const emailVerified=userData.emailVerified||false;
+    document.getElementById('emailVerifyText').textContent=emailVerified?'Email Verified ✓':'Email Not Verified';
+    document.getElementById('emailVerifyDesc').textContent=emailVerified?'Your email is confirmed':'Verify your email for full access';
+    document.getElementById('emailVerifyBadge').className=emailVerified?'status-badge verified':'status-badge unverified';
+    document.getElementById('emailVerifyBadge').innerHTML=emailVerified?'<i class="ph ph-check-circle"></i> VERIFIED':'<i class="ph ph-warning-circle"></i> UNVERIFIED';
+    document.getElementById('resendVerifyBtn').style.display=emailVerified?'none':'block';
+    // Created date
+    if(userData.registrationDate)document.getElementById('accountCreatedDate').textContent=new Date(userData.registrationDate).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric'});
+}
+
+window._verifyPin=async function(pin){try{const s=await getDoc(doc(db,'users',currentUsername));return s.data()?.withdrawalPin===btoa(pin+currentUsername+'elite_salt')}catch(e){return false}};
+window._savePin=async function(pin){try{await updateDoc(doc(db,'users',currentUsername),{withdrawalPin:btoa(pin+currentUsername+'elite_salt')});return true}catch(e){return false}};
+
+window.changePasswordFirebase=async function(currentPass,newPass){
+    try{const user=auth.currentUser;const cred=EmailAuthProvider.credential(user.email,currentPass);await reauthenticateWithCredential(user,cred);await updatePassword(user,newPass);await updateDoc(doc(db,'users',currentUsername),{lastPasswordChange:serverTimestamp()});return{success:true}}catch(e){return{success:false,msg:e.code==='auth/wrong-password'?'Current password is incorrect':e.message}}
+};
+
+window.freezeAccount=async function(){try{await updateDoc(doc(db,'users',currentUsername),{accountStatus:'frozen',frozenAt:serverTimestamp()});return{success:true}}catch(e){return{success:false}}};
+window.unfreezeAccount=async function(){try{await updateDoc(doc(db,'users',currentUsername),{accountStatus:'active'});return{success:true}}catch(e){return{success:false}}};
+window.resendVerificationEmail=async function(){try{const user=auth.currentUser;if(user){await sendEmailVerification(user);return{success:true}}return{success:false}}catch(e){return{success:false}}};
+window.exportUserData=function(){const data={username:currentUsername,email:userData.email||'',phone:userData.phone||'',depositWallet:userData.depositWallet||0,withdrawalWallet:userData.withdrawalWallet||0,totalDeposited:userData.totalDeposited||0,totalWithdrawn:userData.totalWithdrawn||0,referralBonus:userData.referralBonus||0,referralCount:userData.referralCount||0,activePlan:userData.activePlan||'None',accountStatus:userData.accountStatus||'active',registrationDate:userData.registrationDate||'',exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`eliteearn-data-${currentUsername}.json`;a.click();return{success:true}};
+
+const hasSession=loadFromSession();
+onAuthStateChanged(auth,async(user)=>{authChecked=true;if(!user){if(!hasSession&&!sessionStorage.getItem('userLoggedIn')){sessionStorage.clear();window.location.href='login.html';return}return}currentUid=user.uid;await loadPage(user.uid)});
+setTimeout(()=>{if(!authChecked&&hasSession)console.log('⚠️ Auth timeout')},2000);
+</script>
+
+<script>
+const st=localStorage.getItem('elite_theme')||'light';applyTheme(st);
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const i=document.getElementById('themeIcon');if(i)i.className=t==='dark'?'ph ph-sun':'ph ph-moon';localStorage.setItem('elite_theme',t)}
+function toggleTheme(){const c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';applyTheme(n);showToast(n==='dark'?'🌙 Dark mode on':'☀️ Light mode on','info')}
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},4000)}
+
+function togglePass(id,icon){const i=document.getElementById(id);if(i.type==='password'){i.type='text';icon.className='ph ph-eye-slash input-eye'}else{i.type='password';icon.className='ph ph-eye input-eye'}}
+
+// CHANGE PASSWORD
+async function changePassword(){
+    const cp=document.getElementById('currentPassword').value,np=document.getElementById('newPassword').value,cnp=document.getElementById('confirmNewPassword').value;
+    if(!cp||!np||!cnp){showToast('❌ Fill all password fields','error');return}
+    if(np.length<6){showToast('❌ Password must be at least 6 characters','error');return}
+    if(np!==cnp){showToast('❌ Passwords do not match','error');return}
+    const result=await window.changePasswordFirebase(cp,np);
+    if(result.success){showToast('✅ Password updated successfully!','success');document.getElementById('currentPassword').value='';document.getElementById('newPassword').value='';document.getElementById('confirmNewPassword').value=''}else{showToast(`❌ ${result.msg}`,'error')}
+}
+
+// PIN MODAL
+let pinMode='change',pinStep=0,pinEntry='',pinFirst='';
+function openPinModal(m){pinMode=m;pinStep=0;pinEntry='';pinFirst='';document.getElementById('pinErrorMsg').textContent='';document.getElementById('pinStepLabel').textContent='ENTER CURRENT PIN';document.getElementById('pinModalDesc').textContent='Enter your current 4-digit PIN';resetDots();document.getElementById('pinOverlay').classList.add('open')}
+function closePinModal(){document.getElementById('pinOverlay').classList.remove('open');pinEntry='';pinFirst='';pinStep=0;resetDots()}
+function resetDots(s=''){for(let i=0;i<4;i++){const d=document.getElementById('pd'+i);d.className='pin-dot';if(s==='error')d.classList.add('error');if(s==='success')d.classList.add('success')}}
+function updateDots(l){for(let i=0;i<4;i++)document.getElementById('pd'+i).className='pin-dot'+(i<l?' filled':'')}
+function pinKey(d){if(pinEntry.length>=4)return;pinEntry+=d;updateDots(pinEntry.length);if(pinEntry.length===4)setTimeout(()=>processPinEntry(),150)}
+function pinDelete(){if(!pinEntry.length)return;pinEntry=pinEntry.slice(0,-1);updateDots(pinEntry.length);document.getElementById('pinErrorMsg').textContent=''}
+
+async function processPinEntry(){
+    const e=pinEntry;pinEntry='';
+    if(pinStep===0){const ok=await window._verifyPin(e);if(ok){pinStep=1;document.getElementById('pinStepLabel').textContent='ENTER NEW PIN';document.getElementById('pinModalDesc').textContent='Choose your new 4-digit PIN';resetDots()}else{resetDots('error');document.getElementById('pinErrorMsg').textContent='Incorrect PIN';setTimeout(()=>{resetDots();document.getElementById('pinErrorMsg').textContent=''},1200)}}
+    else if(pinStep===1){pinFirst=e;pinStep=2;document.getElementById('pinStepLabel').textContent='CONFIRM NEW PIN';resetDots()}
+    else{if(e===pinFirst){resetDots('success');document.getElementById('pinErrorMsg').style.color='#059669';document.getElementById('pinErrorMsg').textContent='✓ PIN updated!';const ok=await window._savePin(e);if(ok){setTimeout(()=>{closePinModal();showToast('✅ PIN changed successfully!','success')},800)}}else{resetDots('error');document.getElementById('pinErrorMsg').textContent='PINs do not match';pinStep=1;pinFirst='';document.getElementById('pinStepLabel').textContent='ENTER NEW PIN';setTimeout(()=>{resetDots();document.getElementById('pinErrorMsg').textContent=''},1200)}}
+}
+
+// 2FA
+function toggle2FA(){const checked=document.getElementById('twoFAToggle').checked;document.getElementById('twoFAStatus').textContent=checked?'2FA is currently enabled':'2FA is currently disabled';showToast(checked?'✅ 2FA enabled':'🔓 2FA disabled','success')}
+
+// CONFIRM MODAL
+let confirmAction='';
+function openConfirmModal(action){
+    confirmAction=action;
+    const overlay=document.getElementById('confirmOverlay');
+    if(action==='freeze'){document.getElementById('confirmIcon').textContent='⚠️';document.getElementById('confirmTitle').textContent='Freeze Account?';document.getElementById('confirmMsg').textContent='This will pause all withdrawals and transactions. You will need to contact support to unfreeze.';document.getElementById('confirmActionBtn').textContent='FREEZE ACCOUNT'}
+    else{confirmAction='unfreeze';document.getElementById('confirmIcon').textContent='🔓';document.getElementById('confirmTitle').textContent='Unfreeze Account?';document.getElementById('confirmMsg').textContent='This will restore full access to your account.';document.getElementById('confirmActionBtn').textContent='UNFREEZE'}
+    overlay.classList.add('open');
+}
+function closeConfirmModal(){document.getElementById('confirmOverlay').classList.remove('open')}
+async function executeConfirmAction(){
+    if(confirmAction==='freeze'){const r=await window.freezeAccount();if(r.success){closeConfirmModal();location.reload();showToast('✅ Account frozen','success')}}
+    else{const r=await window.unfreezeAccount();if(r.success){closeConfirmModal();location.reload();showToast('✅ Account unfrozen','success')}}
+}
+
+// RESEND VERIFICATION
+async function resendVerification(){const r=await window.resendVerificationEmail();if(r.success)showToast('✅ Verification email sent!','success');else showToast('❌ Failed to send','error')}
+
+// EXPORT DATA
+function exportData(){window.exportUserData();showToast('✅ Data exported!','success')}
+
+console.log('✅ Security page ready');
+</script>
+</body>
+</html>
