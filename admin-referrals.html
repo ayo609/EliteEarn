@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Referral Management</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#0a0a14;--card:#141428;--card2:#1a1a30;--text:#f0f0ff;--text2:#8888aa;
+            --border:#222240;--gold:#D4A017;--gold2:#F0C030;
+            --green:#059669;--red:#EF4444;--purple:#7C3AED;--blue:#0EA5E9;--orange:#F59E0B;
+            --lv-a:#059669;--lv-b:#7C3AED;--lv-c:#D97706;
+            --header:linear-gradient(160deg,#0a0202 0%,#1a0505 30%,#2a0808 60%,#3a0a0a 100%);
+            --overlay:rgba(0,0,0,0.85);--modal-bg:#141428;--input-bg:#1a1a30;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;color:var(--text)}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:20px}
+        .page-header{background:var(--header);padding:16px 18px 24px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(212,160,23,0.1) 0%,transparent 70%);top:-30px;right:-30px}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        .back-btn{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;text-decoration:none}
+        .page-title{font-size:20px;font-weight:900;color:white;font-family:'Oswald',sans-serif}
+        .header-badge{font-size:9px;font-weight:800;color:var(--gold2);background:rgba(212,160,23,0.15);padding:4px 10px;border-radius:50px;text-transform:uppercase}
+        .search-bar{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+        .search-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;color:white;outline:none;font-family:'Montserrat',sans-serif}
+        .search-input::placeholder{color:rgba(255,255,255,0.4)}
+        .search-input:focus{border-color:var(--gold)}
+        .content{padding:14px;display:flex;flex-direction:column;gap:10px;margin-top:-10px;position:relative;z-index:2}
+        .stats-bar{display:flex;gap:8px}
+        .stat-mini{flex:1;background:var(--card);border-radius:14px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+        .stat-mini-val{font-size:14px;font-weight:900;font-family:'Oswald',sans-serif;color:var(--text)}
+        .stat-mini-lbl{font-size:8px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+        /* User Group Card */
+        .user-group-card{background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--border);margin-bottom:10px}
+        .user-group-header{background:var(--card2);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--border)}
+        .user-group-header-left{display:flex;align-items:center;gap:10px}
+        .user-group-avatar{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:white;font-family:'Oswald',sans-serif;background:var(--purple)}
+        .user-group-name{font-size:13px;font-weight:800;color:var(--text)}
+        .user-group-username{font-size:10px;color:var(--text2);font-weight:600}
+        .user-group-stats{display:flex;gap:12px;text-align:right}
+        .user-group-stat{font-size:9px;color:var(--text2)}
+        .user-group-stat b{display:block;font-size:11px;color:var(--text)}
+
+        /* Level Tabs */
+        .level-tabs{display:flex;gap:0;background:var(--card2);padding:4px;margin:0 14px}
+        .level-tab{flex:1;text-align:center;padding:8px 4px;border-radius:8px;font-size:10px;font-weight:800;cursor:pointer;transition:all .2s;color:var(--text2);user-select:none}
+        .level-tab.active-a{background:rgba(5,150,105,0.2);color:var(--lv-a)}
+        .level-tab.active-b{background:rgba(124,58,237,0.2);color:var(--lv-b)}
+        .level-tab.active-c{background:rgba(217,119,6,0.2);color:var(--lv-c)}
+        .level-tab .count{font-size:8px;opacity:.7}
+
+        /* Downline Card */
+        .downline-card{background:var(--card2);padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .2s}
+        .downline-card:hover{background:rgba(212,160,23,0.03)}
+        .downline-card:last-child{border-bottom:none}
+        .downline-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+        .downline-avatar{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;font-family:'Oswald',sans-serif;flex-shrink:0}
+        .downline-info{flex:1;min-width:0}
+        .downline-name{font-size:11px;font-weight:800;color:var(--text)}
+        .downline-username{font-size:9px;color:var(--text2);font-weight:600}
+        .downline-details{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;font-size:8px;color:var(--text2)}
+        .downline-details b{display:block;font-size:10px;color:var(--text)}
+        .downline-date{font-size:8px;color:var(--text2);margin-top:4px;display:flex;align-items:center;gap:4px}
+        .no-downlines{text-align:center;padding:20px;color:var(--text2);font-size:11px}
+        .summary-row{display:flex;gap:4px;padding:8px 14px;background:rgba(212,160,23,0.05);border-top:1px solid var(--border);font-size:9px;color:var(--text2)}
+        .summary-row span{flex:1;text-align:center}
+        .summary-row b{display:block;color:var(--text);font-size:10px}
+        .expanded-content{padding:0}
+        .empty-state{text-align:center;padding:40px;color:var(--text2)}
+        .empty-state i{font-size:48px;margin-bottom:12px;opacity:.4}
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}
+        .spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.2);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .modal-overlay{position:fixed;inset:0;background:var(--overlay);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+        .modal-overlay.open{opacity:1;pointer-events:all}
+        .modal-box{background:var(--modal-bg);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:0 0 30px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:0 -12px 40px rgba(0,0,0,0.4);max-height:85vh;overflow-y:auto}
+        .modal-overlay.open .modal-box{transform:translateY(0)}
+        .modal-drag{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+        .modal-hdr{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+        .modal-hdr h3{font-size:16px;font-weight:800;color:var(--text)}
+        .modal-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px}
+        .modal-body{padding:16px 20px}
+        .detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+        .detail-lbl{font-size:10px;font-weight:600;color:var(--text2)}
+        .detail-val{font-size:12px;font-weight:800;color:var(--text);font-family:'Oswald',sans-serif}
+        .detail-val.green{color:var(--green)}.detail-val.gold{color:var(--gold)}.detail-val.purple{color:var(--purple)}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <a href="dashboard.html" class="back-btn"><i class="ph ph-arrow-left"></i></a>
+            <span class="page-title">Referral Mgmt</span>
+            <span class="header-badge"><i class="ph ph-users-three"></i> TEAMS</span>
+        </div>
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search by username..." oninput="filterUsers()">
+        </div>
+    </div>
+
+    <div class="stats-bar" style="padding:0 14px">
+        <div class="stat-mini"><div class="stat-mini-val" id="totalUsers">0</div><div class="stat-mini-lbl">Users</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--green)" id="totalDownlines">0</div><div class="stat-mini-lbl">Downlines</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--gold)" id="totalInvested">₦0</div><div class="stat-mini-lbl">Invested</div></div>
+    </div>
+
+    <div class="content" id="userList">
+        <div style="text-align:center;padding:30px;color:var(--text2)"><div class="spinner"></div><p style="margin-top:8px;font-size:12px">Loading referral data...</p></div>
+    </div>
+</div>
+
+<!-- USER DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this)closeModal('detailModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-user"></i> <span id="modalUserName">User</span></h3><button class="modal-close" onclick="closeModal('detailModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body" id="detailBody"></div>
+    </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+window._db=db;window._allUsers=[];window._userDownlines={};
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)}
+function fmtShort(n){return n>=1000000?'₦'+(n/1000000).toFixed(1)+'M':n>=1000?'₦'+(n/1000).toFixed(1)+'K':'₦'+fmt(n)}
+function fmtDate(ts){if(!ts)return'—';let d;if(ts.toDate)d=ts.toDate();else if(ts?.seconds)d=new Date(ts.seconds*1000);else d=new Date(ts);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()}`}
+
+if(sessionStorage.getItem('adminLoggedIn')!=='true'){window.location.href='../admin-login.html'}
+
+async function loadAllData(){
+    try{
+        const snap=await getDocs(collection(db,'users'));
+        const users=snap.docs.map(d=>({id:d.id,...d.data()}));
+        window._allUsers=users;
+
+        // Build downline map for each user
+        const downlineMap={};
+        users.forEach(u=>{downlineMap[u.username]={A:[],B:[],C:[]}});
+
+        // Level A: Direct referrals
+        users.forEach(u=>{
+            if(u.referredBy&&downlineMap[u.referredBy]){
+                downlineMap[u.referredBy].A.push(u);
+            }
+        });
+
+        // Level B: Referrals of Level A
+        users.forEach(u=>{
+            if(u.referredBy){
+                const parent=users.find(p=>p.username===u.referredBy);
+                if(parent&&parent.referredBy&&downlineMap[parent.referredBy]){
+                    downlineMap[parent.referredBy].B.push(u);
+                }
+            }
+        });
+
+        // Level C: Referrals of Level B
+        users.forEach(u=>{
+            if(u.referredBy){
+                const parent=users.find(p=>p.username===u.referredBy);
+                if(parent&&parent.referredBy){
+                    const grandparent=users.find(g=>g.username===parent.referredBy);
+                    if(grandparent&&grandparent.referredBy&&downlineMap[grandparent.referredBy]){
+                        downlineMap[grandparent.referredBy].C.push(u);
+                    }
+                }
+            }
+        });
+
+        window._userDownlines=downlineMap;
+
+        // Stats
+        let totalDownlines=0,totalInvested=0;
+        users.forEach(u=>{
+            const dl=downlineMap[u.username]||{A:[],B:[],C:[]};
+            totalDownlines+=dl.A.length+dl.B.length+dl.C.length;
+            totalInvested+=(dl.A.reduce((s,d)=>s+(d.totalDeposited||0),0)+dl.B.reduce((s,d)=>s+(d.totalDeposited||0),0)+dl.C.reduce((s,d)=>s+(d.totalDeposited||0),0));
+        });
+        document.getElementById('totalUsers').textContent=users.length;
+        document.getElementById('totalDownlines').textContent=totalDownlines;
+        document.getElementById('totalInvested').textContent='₦'+fmtShort(totalInvested);
+
+        renderUsers(users);
+    }catch(e){console.error(e)}
+}
+
+function renderUsers(users){
+    const list=document.getElementById('userList');
+    if(!users.length){list.innerHTML='<div class="empty-state"><i class="ph ph-users"></i><p>No users found</p></div>';return}
+    const bgColors=['#7C3AED','#059669','#D97706','#EF4444','#0EA5E9','#8B5CF6','#F59E0B'];
+
+    list.innerHTML=users.map((u,i)=>{
+        const dl=window._userDownlines[u.username]||{A:[],B:[],C:[]};
+        const totalDL=dl.A.length+dl.B.length+dl.C.length;
+        const totalInv=dl.A.reduce((s,d)=>s+(d.totalDeposited||0),0)+dl.B.reduce((s,d)=>s+(d.totalDeposited||0),0)+dl.C.reduce((s,d)=>s+(d.totalDeposited||0),0);
+        if(totalDL===0)return''; // Skip users with no downlines
+
+        return`<div class="user-group-card" id="user-${u.username}">
+            <div class="user-group-header" onclick="toggleExpand('${u.username}')">
+                <div class="user-group-header-left">
+                    <div class="user-group-avatar" style="background:${bgColors[i%7]}">${(u.username||'U')[0].toUpperCase()}</div>
+                    <div>
+                        <div class="user-group-name">${u.fullName||u.username||'User'}</div>
+                        <div class="user-group-username">@${u.username} · ${totalDL} downlines · ${u.referralCount||0} referrals</div>
+                    </div>
+                </div>
+                <div class="user-group-stats">
+                    <div class="user-group-stat">Invested<b style="color:var(--gold)">₦${fmtShort(totalInv)}</b></div>
+                    <div class="user-group-stat">Earned<b style="color:var(--green)">₦${fmtShort(u.referralBonus||0)}</b></div>
+                </div>
+            </div>
+            <div class="expanded-content" id="expand-${u.username}" style="display:none">
+                <div class="level-tabs">
+                    <div class="level-tab active-a" onclick="switchLevel('${u.username}','A',this)">Lvl A (20%) <span class="count">${dl.A.length}</span></div>
+                    <div class="level-tab" onclick="switchLevel('${u.username}','B',this)">Lvl B (2%) <span class="count">${dl.B.length}</span></div>
+                    <div class="level-tab" onclick="switchLevel('${u.username}','C',this)">Lvl C (1%) <span class="count">${dl.C.length}</span></div>
+                </div>
+                <div id="level-${u.username}-A">${renderDownlines(dl.A,'A')}</div>
+                <div id="level-${u.username}-B" style="display:none">${renderDownlines(dl.B,'B')}</div>
+                <div id="level-${u.username}-C" style="display:none">${renderDownlines(dl.C,'C')}</div>
+                ${totalDL>0?`
+                <div class="summary-row">
+                    <span>Lvl A<b style="color:var(--lv-a)">${dl.A.length}</b></span>
+                    <span>Lvl B<b style="color:var(--lv-b)">${dl.B.length}</b></span>
+                    <span>Lvl C<b style="color:var(--lv-c)">${dl.C.length}</b></span>
+                    <span>Total<b>₦${fmtShort(totalInv)}</b></span>
+                </div>`:''}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function renderDownlines(downlines,level){
+    if(!downlines||!downlines.length)return`<div class="no-downlines">No Level ${level} downlines</div>`;
+    const pct={A:20,B:2,C:1};
+    const colors={A:['#7C3AED','#059669','#D97706','#EF4444'],B:['#7C3AED','#059669','#D97706','#EF4444'],C:['#7C3AED','#059669','#D97706','#EF4444']};
+    return downlines.map((d,i)=>{
+        const invested=d.totalDeposited||0;
+        const deposits=d.depositWallet||0;
+        const commission=invested*(pct[level]/100);
+        const plan=d.activePlan||'No Plan';
+        const joinDate=fmtDate(d.createdAt);
+        return`<div class="downline-card" onclick="openUserDetail('${d.username}')">
+            <div class="downline-top">
+                <div class="downline-avatar" style="background:${colors[level][i%4]}">${(d.username||'?')[0].toUpperCase()}</div>
+                <div class="downline-info">
+                    <div class="downline-name">${d.fullName||d.username||'User'} ${d.activePlan?`· <span style="color:var(--purple);font-size:10px">${d.activePlan}</span>`:''}</div>
+                    <div class="downline-username">@${d.username}</div>
+                </div>
+            </div>
+            <div class="downline-details">
+                <div>Invested<b style="color:var(--gold)">₦${fmtShort(invested)}</b></div>
+                <div>Deposits<b style="color:var(--purple)">₦${fmtShort(deposits)}</b></div>
+                <div>Commission<b style="color:var(--green)">₦${fmt(commission)}</b></div>
+            </div>
+            <div class="downline-date"><i class="ph ph-calendar"></i> Joined: ${joinDate}</div>
+        </div>`;
+    }).join('');
+}
+
+// Toggle expand
+window.toggleExpand=function(username){
+    const el=document.getElementById('expand-'+username);
+    if(el)el.style.display=el.style.display==='none'?'block':'none';
+};
+
+// Switch level tabs
+window.switchLevel=function(username,level,tabEl){
+    // Hide all level content
+    ['A','B','C'].forEach(l=>{
+        const content=document.getElementById(`level-${username}-${l}`);
+        if(content)content.style.display='none';
+    });
+    // Show selected
+    const content=document.getElementById(`level-${username}-${level}`);
+    if(content)content.style.display='block';
+    // Update tabs
+    const tabs=tabEl.parentElement.querySelectorAll('.level-tab');
+    tabs.forEach(t=>{t.className='level-tab'});
+    tabEl.className=`level-tab active-${level.toLowerCase()}`;
+};
+
+// User detail modal
+window.openUserDetail=function(username){
+    const u=window._allUsers.find(x=>x.username===username);
+    if(!u)return;
+    const dl=window._userDownlines[username]||{A:[],B:[],C:[]};
+    const totalDL=dl.A.length+dl.B.length+dl.C.length;
+    document.getElementById('modalUserName').textContent=u.fullName||u.username||'User';
+    document.getElementById('detailBody').innerHTML=`
+        <div class="detail-row"><span class="detail-lbl">Username</span><span class="detail-val">@${u.username||'—'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Full Name</span><span class="detail-val">${u.fullName||'—'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Email</span><span class="detail-val">${u.email||'—'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Phone</span><span class="detail-val">${u.phone||'—'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Deposit Wallet</span><span class="detail-val gold">₦${fmt(u.depositWallet||0)}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Withdrawal Wallet</span><span class="detail-val green">₦${fmt(u.withdrawalWallet||0)}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Total Invested</span><span class="detail-val">₦${fmt(u.totalDeposited||0)}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Active Plan</span><span class="detail-val purple">${u.activePlan||'None'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Referral Count</span><span class="detail-val">${u.referralCount||0}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Referral Bonus</span><span class="detail-val gold">₦${fmt(u.referralBonus||0)}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Referred By</span><span class="detail-val">${u.referredBy||'—'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Total Downlines</span><span class="detail-val">${totalDL} (A:${dl.A.length} B:${dl.B.length} C:${dl.C.length})</span></div>
+        <div class="detail-row"><span class="detail-lbl">Joined</span><span class="detail-val">${fmtDate(u.createdAt)}</span></div>
+    `;
+    openModal('detailModal');
+};
+
+window.filterUsers=function(){
+    const search=document.getElementById('searchInput').value.toLowerCase();
+    let users=window._allUsers||[];
+    if(search)users=users.filter(u=>(u.username||'').toLowerCase().includes(search)||(u.fullName||'').toLowerCase().includes(search));
+    renderUsers(users);
+};
+
+loadAllData();
+</script>
+
+<script>
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},4000)}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+</script>
+</body>
+</html>
