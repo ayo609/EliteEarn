@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Admin Login</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="theme-color" content="#1a0505">
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#22223a;--text:#f0f0ff;--text2:#8888aa;--border:#2a2a44;--gold:#D4A017;--gold2:#F0C030;--input-bg:#1a1a30}
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;color:var(--text)}
+        body{display:flex;flex-direction:column;min-height:100vh;position:relative;overflow:hidden}
+        .bg-particles{position:fixed;inset:0;pointer-events:none;z-index:0}
+        .bg-particle{position:absolute;border-radius:50%;background:rgba(212,160,23,0.08);animation:floatParticle 8s ease-in-out infinite}
+        .bg-particle:nth-child(1){width:300px;height:300px;top:-100px;left:-80px}
+        .bg-particle:nth-child(2){width:200px;height:200px;bottom:-60px;right:-60px;animation-delay:2s}
+        .bg-particle:nth-child(3){width:150px;height:150px;top:40%;right:-40px;animation-delay:4s}
+        @keyframes floatParticle{0%,100%{transform:translateY(0) scale(1);opacity:0.6}50%{transform:translateY(-30px) scale(1.1);opacity:0.9}}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;z-index:1;padding:24px}
+        .admin-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(212,160,23,0.15);border:1px solid rgba(212,160,23,0.3);border-radius:50px;padding:8px 20px;font-size:11px;font-weight:800;color:var(--gold2);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px}
+        .shield-icon{width:90px;height:90px;background:linear-gradient(135deg,rgba(212,160,23,0.2),rgba(240,192,48,0.1));border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:42px;color:var(--gold);border:2px solid rgba(212,160,23,0.3);animation:shieldPulse 3s ease-in-out infinite}
+        @keyframes shieldPulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,0.2)}50%{box-shadow:0 0 0 20px rgba(212,160,23,0)}}
+        .login-title{font-family:'Oswald',sans-serif;font-size:28px;font-weight:900;color:white;margin-bottom:4px;letter-spacing:1px}
+        .login-subtitle{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:24px}
+        .form-card{background:var(--card);border-radius:24px;padding:24px 20px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.3);border:1px solid var(--border)}
+        .input-group{position:relative;margin-bottom:16px}
+        .input-group input{width:100%;height:52px;padding:0 44px 0 46px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:14px;font-size:13px;font-weight:600;color:var(--text);outline:none;font-family:'Montserrat',sans-serif;transition:all .3s}
+        .input-group input::placeholder{color:var(--text2);font-weight:500;font-size:12px}
+        .input-group input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,160,23,0.15)}
+        .input-group i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:1.2rem;transition:all .3s;pointer-events:none}
+        .input-group input:focus+i{color:var(--gold)}
+        .eye-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text2);background:none;border:none;padding:6px;font-size:1.1rem;z-index:10;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+        .eye-toggle:hover{color:var(--gold)}
+        .login-btn{width:100%;height:52px;background:linear-gradient(135deg,var(--gold),#B8960A);border:none;border-radius:14px;font-size:14px;font-weight:800;color:#1a0505;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .3s;font-family:'Montserrat',sans-serif;letter-spacing:1px;text-transform:uppercase;box-shadow:0 6px 24px rgba(212,160,23,0.3);margin-top:4px}
+        .login-btn:hover{transform:translateY(-2px)}.login-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+        .error-msg{text-align:center;font-size:11px;font-weight:700;color:#EF4444;min-height:18px;margin-top:10px}
+        .back-link{text-align:center;margin-top:16px}
+        .back-link a{font-size:11px;font-weight:700;color:var(--text2);text-decoration:none;transition:color .2s;display:inline-flex;align-items:center;gap:5px}
+        .back-link a:hover{color:var(--gold)}
+        .spinner{width:18px;height:18px;border:3px solid rgba(26,5,5,0.3);border-top-color:#1a0505;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:#059669}.toast.error{border-left-color:#EF4444}
+    </style>
+</head>
+<body>
+    <div class="bg-particles">
+        <div class="bg-particle"></div><div class="bg-particle"></div><div class="bg-particle"></div>
+    </div>
+
+    <div class="wrapper">
+        <div class="admin-badge"><i class="ph ph-shield-check"></i> ADMINISTRATOR ACCESS</div>
+        <div class="shield-icon"><i class="ph ph-shield-check"></i></div>
+        <div class="login-title">Admin Portal</div>
+        <div class="login-subtitle">Secure access for EliteEarn administrators</div>
+
+        <div class="form-card">
+            <div class="input-group">
+                <input type="text" id="adminUsername" placeholder="Your Username" autocomplete="off" required>
+                <i class="ph ph-user-circle"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="adminPassword" placeholder="Your Password" required>
+                <i class="ph ph-lock-key"></i>
+                <button type="button" class="eye-toggle" onclick="togglePassword()">
+                    <i class="ph ph-eye" id="eyeIcon"></i>
+                </button>
+            </div>
+            <button class="login-btn" id="loginBtn" onclick="handleAdminLogin()">
+                <span id="btnText"><i class="ph ph-sign-in"></i> SIGN IN TO ADMIN</span>
+            </button>
+            <div class="error-msg" id="errorMsg"></div>
+        </div>
+
+        <div class="back-link">
+            <a href="login.html"><i class="ph ph-arrow-left"></i> Back to User Login</a>
+        </div>
+    </div>
+
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <!-- FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",
+            authDomain: "earnelite-94a5e.firebaseapp.com",
+            projectId: "earnelite-94a5e",
+            storageBucket: "earnelite-94a5e.firebasestorage.app",
+            messagingSenderId: "343677058789",
+            appId: "1:343677058789:web:776faceb824158042fde0c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window._auth = auth;
+        window._db = db;
+        window._fbFns = { doc, getDoc, updateDoc, serverTimestamp, signInWithEmailAndPassword };
+        window._firebaseReady = true;
+
+        console.log('✅ Admin Firebase ready');
+    </script>
+
+    <script>
+        "use strict";
+
+        function showToast(msg, type = 'info') {
+            const w = document.getElementById('toastWrap');
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerHTML = msg;
+            w.appendChild(t);
+            setTimeout(() => t.classList.add('show'), 10);
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 350); }, 4000);
+        }
+
+        function togglePassword() {
+            const input = document.getElementById('adminPassword');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text'; icon.className = 'ph ph-eye-slash';
+            } else {
+                input.type = 'password'; icon.className = 'ph ph-eye';
+            }
+        }
+
+        function setLoading(loading) {
+            const btn = document.getElementById('loginBtn');
+            const txt = document.getElementById('btnText');
+            btn.disabled = loading;
+            txt.innerHTML = loading ? '<span class="spinner"></span> VERIFYING...' : '<i class="ph ph-sign-in"></i> SIGN IN TO ADMIN';
+        }
+
+        // 🔑 ADMIN LOGIN - Checks user's isAdmin flag
+        async function handleAdminLogin() {
+            if (!window._firebaseReady || !window._db || !window._auth) {
+                showToast('System loading, please wait...', 'info');
+                return;
+            }
+
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!username || !password) {
+                errorMsg.textContent = 'Please enter both username and password';
+                return;
+            }
+
+            setLoading(true);
+            errorMsg.textContent = '';
+
+            try {
+                const { doc, getDoc, updateDoc, serverTimestamp, signInWithEmailAndPassword } = window._fbFns;
+                const db = window._db;
+                const auth = window._auth;
+
+                // 🔑 Step 1: Get user's email from users collection
+                const userRef = doc(db, 'users', username.toUpperCase());
+                const userSnap = await getDoc(userRef);
+
+                if (!userSnap.exists()) {
+                    setLoading(false);
+                    errorMsg.textContent = '❌ User not found';
+                    showToast('No account found with this username', 'error');
+                    return;
+                }
+
+                const userData = userSnap.data();
+
+                // 🔑 Step 2: Check if user is an admin
+                if (!userData.isAdmin) {
+                    setLoading(false);
+                    errorMsg.textContent = '❌ Access denied. Admin privileges required.';
+                    showToast('This account does not have admin access', 'error');
+                    return;
+                }
+
+                // 🔑 Step 3: Check if account is active
+                if (userData.accountStatus === 'frozen') {
+                    setLoading(false);
+                    errorMsg.textContent = '❌ Your account has been frozen';
+                    return;
+                }
+
+                // 🔑 Step 4: Sign in with Firebase Auth using email
+                const email = userData.email;
+                if (!email) {
+                    setLoading(false);
+                    errorMsg.textContent = '❌ No email associated with this account';
+                    return;
+                }
+
+                try {
+                    const cred = await signInWithEmailAndPassword(auth, email, password);
+                    console.log('✅ Admin authenticated:', username, '| UID:', cred.user.uid);
+
+                    // 🔑 Step 5: Store admin session
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    sessionStorage.setItem('adminUsername', username);
+                    sessionStorage.setItem('adminRole', userData.adminRole || 'admin');
+                    sessionStorage.setItem('adminEmail', email);
+                    sessionStorage.setItem('adminName', userData.fullName || username);
+                    sessionStorage.setItem('adminData', JSON.stringify({
+                        username: username,
+                        fullName: userData.fullName || username,
+                        email: email,
+                        role: userData.adminRole || 'admin',
+                        permissions: ['all'],
+                        loginTime: new Date().toISOString()
+                    }));
+
+                    // Update last login
+                    try {
+                        await updateDoc(userRef, {
+                            lastLogin: serverTimestamp(),
+                            lastLoginDate: new Date().toISOString()
+                        });
+                    } catch(e) { console.log('Update skipped'); }
+
+                    showToast(`✅ Welcome, ${userData.fullName || username}!`, 'success');
+                    errorMsg.style.color = '#059669';
+                    errorMsg.textContent = '✓ Login successful! Redirecting...';
+
+                    setTimeout(() => {
+                        window.location.href = 'admin/dashboard.html';
+                    }, 1000);
+
+                } catch (authErr) {
+                    setLoading(false);
+                    console.error('Auth error:', authErr);
+                    const messages = {
+                        'auth/wrong-password': 'Incorrect password',
+                        'auth/user-not-found': 'Email not found in auth system',
+                        'auth/invalid-credential': 'Invalid credentials',
+                        'auth/too-many-requests': 'Too many attempts. Try later.'
+                    };
+                    errorMsg.textContent = '❌ ' + (messages[authErr.code] || 'Invalid credentials');
+                }
+
+            } catch (err) {
+                setLoading(false);
+                console.error('Admin login error:', err);
+                errorMsg.textContent = '❌ System error. Please try again.';
+                showToast('Login failed: ' + err.message, 'error');
+            }
+        }
+
+        // Enter key
+        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); handleAdminLogin(); }
+        });
+        document.getElementById('adminUsername').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('adminPassword').focus(); }
+        });
+
+        window.handleAdminLogin = handleAdminLogin;
+        window.togglePassword = togglePassword;
+
+        console.log('✅ Admin login ready - Uses isAdmin flag from users collection');
+    </script>
+</body>
+</html>
