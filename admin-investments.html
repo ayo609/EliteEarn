@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Investment Management</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#0a0a14;--card:#141428;--card2:#1a1a30;--text:#f0f0ff;--text2:#8888aa;
+            --border:#222240;--gold:#D4A017;--gold2:#F0C030;
+            --green:#059669;--red:#EF4444;--purple:#7C3AED;--blue:#0EA5E9;--orange:#F59E0B;
+            --header:linear-gradient(160deg,#0a0202 0%,#1a0505 30%,#2a0808 60%,#3a0a0a 100%);
+            --overlay:rgba(0,0,0,0.85);--modal-bg:#141428;--input-bg:#1a1a30;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;color:var(--text)}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:20px}
+        .page-header{background:var(--header);padding:16px 18px 24px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 70%);top:-30px;right:-30px}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        .back-btn{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;text-decoration:none}
+        .page-title{font-size:20px;font-weight:900;color:white;font-family:'Oswald',sans-serif}
+        .header-badge{font-size:9px;font-weight:800;color:var(--purple);background:rgba(124,58,237,0.15);padding:4px 10px;border-radius:50px;text-transform:uppercase}
+        .search-bar{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+        .search-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;color:white;outline:none;font-family:'Montserrat',sans-serif}
+        .search-input::placeholder{color:rgba(255,255,255,0.4)}
+        .search-input:focus{border-color:var(--gold)}
+        .filter-tabs{display:flex;gap:0;background:rgba(255,255,255,0.05);border-radius:12px;padding:4px}
+        .filter-tab{flex:1;text-align:center;padding:10px 6px;border-radius:10px;font-size:10px;font-weight:800;cursor:pointer;transition:all .2s;color:var(--text2);user-select:none}
+        .filter-tab.active{background:var(--gold);color:#1a0505}
+        .stats-bar{display:flex;gap:8px;padding:0 14px;margin-top:-10px;position:relative;z-index:2}
+        .stat-mini{flex:1;background:var(--card);border-radius:14px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+        .stat-mini-val{font-size:16px;font-weight:900;font-family:'Oswald',sans-serif;color:var(--text)}
+        .stat-mini-lbl{font-size:8px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+        .content{padding:14px;display:flex;flex-direction:column;gap:10px}
+
+        /* User grouped card */
+        .user-group-card{background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--border);margin-bottom:12px}
+        .user-group-header{background:var(--card2);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--border)}
+        .user-group-header-left{display:flex;align-items:center;gap:10px}
+        .user-group-avatar{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:white;font-family:'Oswald',sans-serif;background:var(--purple)}
+        .user-group-name{font-size:13px;font-weight:800;color:var(--text)}
+        .user-group-username{font-size:10px;color:var(--text2);font-weight:600}
+        .user-group-stats{display:flex;gap:12px;text-align:right}
+        .user-group-stat{font-size:9px;color:var(--text2)}
+        .user-group-stat b{display:block;font-size:11px;color:var(--text)}
+
+        .inv-card{background:var(--card2);padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .2s}
+        .inv-card:last-child{border-bottom:none}
+        .inv-card:hover{background:rgba(212,160,23,0.05)}
+        .inv-card.active{border-left:3px solid var(--green)}
+        .inv-card.completed{border-left:3px solid var(--purple)}
+        .inv-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+        .inv-emoji{font-size:20px}
+        .inv-info{flex:1;min-width:0}
+        .inv-plan{font-size:12px;font-weight:800;color:var(--text);margin-bottom:1px}
+        .inv-meta{font-size:9px;color:var(--text2);font-weight:600}
+        .inv-status{font-size:8px;font-weight:800;padding:2px 7px;border-radius:50px;text-transform:uppercase}
+        .inv-status.active{background:rgba(5,150,105,0.15);color:var(--green)}
+        .inv-status.completed{background:rgba(124,58,237,0.15);color:var(--purple)}
+        .inv-details{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:6px}
+        .inv-detail{font-size:8px;color:var(--text2);font-weight:600}
+        .inv-detail b{color:var(--text);display:block;font-size:10px}
+        .inv-progress-bar{height:5px;background:var(--input-bg);border-radius:3px;overflow:hidden;margin-bottom:4px}
+        .inv-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:3px}
+        .inv-progress-text{display:flex;justify-content:space-between;font-size:8px;color:var(--text2)}
+        .inv-actions{display:flex;gap:4px;margin-top:6px}
+        .inv-action-btn{flex:1;padding:6px 4px;border-radius:8px;border:1px solid var(--border);font-size:8px;font-weight:800;cursor:pointer;text-align:center;transition:all .2s;font-family:'Montserrat',sans-serif;background:var(--card);color:var(--text2)}
+        .inv-action-btn.green{color:var(--green);border-color:rgba(5,150,105,0.3)}
+        .inv-action-btn.red{color:var(--red);border-color:rgba(239,68,68,0.3)}
+        .inv-action-btn.purple{color:var(--purple);border-color:rgba(124,58,237,0.3)}
+        .empty-state{text-align:center;padding:40px;color:var(--text2)}
+        .empty-state i{font-size:48px;margin-bottom:12px;opacity:.4}
+        .user-summary-row{display:flex;gap:4px;padding:6px 14px;background:rgba(212,160,23,0.05);border-top:1px solid var(--border)}
+        .user-summary-chip{flex:1;text-align:center;font-size:8px;color:var(--text2)}
+        .user-summary-chip b{display:block;font-size:10px;color:var(--text)}
+        .modal-overlay{position:fixed;inset:0;background:var(--overlay);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+        .modal-overlay.open{opacity:1;pointer-events:all}
+        .modal-box{background:var(--modal-bg);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:0 0 30px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:0 -12px 40px rgba(0,0,0,0.4);max-height:85vh;overflow-y:auto}
+        .modal-overlay.open .modal-box{transform:translateY(0)}
+        .modal-drag{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+        .modal-hdr{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+        .modal-hdr h3{font-size:16px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+        .modal-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px}
+        .modal-body{padding:16px 20px}
+        .detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+        .detail-lbl{font-size:10px;font-weight:600;color:var(--text2)}
+        .detail-val{font-size:12px;font-weight:800;color:var(--text);font-family:'Oswald',sans-serif}
+        .detail-val.green{color:var(--green)}.detail-val.red{color:var(--red)}.detail-val.gold{color:var(--gold)}.detail-val.purple{color:var(--purple)}
+        .form-group{margin-bottom:12px}
+        .form-label{font-size:10px;font-weight:800;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:5px}
+        .form-input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:600;color:var(--text);font-family:'Montserrat',sans-serif;outline:none}
+        .btn-green{width:100%;background:linear-gradient(135deg,var(--green),#047857);border:none;border-radius:10px;padding:13px;font-size:13px;font-weight:800;color:white;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;margin-bottom:6px}
+        .btn-red{width:100%;background:linear-gradient(135deg,#EF4444,#DC2626);border:none;border-radius:10px;padding:13px;font-size:13px;font-weight:800;color:white;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif}
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}
+        .spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.2);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <a href="dashboard.html" class="back-btn"><i class="ph ph-arrow-left"></i></a>
+            <span class="page-title">Investments</span>
+            <span class="header-badge"><i class="ph ph-chart-line-up"></i> PLANS</span>
+        </div>
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search by username or plan name..." oninput="filterInvestments()">
+        </div>
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="active" onclick="switchFilter('active',this)">ACTIVE</div>
+            <div class="filter-tab" data-filter="completed" onclick="switchFilter('completed',this)">COMPLETED</div>
+            <div class="filter-tab" data-filter="all" onclick="switchFilter('all',this)">ALL</div>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--green)" id="activeCount">0</div><div class="stat-mini-lbl">Active Plans</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--purple)" id="completedCount">0</div><div class="stat-mini-lbl">Completed</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--gold)" id="totalInvested">₦0</div><div class="stat-mini-lbl">Total Invested</div></div>
+    </div>
+
+    <div class="content" id="invList">
+        <div style="text-align:center;padding:30px;color:var(--text2)"><div class="spinner"></div><p style="margin-top:8px;font-size:12px">Loading investments...</p></div>
+    </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this)closeModal('detailModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-chart-line-up"></i> Investment Details</h3><button class="modal-close" onclick="closeModal('detailModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body" id="detailBody"></div>
+    </div>
+</div>
+
+<!-- ROI MODAL -->
+<div class="modal-overlay" id="roiModal" onclick="if(event.target===this)closeModal('roiModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-plus-circle"></i> Manual ROI Credit</h3><button class="modal-close" onclick="closeModal('roiModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body">
+            <div class="form-group"><label class="form-label">Amount to Credit (₦)</label><input type="number" class="form-input" id="roiAmount" placeholder="Enter amount" min="100"></div>
+            <div class="form-group"><label class="form-label">Note</label><input type="text" class="form-input" id="roiNote" placeholder="Reason"></div>
+            <button class="btn-green" id="roiBtn" onclick="executeManualROI()"><i class="ph ph-check-circle"></i> CREDIT ROI</button>
+        </div>
+    </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal" onclick="if(event.target===this)closeModal('confirmModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3 id="confirmTitle"><i class="ph ph-warning"></i> Confirm</h3><button class="modal-close" onclick="closeModal('confirmModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body" style="text-align:center">
+            <p style="font-size:13px;color:var(--text2);margin-bottom:16px" id="confirmMsg">Are you sure?</p>
+            <div style="display:flex;gap:10px">
+                <button class="form-input" style="flex:1;text-align:center;cursor:pointer;background:var(--card2)" onclick="closeModal('confirmModal')">CANCEL</button>
+                <button class="btn-red" style="flex:1" id="confirmActionBtn">CONFIRM</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, increment, serverTimestamp, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+window._db=db;window._allInvestments=[];let currentFilter='active';let selectedInvestment=null;
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)}
+function fmtShort(n){return n>=1000000?'₦'+(n/1000000).toFixed(1)+'M':n>=1000?'₦'+(n/1000).toFixed(1)+'K':'₦'+fmt(n)}
+function fmtDate(ts){if(!ts)return'—';let d;if(ts.toDate)d=ts.toDate();else if(ts?.seconds)d=new Date(ts.seconds*1000);else d=new Date(ts);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()}`}
+
+if(sessionStorage.getItem('adminLoggedIn')!=='true'){window.location.href='../admin-login.html'}
+
+async function loadInvestments(){
+    try{
+        const snap=await getDocs(collection(db,'investments'));
+        const invs=snap.docs.map(d=>({id:d.id,...d.data()}));
+        invs.sort((a,b)=>(b.startDate?.seconds||0)-(a.startDate?.seconds||0));
+        window._allInvestments=invs;
+        updateStats();
+        renderInvestments(currentFilter);
+    }catch(e){console.error(e)}
+}
+
+function updateStats(){
+    const invs=window._allInvestments||[];
+    document.getElementById('activeCount').textContent=invs.filter(d=>d.status==='active').length;
+    document.getElementById('completedCount').textContent=invs.filter(d=>d.status==='completed').length;
+    document.getElementById('totalInvested').textContent='₦'+fmtShort(invs.reduce((s,d)=>s+(d.price||0),0));
+}
+
+window.switchFilter=function(filter,el){
+    currentFilter=filter;
+    document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    renderInvestments(filter);
+};
+
+window.filterInvestments=function(){renderInvestments(currentFilter)};
+
+// 🔑 GROUP INVESTMENTS BY USER
+function renderInvestments(filter){
+    let invs=window._allInvestments||[];
+    const search=document.getElementById('searchInput')?.value?.toLowerCase()||'';
+    if(filter!=='all')invs=invs.filter(d=>d.status===filter);
+    if(search)invs=invs.filter(d=>(d.username||'').toLowerCase().includes(search)||(d.planName||'').toLowerCase().includes(search));
+    
+    const list=document.getElementById('invList');
+    if(!invs.length){list.innerHTML=`<div class="empty-state"><i class="ph ph-inbox"></i><p>No ${filter==='all'?'':' '+filter} investments found${search?' for "'+search+'"':''}</p></div>`;return}
+
+    // Group by username
+    const grouped={};
+    invs.forEach(d=>{const u=d.username||'unknown';if(!grouped[u])grouped[u]=[];grouped[u].push(d)});
+
+    const bgColors=['#7C3AED','#059669','#D97706','#EF4444','#0EA5E9','#8B5CF6','#F59E0B'];
+
+    list.innerHTML=Object.entries(grouped).map(([username,investments],gi)=>{
+        const totalInvested=investments.reduce((s,d)=>s+(d.price||0),0);
+        const totalEarned=investments.reduce((s,d)=>s+(d.earned||0),0);
+        const activeCount=investments.filter(d=>d.status==='active').length;
+        const initial=username[0]?.toUpperCase()||'U';
+
+        return`<div class="user-group-card">
+            <div class="user-group-header">
+                <div class="user-group-header-left">
+                    <div class="user-group-avatar" style="background:${bgColors[gi%7]}">${initial}</div>
+                    <div>
+                        <div class="user-group-name">${username}</div>
+                        <div class="user-group-username">${investments.length} plan${investments.length>1?'s':''} · ${activeCount} active</div>
+                    </div>
+                </div>
+                <div class="user-group-stats">
+                    <div class="user-group-stat">Invested<b>₦${fmtShort(totalInvested)}</b></div>
+                    <div class="user-group-stat">Earned<b style="color:var(--green)">₦${fmtShort(totalEarned)}</b></div>
+                </div>
+            </div>
+            ${investments.map((d,i)=>{
+                const isActive=d.status==='active';
+                const startDate=d.startDate?.toDate?d.startDate.toDate():new Date(d.startDate?.seconds*1000||Date.now());
+                const endDate=d.endDate?.toDate?d.endDate.toDate():new Date(startDate.getTime()+(d.days||30)*86400000);
+                const now=new Date();
+                const totalMs=endDate-startDate;
+                const elapsedMs=Math.max(0,now-startDate);
+                const progress=Math.min(100,Math.round((elapsedMs/totalMs)*100));
+                const daysLeft=Math.max(0,Math.ceil((endDate-now)/86400000));
+                const earned=d.earned||0;
+                const earnable=(d.totalExpected||0)-(d.price||0);
+
+                return`<div class="inv-card ${d.status||'active'}">
+                    <div class="inv-top">
+                        <span class="inv-emoji">${d.emoji||'📦'}</span>
+                        <div class="inv-info">
+                            <div class="inv-plan">${d.planName||'Investment'}</div>
+                            <div class="inv-meta">${d.category||'products'} · Started ${fmtDate(d.startDate)} · Ends ${fmtDate(endDate)}</div>
+                        </div>
+                        <span class="inv-status ${d.status||'active'}">${(d.status||'active').toUpperCase()}</span>
+                    </div>
+                    <div class="inv-details">
+                        <div class="inv-detail">Price<b style="color:var(--gold)">₦${fmt(d.price||0)}</b></div>
+                        <div class="inv-detail">Daily ROI<b style="color:var(--green)">₦${fmt(d.dailyProfit||0)}</b></div>
+                        <div class="inv-detail">Earned<b style="color:var(--green)">₦${fmt(earned)} / ₦${fmt(earnable)}</b></div>
+                    </div>
+                    ${isActive?`
+                    <div class="inv-progress-bar"><div class="inv-progress-fill" style="width:${progress}%"></div></div>
+                    <div class="inv-progress-text"><span>${progress}% · Day ${Math.floor(elapsedMs/86400000)+1}/${d.days||30}</span><span>${daysLeft}d left</span></div>
+                    `:''}
+                    <div class="inv-actions">
+                        <button class="inv-action-btn purple" onclick="openDetailModal('${d.id}')"><i class="ph ph-eye"></i> View</button>
+                        ${isActive?`
+                        <button class="inv-action-btn green" onclick="openROIModal('${d.id}')"><i class="ph ph-plus-circle"></i> ROI</button>
+                        <button class="inv-action-btn red" onclick="openCompleteModal('${d.id}')"><i class="ph ph-check"></i> Complete</button>
+                        `:''}
+                    </div>
+                </div>`;
+            }).join('')}
+            <div class="user-summary-row">
+                <div class="user-summary-chip">Total Invested<b>₦${fmtShort(totalInvested)}</b></div>
+                <div class="user-summary-chip">Total Earned<b style="color:var(--green)">₦${fmtShort(totalEarned)}</b></div>
+                <div class="user-summary-chip">Active<b>${activeCount}</b></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// 👁️ Detail Modal
+window.openDetailModal=function(id){
+    const d=window._allInvestments.find(x=>x.id===id);if(!d)return;
+    selectedInvestment=d;
+    const startDate=d.startDate?.toDate?d.startDate.toDate():new Date(d.startDate?.seconds*1000||Date.now());
+    const endDate=d.endDate?.toDate?d.endDate.toDate():new Date(startDate.getTime()+(d.days||30)*86400000);
+    document.getElementById('detailBody').innerHTML=`
+        <div class="detail-row"><span class="detail-lbl">User</span><span class="detail-val">@${d.username||'—'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Plan</span><span class="detail-val">${d.planName||'—'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Category</span><span class="detail-val">${(d.category||'products').toUpperCase()}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Price</span><span class="detail-val gold">₦${fmt(d.price||0)}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Daily Profit</span><span class="detail-val green">₦${fmt(d.dailyProfit||0)}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Duration</span><span class="detail-val">${d.days||0} days</span></div>
+        <div class="detail-row"><span class="detail-lbl">Total Expected</span><span class="detail-val gold">₦${fmt(d.totalExpected||0)}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Earned So Far</span><span class="detail-val green">₦${fmt(d.earned||0)}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Status</span><span class="detail-val ${d.status==='active'?'green':'purple'}">${(d.status||'active').toUpperCase()}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Started</span><span class="detail-val">${fmtDate(d.startDate)}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Ends</span><span class="detail-val">${fmtDate(endDate)}</span></div>
+        ${d.status==='active'?`
+        <button class="btn-green" style="margin-top:12px" onclick="closeModal('detailModal');openROIModal('${d.id}')"><i class="ph ph-plus-circle"></i> MANUAL ROI CREDIT</button>
+        <button class="btn-red" onclick="closeModal('detailModal');openCompleteModal('${d.id}')"><i class="ph ph-check-circle"></i> COMPLETE INVESTMENT</button>
+        `:''}
+    `;
+    openModal('detailModal');
+};
+
+// 💰 Manual ROI
+window.openROIModal=function(id){selectedInvestment=window._allInvestments.find(x=>x.id===id);document.getElementById('roiAmount').value='';document.getElementById('roiNote').value='';openModal('roiModal')};
+window.executeManualROI=async function(){
+    if(!selectedInvestment)return;
+    const amount=parseFloat(document.getElementById('roiAmount').value);
+    const note=document.getElementById('roiNote').value.trim();
+    if(!amount||amount<100){showToast('❌ Minimum ₦100','error');return}
+    const btn=document.getElementById('roiBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Processing...';
+    try{
+        await updateDoc(doc(db,'investments',selectedInvestment.id),{earned:increment(amount)});
+        await updateDoc(doc(db,'users',selectedInvestment.username),{withdrawalWallet:increment(amount)});
+        await addDoc(collection(db,'roiDrops'),{investmentId:selectedInvestment.id,userId:selectedInvestment.userId||'',username:selectedInvestment.username,planName:selectedInvestment.planName,amount,dayNumber:0,droppedAt:serverTimestamp(),autoProcessed:false,manualNote:note});
+        await addDoc(collection(db,'adminLogs'),{adminUsername:sessionStorage.getItem('adminUsername')||'admin',action:'manual_roi',targetUser:selectedInvestment.username,amount,note:note||'Manual ROI',createdAt:serverTimestamp()});
+        const snap=await getDocs(collection(db,'investments'));window._allInvestments=snap.docs.map(d=>({id:d.id,...d.data()}));
+        window._allInvestments.sort((a,b)=>(b.startDate?.seconds||0)-(a.startDate?.seconds||0));
+        updateStats();renderInvestments(currentFilter);
+        showToast(`✅ ₦${fmt(amount)} ROI credited to ${selectedInvestment.username}`,'success');
+        closeModal('roiModal');
+    }catch(e){console.error(e);showToast('❌ Failed','error');btn.disabled=false;btn.innerHTML='<i class="ph ph-check-circle"></i> CREDIT ROI'}
+};
+
+// ✅ Complete
+window.openCompleteModal=function(id){
+    selectedInvestment=window._allInvestments.find(x=>x.id===id);
+    document.getElementById('confirmTitle').innerHTML='<i class="ph ph-check-circle"></i> Complete Investment?';
+    document.getElementById('confirmMsg').textContent=`Complete "${selectedInvestment?.planName}" for @${selectedInvestment?.username}? Remaining earnings will be credited.`;
+    document.getElementById('confirmActionBtn').onclick=async()=>{
+        try{
+            const d=selectedInvestment;
+            const earnable=(d.totalExpected||0)-(d.price||0);
+            const remaining=earnable-(d.earned||0);
+            if(remaining>0){await updateDoc(doc(db,'investments',d.id),{earned:increment(remaining)});await updateDoc(doc(db,'users',d.username),{withdrawalWallet:increment(remaining)});}
+            await updateDoc(doc(db,'investments',d.id),{status:'completed',completedAt:serverTimestamp()});
+            await updateDoc(doc(db,'users',d.username),{activePlan:null,activeInvestmentId:null});
+            await addDoc(collection(db,'adminLogs'),{adminUsername:sessionStorage.getItem('adminUsername')||'admin',action:'complete_investment',targetUser:d.username,planName:d.planName,createdAt:serverTimestamp()});
+            const snap=await getDocs(collection(db,'investments'));window._allInvestments=snap.docs.map(d=>({id:d.id,...d.data()}));
+            window._allInvestments.sort((a,b)=>(b.startDate?.seconds||0)-(a.startDate?.seconds||0));
+            updateStats();renderInvestments(currentFilter);
+            showToast(`✅ Investment completed for ${d.username}`,'success');
+            closeModal('confirmModal');
+        }catch(e){showToast('❌ Failed','error')}
+    };
+    openModal('confirmModal');
+};
+
+loadInvestments();
+</script>
+
+<script>
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},4000)}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+</script>
+</body>
+</html>
