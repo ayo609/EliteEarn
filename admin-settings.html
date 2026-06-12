@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Settings</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#0a0a14;--card:#141428;--card2:#1a1a30;--text:#f0f0ff;--text2:#8888aa;
+            --border:#222240;--gold:#D4A017;--gold2:#F0C030;
+            --green:#059669;--red:#EF4444;--purple:#7C3AED;--blue:#0EA5E9;--orange:#F59E0B;
+            --header:linear-gradient(160deg,#0a0202 0%,#1a0505 30%,#2a0808 60%,#3a0a0a 100%);
+            --overlay:rgba(0,0,0,0.85);--modal-bg:#141428;--input-bg:#1a1a30;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;color:var(--text)}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:20px}
+        .page-header{background:var(--header);padding:16px 18px 24px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(212,160,23,0.1) 0%,transparent 70%);top:-30px;right:-30px}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        .back-btn{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;text-decoration:none}
+        .page-title{font-size:20px;font-weight:900;color:white;font-family:'Oswald',sans-serif}
+        .header-badge{font-size:9px;font-weight:800;color:var(--gold2);background:rgba(212,160,23,0.15);padding:4px 10px;border-radius:50px;text-transform:uppercase}
+        .content{padding:14px;display:flex;flex-direction:column;gap:12px;margin-top:-10px;position:relative;z-index:2}
+
+        /* Section Card */
+        .section-card{background:var(--card);border-radius:18px;padding:16px;border:1px solid var(--border)}
+        .section-title{font-size:11px;font-weight:800;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+        .section-title i{color:var(--gold);font-size:16px}
+        .section-desc{font-size:10px;color:var(--text2);font-weight:600;margin-bottom:12px;line-height:1.5}
+
+        /* Form */
+        .form-group{margin-bottom:14px}
+        .form-label{font-size:10px;font-weight:800;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:6px}
+        .form-input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;color:var(--text);font-family:'Montserrat',sans-serif;outline:none;transition:all .2s}
+        .form-input:focus{border-color:var(--gold)}
+        .form-input:disabled{opacity:.5;cursor:not-allowed}
+        .input-row{display:flex;gap:8px}
+        .input-row .form-input{flex:1}
+
+        /* Toggle */
+        .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+        .toggle-info{flex:1}
+        .toggle-label{font-size:12px;font-weight:800;color:var(--text);margin-bottom:2px}
+        .toggle-desc{font-size:9px;color:var(--text2);font-weight:600}
+        .toggle-switch{position:relative;width:48px;height:26px;flex-shrink:0}
+        .toggle-switch input{opacity:0;width:0;height:0}
+        .toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--input-bg);border-radius:26px;transition:.3s;border:1px solid var(--border)}
+        .toggle-slider::before{content:'';position:absolute;height:20px;width:20px;left:2px;bottom:2px;background:var(--text2);border-radius:50%;transition:.3s}
+        .toggle-switch input:checked+.toggle-slider{background:var(--green);border-color:var(--green)}
+        .toggle-switch input:checked+.toggle-slider::before{transform:translateX(22px);background:white}
+
+        /* Info row */
+        .info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+        .info-row:last-child{border-bottom:none}
+        .info-lbl{font-size:11px;font-weight:600;color:var(--text2)}
+        .info-val{font-size:13px;font-weight:800;color:var(--text);font-family:'Oswald',sans-serif}
+
+        /* Buttons */
+        .btn-save{width:100%;background:linear-gradient(135deg,var(--gold),#B8960A);border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:800;color:#1a0505;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:8px}
+        .btn-save:hover{transform:translateY(-2px)}.btn-save:disabled{opacity:.6;cursor:not-allowed;transform:none}
+        .btn-danger{width:100%;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:14px;font-size:14px;font-weight:800;color:var(--red);cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
+        .btn-danger:hover{background:rgba(239,68,68,0.2)}
+        .btn-outline{width:100%;background:transparent;border:1px solid var(--border);border-radius:12px;padding:13px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
+        .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+
+        /* Modal */
+        .modal-overlay{position:fixed;inset:0;background:var(--overlay);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+        .modal-overlay.open{opacity:1;pointer-events:all}
+        .modal-box{background:var(--modal-bg);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:0 0 30px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:0 -12px 40px rgba(0,0,0,0.4);max-height:85vh;overflow-y:auto}
+        .modal-overlay.open .modal-box{transform:translateY(0)}
+        .modal-drag{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+        .modal-hdr{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+        .modal-hdr h3{font-size:16px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+        .modal-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px}
+        .modal-body{padding:16px 20px}
+
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}
+        .spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.2);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <a href="dashboard.html" class="back-btn"><i class="ph ph-arrow-left"></i></a>
+            <span class="page-title">Settings</span>
+            <span class="header-badge"><i class="ph ph-gear"></i> CONFIG</span>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Admin Profile -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-user-circle"></i> ADMIN PROFILE</div>
+            <div class="info-row"><span class="info-lbl">Username</span><span class="info-val" id="adminUsername">—</span></div>
+            <div class="info-row"><span class="info-lbl">Role</span><span class="info-val" id="adminRole" style="color:var(--gold)">—</span></div>
+            <div class="info-row"><span class="info-lbl">Last Login</span><span class="info-val" id="adminLastLogin">—</span></div>
+            <button class="btn-outline" style="margin-top:12px" onclick="openChangePasswordModal()"><i class="ph ph-lock-key"></i> CHANGE PASSWORD</button>
+        </div>
+
+        <!-- Bank Account Settings -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-bank"></i> DEPOSIT BANK ACCOUNT</div>
+            <div class="section-desc">This bank account is shown to users when they want to make deposits.</div>
+            <div class="form-group"><label class="form-label">Bank Name</label><input type="text" class="form-input" id="bankName" placeholder="e.g. Palmpay"></div>
+            <div class="form-group"><label class="form-label">Account Number</label><input type="text" class="form-input" id="bankAccountNumber" placeholder="e.g. 9167378733"></div>
+            <div class="form-group"><label class="form-label">Account Name</label><input type="text" class="form-input" id="bankAccountName" placeholder="e.g. EliteEarn Investments"></div>
+            <button class="btn-save" onclick="saveBankSettings()"><i class="ph ph-floppy-disk"></i> SAVE BANK DETAILS</button>
+        </div>
+
+        <!-- Withdrawal Settings -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-arrow-up-right"></i> WITHDRAWAL SETTINGS</div>
+            <div class="form-group"><label class="form-label">Minimum Withdrawal (₦)</label><input type="number" class="form-input" id="minWithdrawal" placeholder="3000" min="1000"></div>
+            <div class="form-group"><label class="form-label">Tax Rate (%)</label><input type="number" class="form-input" id="taxRate" placeholder="10" min="0" max="100"></div>
+            <div class="form-group"><label class="form-label">Withdrawal Hours</label><div class="input-row"><input type="number" class="form-input" id="withdrawStart" placeholder="9" min="0" max="23"><input type="number" class="form-input" id="withdrawEnd" placeholder="17" min="0" max="23"></div></div>
+            <button class="btn-save" onclick="saveWithdrawalSettings()"><i class="ph ph-floppy-disk"></i> SAVE SETTINGS</button>
+        </div>
+
+        <!-- Referral Settings -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-users-three"></i> REFERRAL COMMISSIONS</div>
+            <div class="form-group"><label class="form-label">Level A Commission (%)</label><input type="number" class="form-input" id="refLevelA" placeholder="20" min="0" max="100"></div>
+            <div class="form-group"><label class="form-label">Level B Commission (%)</label><input type="number" class="form-input" id="refLevelB" placeholder="2" min="0" max="100"></div>
+            <div class="form-group"><label class="form-label">Level C Commission (%)</label><input type="number" class="form-input" id="refLevelC" placeholder="1" min="0" max="100"></div>
+            <button class="btn-save" onclick="saveReferralSettings()"><i class="ph ph-floppy-disk"></i> SAVE COMMISSIONS</button>
+        </div>
+
+        <!-- Welcome Bonus -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-gift"></i> WELCOME BONUS</div>
+            <div class="section-desc">Amount credited to new users' deposit wallet on registration.</div>
+            <div class="form-group"><label class="form-label">Bonus Amount (₦)</label><input type="number" class="form-input" id="welcomeBonus" placeholder="300" min="0"></div>
+            <button class="btn-save" onclick="saveWelcomeBonus()"><i class="ph ph-floppy-disk"></i> SAVE BONUS</button>
+        </div>
+
+        <!-- Maintenance Mode -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-wrench"></i> MAINTENANCE MODE</div>
+            <div class="toggle-row">
+                <div class="toggle-info"><div class="toggle-label">Enable Maintenance Mode</div><div class="toggle-desc">Blocks all user access except admins</div></div>
+                <label class="toggle-switch"><input type="checkbox" id="maintenanceToggle" onchange="toggleMaintenance()"><span class="toggle-slider"></span></label>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="section-card" style="border-color:rgba(239,68,68,0.3)">
+            <div class="section-title" style="color:var(--red)"><i class="ph ph-warning-circle" style="color:var(--red)"></i> DANGER ZONE</div>
+            <div class="section-desc" style="color:var(--red)">These actions are irreversible. Proceed with caution.</div>
+            <button class="btn-danger" onclick="openResetModal()"><i class="ph ph-trash"></i> RESET ALL DATA</button>
+        </div>
+
+        <!-- Logout -->
+        <button class="btn-outline" style="margin-top:4px;border-color:rgba(239,68,68,0.3);color:var(--red)" onclick="handleLogout()"><i class="ph ph-sign-out"></i> SIGN OUT</button>
+    </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal-overlay" id="passwordModal" onclick="if(event.target===this)closeModal('passwordModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-lock-key"></i> Change Password</h3><button class="modal-close" onclick="closeModal('passwordModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body">
+            <div class="form-group"><label class="form-label">Current Password</label><input type="password" class="form-input" id="currentPassword" placeholder="Enter current password"></div>
+            <div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-input" id="newPassword" placeholder="Min 6 characters"></div>
+            <div class="form-group"><label class="form-label">Confirm New Password</label><input type="password" class="form-input" id="confirmPassword" placeholder="Re-enter new password"></div>
+            <button class="btn-save" id="changePassBtn" onclick="changePassword()"><i class="ph ph-check-circle"></i> UPDATE PASSWORD</button>
+        </div>
+    </div>
+</div>
+
+<!-- RESET DATA MODAL -->
+<div class="modal-overlay" id="resetModal" onclick="if(event.target===this)closeModal('resetModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-warning-circle" style="color:var(--red)"></i> Reset All Data</h3><button class="modal-close" onclick="closeModal('resetModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body" style="text-align:center">
+            <p style="font-size:13px;color:var(--red);margin-bottom:8px;font-weight:700">⚠️ WARNING: This is irreversible!</p>
+            <p style="font-size:11px;color:var(--text2);margin-bottom:16px">Type <b style="color:var(--red)">DELETE ALL DATA</b> to confirm</p>
+            <input type="text" class="form-input" id="resetConfirm" placeholder="Type DELETE ALL DATA" style="margin-bottom:12px">
+            <button class="btn-danger" id="resetBtn" onclick="executeReset()"><i class="ph ph-trash"></i> RESET EVERYTHING</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+window._db=db;
+
+function fmtDate(ts){if(!ts)return'—';let d;if(ts.toDate)d=ts.toDate();else if(ts?.seconds)d=new Date(ts.seconds*1000);else d=new Date(ts);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+
+if(sessionStorage.getItem('adminLoggedIn')!=='true'){window.location.href='../admin-login.html'}
+
+async function loadSettings(){
+    const adminUser=sessionStorage.getItem('adminUsername')||'admin';
+    document.getElementById('adminUsername').textContent=adminUser;
+    document.getElementById('adminRole').textContent=(sessionStorage.getItem('adminRole')||'admin').toUpperCase();
+
+    // Load admin profile
+    try{
+        const adminSnap=await getDoc(doc(db,'admins',adminUser));
+        if(adminSnap.exists()){
+            const d=adminSnap.data();
+            document.getElementById('adminLastLogin').textContent=fmtDate(d.lastLogin);
+        }
+    }catch(e){}
+
+    // Load settings from settings doc
+    try{
+        const settingsSnap=await getDoc(doc(db,'settings','app'));
+        if(settingsSnap.exists()){
+            const s=settingsSnap.data();
+            document.getElementById('bankName').value=s.bankName||'';
+            document.getElementById('bankAccountNumber').value=s.bankAccountNumber||'';
+            document.getElementById('bankAccountName').value=s.bankAccountName||'';
+            document.getElementById('minWithdrawal').value=s.minWithdrawal||3000;
+            document.getElementById('taxRate').value=s.taxRate||10;
+            document.getElementById('withdrawStart').value=s.withdrawStart||9;
+            document.getElementById('withdrawEnd').value=s.withdrawEnd||17;
+            document.getElementById('refLevelA').value=s.refLevelA||20;
+            document.getElementById('refLevelB').value=s.refLevelB||2;
+            document.getElementById('refLevelC').value=s.refLevelC||1;
+            document.getElementById('welcomeBonus').value=s.welcomeBonus||300;
+            document.getElementById('maintenanceToggle').checked=s.maintenanceMode||false;
+        }
+    }catch(e){}
+}
+
+// 💾 Save Bank Settings
+window.saveBankSettings=async function(){
+    const data={bankName:document.getElementById('bankName').value,bankAccountNumber:document.getElementById('bankAccountNumber').value,bankAccountName:document.getElementById('bankAccountName').value};
+    await setDoc(doc(db,'settings','app'),data,{merge:true});
+    showToast('✅ Bank details saved','success');
+};
+
+// 💾 Save Withdrawal Settings
+window.saveWithdrawalSettings=async function(){
+    const data={minWithdrawal:parseInt(document.getElementById('minWithdrawal').value)||3000,taxRate:parseInt(document.getElementById('taxRate').value)||10,withdrawStart:parseInt(document.getElementById('withdrawStart').value)||9,withdrawEnd:parseInt(document.getElementById('withdrawEnd').value)||17};
+    await setDoc(doc(db,'settings','app'),data,{merge:true});
+    showToast('✅ Withdrawal settings saved','success');
+};
+
+// 💾 Save Referral Settings
+window.saveReferralSettings=async function(){
+    const data={refLevelA:parseInt(document.getElementById('refLevelA').value)||20,refLevelB:parseInt(document.getElementById('refLevelB').value)||2,refLevelC:parseInt(document.getElementById('refLevelC').value)||1};
+    await setDoc(doc(db,'settings','app'),data,{merge:true});
+    showToast('✅ Referral commissions saved','success');
+};
+
+// 💾 Save Welcome Bonus
+window.saveWelcomeBonus=async function(){
+    const data={welcomeBonus:parseInt(document.getElementById('welcomeBonus').value)||300};
+    await setDoc(doc(db,'settings','app'),data,{merge:true});
+    showToast('✅ Welcome bonus saved','success');
+};
+
+// 🔧 Maintenance Mode
+window.toggleMaintenance=async function(){
+    const enabled=document.getElementById('maintenanceToggle').checked;
+    await setDoc(doc(db,'settings','app'),{maintenanceMode:enabled},{merge:true});
+    showToast(enabled?'🔧 Maintenance mode ON':'✅ Maintenance mode OFF','success');
+};
+
+// 🔐 Change Password
+window.openChangePasswordModal=function(){document.getElementById('currentPassword').value='';document.getElementById('newPassword').value='';document.getElementById('confirmPassword').value='';openModal('passwordModal')};
+window.changePassword=async function(){
+    const cp=document.getElementById('currentPassword').value,np=document.getElementById('newPassword').value,cnp=document.getElementById('confirmPassword').value;
+    if(!cp||!np||!cnp){showToast('❌ Fill all fields','error');return}
+    if(np.length<6){showToast('❌ Min 6 characters','error');return}
+    if(np!==cnp){showToast('❌ Passwords don\'t match','error');return}
+    const btn=document.getElementById('changePassBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Updating...';
+    try{
+        const adminUser=sessionStorage.getItem('adminUsername')||'admin';
+        const adminSnap=await getDoc(doc(db,'admins',adminUser));
+        const storedPass=adminSnap.data()?.password||'';
+        const currentHash=btoa(cp+adminUser+'elite_admin_salt');
+        if(storedPass!==currentHash){btn.disabled=false;btn.innerHTML='<i class="ph ph-check-circle"></i> UPDATE PASSWORD';showToast('❌ Current password incorrect','error');return}
+        await updateDoc(doc(db,'admins',adminUser),{password:btoa(np+adminUser+'elite_admin_salt')});
+        showToast('✅ Password updated!','success');
+        closeModal('passwordModal');
+    }catch(e){showToast('❌ Failed','error');btn.disabled=false;btn.innerHTML='<i class="ph ph-check-circle"></i> UPDATE PASSWORD'}
+};
+
+// 🗑️ Reset All Data
+window.openResetModal=function(){document.getElementById('resetConfirm').value='';openModal('resetModal')};
+window.executeReset=async function(){
+    const confirm=document.getElementById('resetConfirm').value;
+    if(confirm!=='DELETE ALL DATA'){showToast('❌ Type DELETE ALL DATA to confirm','error');return}
+    const btn=document.getElementById('resetBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Deleting...';
+    try{
+        const collections=['users','usersByUid','deposits','withdrawals','investments','roiDrops','notifications','giftCodes','referralStats','transactionHistory','adminLogs'];
+        for(const col of collections){
+            const snap=await getDocs(collection(db,col));
+            const batch=writeBatch(db);
+            snap.docs.forEach(d=>batch.delete(d.ref));
+            await batch.commit();
+        }
+        showToast('✅ All data reset!','success');
+        closeModal('resetModal');
+    }catch(e){console.error(e);showToast('❌ Failed','error');btn.disabled=false;btn.innerHTML='<i class="ph ph-trash"></i> RESET EVERYTHING'}
+};
+
+// Sign out
+window.handleLogout=function(){sessionStorage.clear();window.location.href='../admin-login.html'};
+
+loadSettings();
+</script>
+
+<script>
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},4000)}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+</script>
+</body>
+</html>
