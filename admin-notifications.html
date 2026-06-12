@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Notification Management</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#0a0a14;--card:#141428;--card2:#1a1a30;--text:#f0f0ff;--text2:#8888aa;
+            --border:#222240;--gold:#D4A017;--gold2:#F0C030;
+            --green:#059669;--red:#EF4444;--purple:#7C3AED;--blue:#0EA5E9;--orange:#F59E0B;
+            --header:linear-gradient(160deg,#0a0202 0%,#1a0505 30%,#2a0808 60%,#3a0a0a 100%);
+            --overlay:rgba(0,0,0,0.85);--modal-bg:#141428;--input-bg:#1a1a30;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;color:var(--text)}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:20px}
+        .page-header{background:var(--header);padding:16px 18px 24px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(14,165,233,0.08) 0%,transparent 70%);top:-30px;right:-30px}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        .back-btn{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;text-decoration:none}
+        .page-title{font-size:20px;font-weight:900;color:white;font-family:'Oswald',sans-serif}
+        .header-badge{font-size:9px;font-weight:800;color:var(--blue);background:rgba(14,165,233,0.15);padding:4px 10px;border-radius:50px;text-transform:uppercase}
+        .search-bar{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+        .search-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;color:white;outline:none;font-family:'Montserrat',sans-serif}
+        .search-input::placeholder{color:rgba(255,255,255,0.4)}
+        .search-input:focus{border-color:var(--gold)}
+        .filter-tabs{display:flex;gap:0;background:rgba(255,255,255,0.05);border-radius:12px;padding:4px;margin-bottom:8px}
+        .filter-tab{flex:1;text-align:center;padding:10px 6px;border-radius:10px;font-size:10px;font-weight:800;cursor:pointer;transition:all .2s;color:var(--text2);user-select:none}
+        .filter-tab.active{background:var(--gold);color:#1a0505}
+        .stats-bar{display:flex;gap:8px;padding:0 14px;margin-top:-10px;position:relative;z-index:2}
+        .stat-mini{flex:1;background:var(--card);border-radius:14px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+        .stat-mini-val{font-size:16px;font-weight:900;font-family:'Oswald',sans-serif;color:var(--text)}
+        .stat-mini-lbl{font-size:8px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+        .content{padding:14px;display:flex;flex-direction:column;gap:10px}
+        .create-btn{width:100%;background:linear-gradient(135deg,var(--blue),#0284C7);border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:800;color:white;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+        .create-btn:hover{transform:translateY(-2px)}
+        .delete-all-btn{width:100%;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:12px;font-size:12px;font-weight:800;color:var(--red);cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
+        .delete-all-btn:hover{background:rgba(239,68,68,0.2)}
+        .notif-card{background:var(--card);border-radius:14px;padding:12px 14px;border:1px solid var(--border);transition:all .2s}
+        .notif-card.unread{border-left:3px solid var(--blue)}
+        .notif-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+        .notif-icon{width:34px;height:34px;min-width:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+        .notif-icon.system{background:rgba(124,58,237,0.15);color:var(--purple)}
+        .notif-icon.deposit{background:rgba(5,150,105,0.15);color:var(--green)}
+        .notif-icon.withdrawal{background:rgba(239,68,68,0.15);color:var(--red)}
+        .notif-icon.gift{background:rgba(212,160,23,0.15);color:var(--gold)}
+        .notif-icon.plan{background:rgba(14,165,233,0.15);color:var(--blue)}
+        .notif-info{flex:1;min-width:0}
+        .notif-title{font-size:12px;font-weight:800;color:var(--text);margin-bottom:2px}
+        .notif-msg{font-size:10px;color:var(--text2);line-height:1.4;margin-bottom:2px}
+        .notif-meta{font-size:9px;color:var(--text2);display:flex;align-items:center;gap:8px}
+        .notif-user{color:var(--blue);font-weight:700}
+        .notif-actions{display:flex;gap:4px;margin-top:6px}
+        .notif-action-btn{flex:1;padding:6px 4px;border-radius:8px;border:1px solid var(--border);font-size:8px;font-weight:800;cursor:pointer;text-align:center;transition:all .2s;font-family:'Montserrat',sans-serif;background:var(--card2);color:var(--text2)}
+        .notif-action-btn.red{color:var(--red);border-color:rgba(239,68,68,0.3)}
+        .notif-action-btn.red:hover{background:rgba(239,68,68,0.1)}
+        .empty-state{text-align:center;padding:40px;color:var(--text2)}
+        .empty-state i{font-size:48px;margin-bottom:12px;opacity:.4}
+        .modal-overlay{position:fixed;inset:0;background:var(--overlay);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+        .modal-overlay.open{opacity:1;pointer-events:all}
+        .modal-box{background:var(--modal-bg);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:0 0 30px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:0 -12px 40px rgba(0,0,0,0.4);max-height:85vh;overflow-y:auto}
+        .modal-overlay.open .modal-box{transform:translateY(0)}
+        .modal-drag{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+        .modal-hdr{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+        .modal-hdr h3{font-size:16px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+        .modal-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px}
+        .modal-body{padding:16px 20px}
+        .form-group{margin-bottom:14px}
+        .form-label{font-size:10px;font-weight:800;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:6px}
+        .form-input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;color:var(--text);font-family:'Montserrat',sans-serif;outline:none}
+        textarea.form-input{resize:vertical;min-height:80px}
+        .form-select{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;color:var(--text);font-family:'Montserrat',sans-serif;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238888aa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+        .form-select option{background:#1a1a30;color:white}
+        .target-options{display:flex;gap:8px;margin-bottom:12px}
+        .target-option{flex:1;text-align:center;padding:10px;border-radius:10px;border:1px solid var(--border);font-size:10px;font-weight:800;cursor:pointer;transition:all .2s;color:var(--text2);user-select:none}
+        .target-option.active{background:var(--blue);color:white;border-color:var(--blue)}
+        .btn-primary{width:100%;background:linear-gradient(135deg,var(--blue),#0284C7);border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:800;color:white;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;text-transform:uppercase;margin-bottom:8px}
+        .btn-primary:hover{transform:translateY(-2px)}.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
+        .btn-red{width:100%;background:linear-gradient(135deg,#EF4444,#DC2626);border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:800;color:white;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif}
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}
+        .spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.2);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <a href="dashboard.html" class="back-btn"><i class="ph ph-arrow-left"></i></a>
+            <span class="page-title">Notifications</span>
+            <span class="header-badge"><i class="ph ph-bell-ringing"></i> ALERTS</span>
+        </div>
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search by username or message..." oninput="filterNotifications()">
+        </div>
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all" onclick="switchFilter('all',this)">ALL</div>
+            <div class="filter-tab" data-filter="unread" onclick="switchFilter('unread',this)">UNREAD</div>
+            <div class="filter-tab" data-filter="read" onclick="switchFilter('read',this)">READ</div>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-mini"><div class="stat-mini-val" id="totalCount">0</div><div class="stat-mini-lbl">Total</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--blue)" id="unreadCount">0</div><div class="stat-mini-lbl">Unread</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--purple)" id="uniqueUsers">0</div><div class="stat-mini-lbl">Users</div></div>
+    </div>
+
+    <div class="content">
+        <button class="create-btn" onclick="openSendModal()"><i class="ph ph-paper-plane-tilt"></i> SEND NOTIFICATION</button>
+        <button class="delete-all-btn" onclick="openDeleteAllModal()"><i class="ph ph-trash"></i> DELETE ALL NOTIFICATIONS</button>
+        <div id="notifList"><div style="text-align:center;padding:30px;color:var(--text2)"><div class="spinner"></div><p style="margin-top:8px;font-size:12px">Loading notifications...</p></div></div>
+    </div>
+</div>
+
+<!-- SEND NOTIFICATION MODAL -->
+<div class="modal-overlay" id="sendModal" onclick="if(event.target===this)closeModal('sendModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-paper-plane-tilt"></i> Send Notification</h3><button class="modal-close" onclick="closeModal('sendModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body">
+            <div class="form-group"><label class="form-label">Target</label>
+                <div class="target-options" id="targetOptions">
+                    <div class="target-option active" data-target="all" onclick="selectTarget('all',this)">📢 All Users</div>
+                    <div class="target-option" data-target="single" onclick="selectTarget('single',this)">👤 Single User</div>
+                </div>
+            </div>
+            <div class="form-group" id="singleUserGroup" style="display:none">
+                <label class="form-label">Username</label><input type="text" class="form-input" id="targetUsername" placeholder="Enter username">
+            </div>
+            <div class="form-group"><label class="form-label">Type</label>
+                <select class="form-select" id="notifType">
+                    <option value="system">📢 System / General</option>
+                    <option value="gift">🎁 Gift / Reward</option>
+                    <option value="deposit">💰 Deposit</option>
+                    <option value="withdrawal">💸 Withdrawal</option>
+                    <option value="plan">📊 Plan / Investment</option>
+                </select>
+            </div>
+            <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="notifTitle" placeholder="Notification title"></div>
+            <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="notifMessage" placeholder="Notification message body"></textarea></div>
+            <button class="btn-primary" id="sendBtn" onclick="sendNotification()"><i class="ph ph-paper-plane-tilt"></i> SEND NOW</button>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE ALL MODAL -->
+<div class="modal-overlay" id="deleteAllModal" onclick="if(event.target===this)closeModal('deleteAllModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-trash"></i> Delete All Notifications</h3><button class="modal-close" onclick="closeModal('deleteAllModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body" style="text-align:center">
+            <p style="font-size:13px;color:var(--text2);margin-bottom:8px">This will permanently delete <b style="color:var(--red)">ALL notifications</b> from all users.</p>
+            <div class="form-group"><label class="form-label">Filter (Optional)</label>
+                <select class="form-select" id="deleteFilter">
+                    <option value="all">🗑️ Delete ALL notifications</option>
+                    <option value="read">📖 Delete only READ notifications</option>
+                </select>
+            </div>
+            <button class="btn-red" id="deleteAllBtn" onclick="executeDeleteAll()"><i class="ph ph-trash"></i> DELETE ALL NOTIFICATIONS</button>
+        </div>
+    </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal" onclick="if(event.target===this)closeModal('confirmModal')">
+    <div class="modal-box"><div class="modal-drag"></div>
+        <div class="modal-hdr"><h3><i class="ph ph-warning"></i> Confirm</h3><button class="modal-close" onclick="closeModal('confirmModal')"><i class="ph ph-x"></i></button></div>
+        <div class="modal-body" style="text-align:center">
+            <p style="font-size:13px;color:var(--text2);margin-bottom:16px" id="confirmMsg">Are you sure?</p>
+            <div style="display:flex;gap:10px">
+                <button class="form-input" style="flex:1;text-align:center;cursor:pointer;background:var(--card2)" onclick="closeModal('confirmModal')">CANCEL</button>
+                <button class="btn-red" style="flex:1" id="confirmActionBtn">CONFIRM</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, addDoc, deleteDoc, serverTimestamp, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+window._db=db;window._allNotifications=[];let currentFilter='all';let selectedTarget='all';
+
+function fmtDate(ts){if(!ts)return'—';let d;if(ts.toDate)d=ts.toDate();else if(ts?.seconds)d=new Date(ts.seconds*1000);else d=new Date(ts);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+
+if(sessionStorage.getItem('adminLoggedIn')!=='true'){window.location.href='../admin-login.html'}
+
+async function loadNotifications(){
+    try{
+        const snap=await getDocs(collection(db,'notifications'));
+        const notifs=snap.docs.map(d=>({id:d.id,...d.data()}));
+        notifs.sort((a,b)=>(b.timestamp?.seconds||0)-(a.timestamp?.seconds||0));
+        window._allNotifications=notifs;
+        updateStats();
+        renderNotifications(currentFilter);
+    }catch(e){console.error(e)}
+}
+
+function updateStats(){
+    const notifs=window._allNotifications||[];
+    document.getElementById('totalCount').textContent=notifs.length;
+    document.getElementById('unreadCount').textContent=notifs.filter(n=>!n.read).length;
+    const uniqueUids=new Set(notifs.map(n=>n.uid).filter(Boolean));
+    document.getElementById('uniqueUsers').textContent=uniqueUids.size;
+}
+
+window.switchFilter=function(filter,el){
+    currentFilter=filter;
+    document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    renderNotifications(filter);
+};
+
+window.filterNotifications=function(){renderNotifications(currentFilter)};
+
+function renderNotifications(filter){
+    let notifs=window._allNotifications||[];
+    const search=document.getElementById('searchInput')?.value?.toLowerCase()||'';
+    if(filter==='unread')notifs=notifs.filter(n=>!n.read);
+    else if(filter==='read')notifs=notifs.filter(n=>n.read);
+    if(search)notifs=notifs.filter(n=>(n.username||'').toLowerCase().includes(search)||(n.title||'').toLowerCase().includes(search)||(n.msg||'').toLowerCase().includes(search));
+    
+    const list=document.getElementById('notifList');
+    if(!notifs.length){list.innerHTML=`<div class="empty-state"><i class="ph ph-bell-slash"></i><p>No notifications found</p></div>`;return}
+
+    list.innerHTML=notifs.map(n=>{
+        const iconClass=n.type||'system';
+        const icons={system:'<i class="ph ph-bell-ringing"></i>',deposit:'<i class="ph ph-arrow-down-left"></i>',withdrawal:'<i class="ph ph-arrow-up-right"></i>',gift:'<i class="ph ph-gift"></i>',plan:'<i class="ph ph-chart-line-up"></i>'};
+        return`<div class="notif-card ${n.read?'':'unread'}">
+            <div class="notif-top">
+                <div class="notif-icon ${iconClass}">${icons[iconClass]||icons.system}</div>
+                <div class="notif-info">
+                    <div class="notif-title">${n.title||'Notification'}</div>
+                    <div class="notif-msg">${n.msg||''}</div>
+                    <div class="notif-meta">
+                        <span class="notif-user">@${n.username||n.uid?.slice(0,8)||'user'}</span>
+                        <span>${fmtDate(n.timestamp)}</span>
+                        <span>${n.read?'✅ Read':'🔵 Unread'}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="notif-actions">
+                <button class="notif-action-btn red" onclick="deleteNotification('${n.id}')"><i class="ph ph-trash"></i> Delete</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// 🎯 Target selection
+window.selectTarget=function(target,el){
+    selectedTarget=target;
+    document.querySelectorAll('.target-option').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('singleUserGroup').style.display=target==='single'?'block':'none';
+};
+
+// 📤 Send Notification
+window.openSendModal=function(){document.getElementById('notifTitle').value='';document.getElementById('notifMessage').value='';document.getElementById('targetUsername').value='';selectedTarget='all';document.querySelectorAll('.target-option').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="all"]').classList.add('active');document.getElementById('singleUserGroup').style.display='none';openModal('sendModal')};
+
+window.sendNotification=async function(){
+    const title=document.getElementById('notifTitle').value.trim();
+    const message=document.getElementById('notifMessage').value.trim();
+    const type=document.getElementById('notifType').value;
+    if(!title||!message){showToast('❌ Title and message required','error');return}
+    const btn=document.getElementById('sendBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending...';
+    try{
+        if(selectedTarget==='all'){
+            // Send to all users
+            const usersSnap=await getDocs(collection(db,'users'));
+            const batch=writeBatch(db);
+            usersSnap.docs.forEach(u=>{
+                const ref=doc(collection(db,'notifications'));
+                batch.set(ref,{uid:u.data().uid||'',username:u.id,type,title,msg:message,timestamp:serverTimestamp(),read:false,sentBy:sessionStorage.getItem('adminUsername')||'admin'});
+            });
+            await batch.commit();
+            showToast(`✅ Sent to ${usersSnap.docs.length} users!`,'success');
+        }else{
+            const username=document.getElementById('targetUsername').value.trim();
+            if(!username){showToast('❌ Enter username','error');btn.disabled=false;btn.innerHTML='<i class="ph ph-paper-plane-tilt"></i> SEND NOW';return}
+            const userSnap=await getDocs(query(collection(db,'users'),where('__name__','==',username)));
+            if(userSnap.empty){showToast('❌ User not found','error');btn.disabled=false;btn.innerHTML='<i class="ph ph-paper-plane-tilt"></i> SEND NOW';return}
+            const uid=userSnap.docs[0].data().uid||'';
+            await addDoc(collection(db,'notifications'),{uid,username,type,title,msg:message,timestamp:serverTimestamp(),read:false,sentBy:sessionStorage.getItem('adminUsername')||'admin'});
+            showToast(`✅ Sent to @${username}`,'success');
+        }
+        const snap=await getDocs(collection(db,'notifications'));window._allNotifications=snap.docs.map(d=>({id:d.id,...d.data()}));
+        window._allNotifications.sort((a,b)=>(b.timestamp?.seconds||0)-(a.timestamp?.seconds||0));
+        updateStats();renderNotifications(currentFilter);
+        closeModal('sendModal');
+    }catch(e){console.error(e);showToast('❌ Failed','error');btn.disabled=false;btn.innerHTML='<i class="ph ph-paper-plane-tilt"></i> SEND NOW'}
+};
+
+// 🗑️ Delete single
+window.deleteNotification=function(id){
+    document.getElementById('confirmMsg').textContent='Delete this notification?';
+    document.getElementById('confirmActionBtn').onclick=async()=>{
+        try{await deleteDoc(doc(db,'notifications',id));
+            const snap=await getDocs(collection(db,'notifications'));window._allNotifications=snap.docs.map(d=>({id:d.id,...d.data()}));
+            updateStats();renderNotifications(currentFilter);
+            showToast('✅ Deleted','success');closeModal('confirmModal');
+        }catch(e){showToast('❌ Failed','error')}
+    };
+    openModal('confirmModal');
+};
+
+// 🗑️ Delete ALL
+window.openDeleteAllModal=function(){openModal('deleteAllModal')};
+window.executeDeleteAll=async function(){
+    const filter=document.getElementById('deleteFilter').value;
+    const btn=document.getElementById('deleteAllBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Deleting...';
+    try{
+        const snap=await getDocs(collection(db,'notifications'));
+        let count=0;
+        const batch=writeBatch(db);
+        snap.docs.forEach(d=>{
+            const data=d.data();
+            if(filter==='all'||(filter==='read'&&data.read)){batch.delete(d.ref);count++;}
+        });
+        if(count===0){showToast('No notifications to delete','info');btn.disabled=false;btn.innerHTML='<i class="ph ph-trash"></i> DELETE ALL NOTIFICATIONS';return}
+        await batch.commit();
+        const newSnap=await getDocs(collection(db,'notifications'));window._allNotifications=newSnap.docs.map(d=>({id:d.id,...d.data()}));
+        updateStats();renderNotifications(currentFilter);
+        showToast(`✅ ${count} notifications deleted!`,'success');
+        closeModal('deleteAllModal');
+    }catch(e){console.error(e);showToast('❌ Failed','error');btn.disabled=false;btn.innerHTML='<i class="ph ph-trash"></i> DELETE ALL NOTIFICATIONS'}
+};
+
+loadNotifications();
+</script>
+
+<script>
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},4000)}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+</script>
+</body>
+</html>
