@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Reports & Analytics</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#0a0a14;--card:#141428;--card2:#1a1a30;--text:#f0f0ff;--text2:#8888aa;
+            --border:#222240;--gold:#D4A017;--gold2:#F0C030;
+            --green:#059669;--red:#EF4444;--purple:#7C3AED;--blue:#0EA5E9;--orange:#F59E0B;
+            --header:linear-gradient(160deg,#0a0202 0%,#1a0505 30%,#2a0808 60%,#3a0a0a 100%);
+            --overlay:rgba(0,0,0,0.85);--modal-bg:#141428;--input-bg:#1a1a30;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;color:var(--text)}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:20px}
+        .page-header{background:var(--header);padding:16px 18px 24px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 70%);top:-30px;right:-30px}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+        .back-btn{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;text-decoration:none}
+        .page-title{font-size:20px;font-weight:900;color:white;font-family:'Oswald',sans-serif}
+        .header-badge{font-size:9px;font-weight:800;color:var(--purple);background:rgba(124,58,237,0.15);padding:4px 10px;border-radius:50px;text-transform:uppercase}
+        .content{padding:14px;display:flex;flex-direction:column;gap:12px;margin-top:-10px;position:relative;z-index:2}
+
+        /* Overview Cards */
+        .overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+        .overview-card{background:var(--card);border-radius:18px;padding:16px 14px;border:1px solid var(--border);text-align:center}
+        .overview-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 8px}
+        .overview-icon.green{background:rgba(5,150,105,0.15);color:var(--green)}
+        .overview-icon.gold{background:rgba(212,160,23,0.15);color:var(--gold)}
+        .overview-icon.red{background:rgba(239,68,68,0.15);color:var(--red)}
+        .overview-icon.blue{background:rgba(14,165,233,0.15);color:var(--blue)}
+        .overview-icon.purple{background:rgba(124,58,237,0.15);color:var(--purple)}
+        .overview-icon.orange{background:rgba(245,158,11,0.15);color:var(--orange)}
+        .overview-val{font-size:20px;font-weight:900;color:var(--text);font-family:'Oswald',sans-serif}
+        .overview-lbl{font-size:9px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+        /* Section */
+        .section-card{background:var(--card);border-radius:18px;padding:16px;border:1px solid var(--border)}
+        .section-title{font-size:11px;font-weight:800;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+        .section-title i{color:var(--gold);font-size:16px}
+
+        /* Report Row */
+        .report-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+        .report-row:last-child{border-bottom:none}
+        .report-lbl{font-size:11px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:6px}
+        .report-lbl i{font-size:14px}
+        .report-val{font-size:13px;font-weight:900;color:var(--text);font-family:'Oswald',sans-serif}
+        .report-val.green{color:var(--green)}.report-val.red{color:var(--red)}.report-val.gold{color:var(--gold)}.report-val.blue{color:var(--blue)}.report-val.purple{color:var(--purple)}
+
+        /* Top Users List */
+        .top-user{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+        .top-user:last-child{border-bottom:none}
+        .top-rank{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-family:'Oswald',sans-serif;background:var(--input-bg);color:var(--text2);flex-shrink:0}
+        .top-rank.gold{background:rgba(212,160,23,0.2);color:var(--gold)}
+        .top-rank.silver{background:rgba(168,168,180,0.2);color:#aaa}
+        .top-rank.bronze{background:rgba(205,127,50,0.2);color:#cd7f32}
+        .top-info{flex:1;min-width:0}
+        .top-name{font-size:12px;font-weight:800;color:var(--text)}
+        .top-sub{font-size:9px;color:var(--text2);font-weight:600}
+        .top-val{font-size:14px;font-weight:900;color:var(--gold);font-family:'Oswald',sans-serif}
+
+        /* Export Button */
+        .export-btn{width:100%;background:linear-gradient(135deg,var(--green),#047857);border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:800;color:white;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;letter-spacing:.5px}
+        .export-btn:hover{transform:translateY(-2px)}
+        .export-btn.secondary{background:linear-gradient(135deg,var(--purple),#5B21B6)}
+
+        /* Chart bar */
+        .chart-bar-wrap{display:flex;align-items:flex-end;gap:6px;height:120px;padding:8px 0}
+        .chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%}
+        .chart-bar{width:100%;background:linear-gradient(180deg,var(--gold),var(--gold2));border-radius:6px 6px 0 0;transition:height .5s;min-height:4px}
+        .chart-bar-label{font-size:8px;color:var(--text2);font-weight:700}
+        .chart-bar-val{font-size:9px;font-weight:800;color:var(--text)}
+
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}
+        .spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.2);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-center{text-align:center;padding:30px;color:var(--text2)}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <a href="dashboard.html" class="back-btn"><i class="ph ph-arrow-left"></i></a>
+            <span class="page-title">Reports</span>
+            <span class="header-badge"><i class="ph ph-file-text"></i> ANALYTICS</span>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Overview Cards -->
+        <div class="overview-grid">
+            <div class="overview-card"><div class="overview-icon green"><i class="ph ph-users"></i></div><div class="overview-val" id="totalUsers">0</div><div class="overview-lbl">Total Users</div></div>
+            <div class="overview-card"><div class="overview-icon gold"><i class="ph ph-coins"></i></div><div class="overview-val" id="totalRevenue">₦0</div><div class="overview-lbl">Total Revenue</div></div>
+            <div class="overview-card"><div class="overview-icon blue"><i class="ph ph-arrow-down-left"></i></div><div class="overview-val" id="totalDeposits">₦0</div><div class="overview-lbl">Total Deposits</div></div>
+            <div class="overview-card"><div class="overview-icon red"><i class="ph ph-arrow-up-right"></i></div><div class="overview-val" id="totalWithdrawals">₦0</div><div class="overview-lbl">Total Withdrawals</div></div>
+            <div class="overview-card"><div class="overview-icon purple"><i class="ph ph-chart-line-up"></i></div><div class="overview-val" id="activePlans">0</div><div class="overview-lbl">Active Plans</div></div>
+            <div class="overview-card"><div class="overview-icon orange"><i class="ph ph-gift"></i></div><div class="overview-val" id="totalReferralPaid">₦0</div><div class="overview-lbl">Referral Paid</div></div>
+        </div>
+
+        <!-- Today's Report -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-calendar-check"></i> TODAY'S REPORT</div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-user-plus" style="color:var(--blue)"></i> New Users</span><span class="report-val blue" id="todayUsers">0</span></div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-arrow-down-left" style="color:var(--green)"></i> Deposits</span><span class="report-val green" id="todayDeposits">₦0</span></div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-arrow-up-right" style="color:var(--red)"></i> Withdrawals</span><span class="report-val red" id="todayWithdrawals">₦0</span></div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-shopping-cart" style="color:var(--purple)"></i> Plans Purchased</span><span class="report-val purple" id="todayPlans">0</span></div>
+        </div>
+
+        <!-- Weekly Chart -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-chart-bar"></i> LAST 7 DAYS REVENUE</div>
+            <div class="chart-bar-wrap" id="weeklyChart"><div class="loading-center"><div class="spinner"></div></div></div>
+        </div>
+
+        <!-- Top Investors -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-trophy"></i> TOP INVESTORS</div>
+            <div id="topInvestors"><div class="loading-center"><div class="spinner"></div></div></div>
+        </div>
+
+        <!-- Top Referrers -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-users-three"></i> TOP REFERRERS</div>
+            <div id="topReferrers"><div class="loading-center"><div class="spinner"></div></div></div>
+        </div>
+
+        <!-- Revenue Breakdown -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-chart-pie"></i> REVENUE BREAKDOWN</div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-shopping-cart" style="color:var(--purple)"></i> Plan Purchases</span><span class="report-val purple" id="revPlans">₦0</span></div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-gift" style="color:var(--orange)"></i> Referral Bonuses Paid</span><span class="report-val orange" id="revReferral">₦0</span></div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-arrow-down-left" style="color:var(--green)"></i> Net Revenue</span><span class="report-val green" id="revNet">₦0</span></div>
+        </div>
+
+        <!-- User Growth -->
+        <div class="section-card">
+            <div class="section-title"><i class="ph ph-trend-up"></i> USER GROWTH</div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-users" style="color:var(--blue)"></i> Total Registered</span><span class="report-val blue" id="growthTotal">0</span></div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-check-circle" style="color:var(--green)"></i> Active Users</span><span class="report-val green" id="growthActive">0</span></div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-snowflake" style="color:var(--red)"></i> Frozen Users</span><span class="report-val red" id="growthFrozen">0</span></div>
+            <div class="report-row"><span class="report-lbl"><i class="ph ph-chart-line-up" style="color:var(--purple)"></i> With Active Plan</span><span class="report-val purple" id="growthWithPlan">0</span></div>
+        </div>
+
+        <!-- Export Buttons -->
+        <button class="export-btn" onclick="exportReport('csv')"><i class="ph ph-file-csv"></i> EXPORT AS CSV</button>
+        <button class="export-btn secondary" onclick="exportReport('json')"><i class="ph ph-file-text"></i> EXPORT AS JSON</button>
+    </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+window._db=db;
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)}
+function fmtShort(n){return n>=1000000?'₦'+(n/1000000).toFixed(1)+'M':n>=1000?'₦'+(n/1000).toFixed(1)+'K':'₦'+fmt(n)}
+
+if(sessionStorage.getItem('adminLoggedIn')!=='true'){window.location.href='../admin-login.html'}
+
+async function loadReports(){
+    try{
+        const today=new Date();today.setHours(0,0,0,0);
+        const [usersSnap,depSnap,witSnap,invSnap]=await Promise.all([
+            getDocs(collection(db,'users')),
+            getDocs(collection(db,'deposits')),
+            getDocs(collection(db,'withdrawals')),
+            getDocs(collection(db,'investments'))
+        ]);
+        const users=usersSnap.docs.map(d=>d.data());
+        const deps=depSnap.docs.map(d=>d.data());
+        const wits=witSnap.docs.map(d=>d.data());
+        const invs=invSnap.docs.map(d=>d.data());
+
+        // Overview
+        const activeUsers=users.filter(u=>u.accountStatus!=='frozen').length;
+        const totalRevenue=invs.reduce((s,i)=>s+(i.price||0),0);
+        const totalDepAmt=deps.filter(d=>d.status==='approved').reduce((s,d)=>s+(d.amount||0),0);
+        const totalWitAmt=wits.filter(d=>d.status==='approved').reduce((s,d)=>s+(d.netAmount||d.amount||0),0);
+        const activePlans=invs.filter(i=>i.status==='active').length;
+        const totalRefPaid=users.reduce((s,u)=>s+(u.referralBonus||0),0);
+
+        document.getElementById('totalUsers').textContent=users.length;
+        document.getElementById('totalRevenue').textContent='₦'+fmtShort(totalRevenue);
+        document.getElementById('totalDeposits').textContent='₦'+fmtShort(totalDepAmt);
+        document.getElementById('totalWithdrawals').textContent='₦'+fmtShort(totalWitAmt);
+        document.getElementById('activePlans').textContent=activePlans;
+        document.getElementById('totalReferralPaid').textContent='₦'+fmtShort(totalRefPaid);
+
+        // Today
+        const todayUsers=users.filter(u=>{if(u.createdAt){const d=u.createdAt.toDate?u.createdAt.toDate():new Date(u.createdAt.seconds*1000);return d>=today}return false}).length;
+        const todayDeps=deps.filter(d=>d.status==='approved'&&(d.reviewedAt?new Date(d.reviewedAt.seconds*1000):new Date())>=today).reduce((s,d)=>s+(d.amount||0),0);
+        const todayWits=wits.filter(d=>d.status==='approved'&&(d.processedAt?new Date(d.processedAt.seconds*1000):new Date())>=today).reduce((s,d)=>s+(d.netAmount||d.amount||0),0);
+        const todayPlans=invs.filter(i=>{if(i.startDate){const d=i.startDate.toDate?i.startDate.toDate():new Date(i.startDate.seconds*1000);return d>=today}return false}).length;
+
+        document.getElementById('todayUsers').textContent=todayUsers;
+        document.getElementById('todayDeposits').textContent='₦'+fmtShort(todayDeps);
+        document.getElementById('todayWithdrawals').textContent='₦'+fmtShort(todayWits);
+        document.getElementById('todayPlans').textContent=todayPlans;
+
+        // Revenue breakdown
+        document.getElementById('revPlans').textContent='₦'+fmtShort(totalRevenue);
+        document.getElementById('revReferral').textContent='₦'+fmtShort(totalRefPaid);
+        document.getElementById('revNet').textContent='₦'+fmtShort(totalRevenue-totalRefPaid);
+
+        // User growth
+        document.getElementById('growthTotal').textContent=users.length;
+        document.getElementById('growthActive').textContent=activeUsers;
+        document.getElementById('growthFrozen').textContent=users.filter(u=>u.accountStatus==='frozen').length;
+        document.getElementById('growthWithPlan').textContent=users.filter(u=>u.activePlan).length;
+
+        // Weekly chart
+        renderWeeklyChart(deps,invs);
+
+        // Top investors
+        renderTopInvestors(users);
+
+        // Top referrers
+        renderTopReferrers(users);
+
+        // Store for export
+        window._reportData={users,deps,wits,invs,totalRevenue,totalDepAmt,totalWitAmt,totalRefPaid};
+
+    }catch(e){console.error(e)}
+}
+
+function renderWeeklyChart(deps,invs){
+    const wrap=document.getElementById('weeklyChart');
+    const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const today=new Date();today.setHours(23,59,59,999);
+    const data=[];
+    for(let i=6;i>=0;i--){
+        const d=new Date(today);d.setDate(d.getDate()-i);d.setHours(0,0,0,0);
+        const dEnd=new Date(d);dEnd.setHours(23,59,59,999);
+        const dayDeps=deps.filter(dep=>{if(dep.createdAt){const dt=dep.createdAt.toDate?dep.createdAt.toDate():new Date(dep.createdAt.seconds*1000);return dt>=d&&dt<=dEnd&&dep.status==='approved'}return false}).reduce((s,dep)=>s+(dep.amount||0),0);
+        const dayInvs=invs.filter(inv=>{if(inv.startDate){const dt=inv.startDate.toDate?inv.startDate.toDate():new Date(inv.startDate.seconds*1000);return dt>=d&&dt<=dEnd}return false}).reduce((s,inv)=>s+(inv.price||0),0);
+        data.push({label:days[d.getDay()],amount:dayDeps+dayInvs});
+    }
+    const maxAmt=Math.max(...data.map(d=>d.amount),1);
+    wrap.innerHTML=data.map(d=>{
+        const h=Math.max(4,(d.amount/maxAmt)*100);
+        return`<div class="chart-bar-col"><div class="chart-bar-val">${d.amount>0?'₦'+fmtShort(d.amount):''}</div><div class="chart-bar" style="height:${h}%"></div><div class="chart-bar-label">${d.label}</div></div>`;
+    }).join('');
+}
+
+function renderTopInvestors(users){
+    const sorted=[...users].sort((a,b)=>(b.totalDeposited||0)-(a.totalDeposited||0)).slice(0,5);
+    const ranks=['gold','silver','bronze','',''];
+    document.getElementById('topInvestors').innerHTML=sorted.length?sorted.map((u,i)=>`
+        <div class="top-user">
+            <div class="top-rank ${ranks[i]}">${i+1}</div>
+            <div class="top-info"><div class="top-name">${u.fullName||u.username||'User'}</div><div class="top-sub">@${u.username||'unknown'} · ${u.activePlan||'No Plan'}</div></div>
+            <div class="top-val">₦${fmtShort(u.totalDeposited||0)}</div>
+        </div>`).join(''):'<div style="text-align:center;padding:16px;color:var(--text2);font-size:12px">No data yet</div>';
+}
+
+function renderTopReferrers(users){
+    const sorted=[...users].sort((a,b)=>(b.referralCount||0)-(a.referralCount||0)).slice(0,5);
+    const ranks=['gold','silver','bronze','',''];
+    document.getElementById('topReferrers').innerHTML=sorted.length?sorted.map((u,i)=>`
+        <div class="top-user">
+            <div class="top-rank ${ranks[i]}">${i+1}</div>
+            <div class="top-info"><div class="top-name">${u.fullName||u.username||'User'}</div><div class="top-sub">@${u.username||'unknown'} · ${u.referralCount||0} referrals</div></div>
+            <div class="top-val">₦${fmtShort(u.referralBonus||0)}</div>
+        </div>`).join(''):'<div style="text-align:center;padding:16px;color:var(--text2);font-size:12px">No data yet</div>';
+}
+
+// 📥 Export
+window.exportReport=function(format){
+    const data=window._reportData;
+    if(!data){showToast('No data to export','error');return}
+    if(format==='csv'){
+        let csv='Metric,Value\n';
+        csv+=`Total Users,${data.users.length}\n`;
+        csv+=`Total Revenue,₦${data.totalRevenue}\n`;
+        csv+=`Total Deposits,₦${data.totalDepAmt}\n`;
+        csv+=`Total Withdrawals,₦${data.totalWitAmt}\n`;
+        csv+=`Referral Bonuses Paid,₦${data.totalRefPaid}\n`;
+        downloadFile(csv,'eliteearn-report.csv','text/csv');
+    }else{
+        const json={exportedAt:new Date().toISOString(),summary:{totalUsers:data.users.length,totalRevenue:data.totalRevenue,totalDeposits:data.totalDepAmt,totalWithdrawals:data.totalWitAmt,referralPaid:data.totalRefPaid}};
+        downloadFile(JSON.stringify(json,null,2),'eliteearn-report.json','application/json');
+    }
+    showToast('✅ Report exported!','success');
+};
+
+function downloadFile(content,filename,type){
+    const blob=new Blob([content],{type});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();
+}
+
+loadReports();
+</script>
+
+<script>
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},4000)}
+</script>
+</body>
+</html>
