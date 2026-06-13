@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Sign Up</title>
+
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="theme-color" content="#7C3AED">
+
+    <style>
+        html,body{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif;-webkit-font-smoothing:antialiased;background-color:#f9fafb;color:#1f2937}
+        *,*::before,*::after{box-sizing:inherit}
+        body{display:flex;flex-direction:column;min-height:100vh;position:relative}
+        .app-mobile-wrapper{width:100%;max-width:480px;margin:0 auto;flex:1;display:flex;flex-direction:column;background:linear-gradient(135deg,#7C3AED 0%,#6D28D9 40%,#5B21B6 70%,#4C1D95 100%);position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.15);overflow:hidden}
+        .ambient-glow{position:absolute;border-radius:50%;filter:blur(80px);z-index:0;pointer-events:none;animation:pulse 4s ease-in-out infinite}
+        @keyframes pulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:0.9;transform:scale(1.1)}}
+        .glow-top-right{width:280px;height:280px;background:rgba(245,158,11,0.35);top:-60px;right:-60px;animation-delay:0s}
+        .glow-bottom-left{width:320px;height:320px;background:rgba(139,92,246,0.4);top:15%;left:-120px;animation-delay:2s}
+        .glow-center{width:200px;height:200px;background:rgba(255,255,255,0.08);top:40%;left:50%;transform:translateX(-50%);animation-delay:1s}
+        .particle{position:absolute;border-radius:50%;background:rgba(255,255,255,0.15);pointer-events:none;z-index:1}
+        .p1{width:8px;height:8px;top:20%;left:15%;animation:float 6s ease-in-out infinite}.p2{width:12px;height:12px;top:35%;right:20%;animation:float 8s ease-in-out infinite 1s}.p3{width:6px;height:6px;top:50%;left:25%;animation:float 7s ease-in-out infinite 2s}.p4{width:10px;height:10px;top:25%;right:30%;animation:float 5s ease-in-out infinite 0.5s}
+        @keyframes float{0%,100%{transform:translateY(0) translateX(0);opacity:0.3}25%{transform:translateY(-20px) translateX(10px);opacity:0.8}50%{transform:translateY(-10px) translateX(-10px);opacity:0.5}75%{transform:translateY(-30px) translateX(5px);opacity:0.7}}
+        .app-header-area{padding:50px 32px 80px 32px;color:#ffffff;position:relative;z-index:1}
+        .header-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:50px;padding:6px 16px;font-size:11px;font-weight:700;color:#FCD34D;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;backdrop-filter:blur(10px)}
+        .header-badge::before{content:'✦';font-size:10px}
+        .app-header-area h1{font-size:38px;font-weight:800;margin:0 0 8px 0;line-height:1.1;letter-spacing:-1px;text-shadow:0 4px 20px rgba(0,0,0,0.2)}
+        .app-header-area p{margin:0;font-size:14px;font-weight:500;opacity:0.85}
+        .welcome-bonus-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(5,150,105,0.3);border:1px solid rgba(5,150,105,0.5);border-radius:50px;padding:8px 16px;font-size:12px;font-weight:700;color:#6EE7B7;margin-top:12px;backdrop-filter:blur(10px)}
+        .welcome-bonus-badge i{font-size:16px}
+        .app-content-card{flex:1;background:linear-gradient(to bottom,#ffffff 0%,#fafafa 100%);border-radius:40px 40px 0 0;padding:32px 24px 28px 24px;margin-top:-50px;position:relative;z-index:2;display:flex;flex-direction:column;box-shadow:0 -15px 40px rgba(0,0,0,0.12)}
+        .card-header-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;position:relative}
+        .card-header-row h2{color:#D97706;font-size:30px;font-weight:800;margin:0;letter-spacing:-0.5px;background:linear-gradient(135deg,#F59E0B 0%,#D97706 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .pill-input-group{position:relative;margin-bottom:16px}
+        .pill-input-group input{width:100%;height:54px;padding:0 44px 0 50px;background:#ffffff;border:1.5px solid rgba(0,0,0,0.06);border-radius:27px;font-size:13px;font-weight:600;color:#1f2937;outline:none;box-sizing:border-box;box-shadow:0 2px 8px rgba(0,0,0,0.04),inset 0 1px 2px rgba(0,0,0,0.02);transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+        .pill-input-group input::placeholder{color:#9ca3af;font-weight:500;font-size:12.5px}
+        .pill-input-group input:focus{border-color:transparent;background:#ffffff;box-shadow:0 0 0 2.5px rgba(139,92,246,0.2),0 8px 20px rgba(139,92,246,0.1);transform:translateY(-2px)}
+        .pill-input-group i{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:1.3rem;transition:all 0.3s ease;pointer-events:none}
+        .pill-input-group.referral-field input{color:#D97706;font-weight:700;background:linear-gradient(to right,#ffffff 0%,#FFFBEB 100%);border:1.5px solid rgba(245,158,11,0.25)}
+        .referral-status{position:absolute;right:44px;top:50%;transform:translateY(-50%);font-size:1.1rem;display:none;z-index:10;pointer-events:none}
+        .referral-status.valid{color:#10B981;display:block}.referral-status.invalid{color:#EF4444;display:block}.referral-status.checking{color:#F59E0B;display:block;animation:spin 1s linear infinite}
+        .eye-toggle-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:#9ca3af;background:none;border:none;padding:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all 0.2s;z-index:10;border-radius:50%;width:34px;height:34px}
+        .eye-toggle-btn:hover{color:#8B5CF6;background:rgba(139,92,246,0.08)}
+        .eye-toggle-btn:active{transform:translateY(-50%) scale(0.9)}
+        .btn-pill-primary{transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:54px;background:linear-gradient(135deg,#F59E0B 0%,#D97706 50%,#B45309 100%);color:#ffffff;border:none;border-radius:27px;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;box-shadow:0 8px 25px rgba(245,158,11,0.35);overflow:hidden;letter-spacing:0.5px}
+        .btn-pill-primary::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(to right,rgba(255,255,255,0) 0%,rgba(255,255,255,0.25) 50%,rgba(255,255,255,0) 100%);transform:skewX(-25deg);transition:all 0.6s ease}
+        .btn-pill-primary:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 15px 35px rgba(245,158,11,0.45)}
+        .btn-pill-primary:hover::before{left:200%}
+        .btn-pill-primary:active:not(:disabled){transform:translateY(-1px) scale(0.98)}
+        .btn-pill-primary:disabled{opacity:0.65;cursor:not-allowed;transform:none;box-shadow:none}
+        .spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .signin-row{margin-top:auto;text-align:center;padding-top:24px}
+        .signin-row p{font-size:13px;color:#6b7280;font-weight:600;margin:0}
+        .signin-row a{color:#D97706;font-weight:800;text-decoration:none;margin-left:4px;position:relative;transition:color 0.2s}
+        .field-hint{font-size:11px;margin:4px 0 0 18px;display:none;font-weight:600}
+        .field-hint.error{color:#EF4444;display:block}.field-hint.success{color:#10B981;display:block}
+        .referral-info-banner{background:#FFFBEB;border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:10px 14px;margin-bottom:16px;display:none;align-items:center;gap:8px}
+        .referral-info-banner.show{display:flex}
+        .referral-info-banner i{color:#D97706;font-size:18px}
+        .referral-info-banner span{font-size:11px;font-weight:600;color:#92400E}
+        #elite-toast-container{position:fixed;top:20px;left:20px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+        .elite-toast{width:max-content;max-width:340px;background:#ffffff;border-radius:14px;box-shadow:0 12px 40px -8px rgba(0,0,0,0.18);display:flex;align-items:flex-start;padding:14px;pointer-events:auto;transform:translateX(-120%);opacity:0;transition:transform 0.5s cubic-bezier(0.68,-0.55,0.265,1.55),opacity 0.3s ease}
+        .elite-toast.show{transform:translateX(0);opacity:1}
+        .elite-toast-icon{flex-shrink:0;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px}
+        .elite-toast-body{flex-grow:1;margin-top:1px;padding-right:12px}
+        .elite-toast-title{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;color:#1f2937;margin-bottom:3px;line-height:1.2}
+        .elite-toast-message{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:500;color:#6b7280;line-height:1.4}
+        .elite-toast-close{background:transparent;border:none;color:#9ca3af;font-size:14px;cursor:pointer;padding:3px;margin-top:-2px;margin-right:-4px;border-radius:5px;transition:all 0.2s}
+        .elite-toast-close:hover{background:#f3f4f6;color:#1f2937}
+        @media(max-width:480px){.app-header-area{padding:44px 20px 70px 20px}.app-header-area h1{font-size:32px}.app-content-card{padding:28px 18px 24px 18px}}
+    </style>
+</head>
+<body>
+    <main style="flex:1;display:flex;flex-direction:column;width:100%;">
+        <div class="app-mobile-wrapper">
+            <div class="ambient-glow glow-top-right"></div><div class="ambient-glow glow-bottom-left"></div><div class="ambient-glow glow-center"></div>
+            <div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div>
+
+            <div class="app-header-area">
+                <div class="header-badge">Invest & Earn</div>
+                <h1>Welcome!</h1>
+                <p>Join EliteEarn & get started</p>
+                <!-- 🔑 UPDATED TO ₦500 -->
+                <div class="welcome-bonus-badge"><i class="ph ph-gift"></i> +₦500 Welcome Bonus Awaits!</div>
+            </div>
+
+            <div class="app-content-card">
+                <div class="card-header-row"><h2>Sign Up</h2></div>
+
+                <div class="referral-info-banner" id="referralBanner">
+                    <i class="ph ph-gift"></i>
+                    <span id="referralBannerText">You were referred by <strong id="referralBannerName">---</strong></span>
+                </div>
+
+                <form id="signupForm" autocomplete="off" onsubmit="return false;">
+                    <div class="pill-input-group">
+                        <input type="email" id="email" placeholder="Email Address" required autocomplete="email">
+                        <i class="ph ph-envelope-simple"></i>
+                        <div class="field-hint" id="emailHint"></div>
+                    </div>
+                    <div class="pill-input-group">
+                        <input type="tel" id="phone" placeholder="Phone Number (08012345678)" maxlength="11" required autocomplete="tel">
+                        <i class="ph ph-phone"></i>
+                        <div class="field-hint" id="phoneHint"></div>
+                    </div>
+                    <div class="pill-input-group">
+                        <input type="text" id="username" placeholder="Choose a username (4-20 letters)" maxlength="20" required autocomplete="username">
+                        <i class="ph ph-user"></i>
+                        <div class="field-hint" id="usernameHint"></div>
+                    </div>
+                    <div class="pill-input-group referral-field">
+                        <input type="text" id="referralCode" placeholder="Referral Code (Optional)">
+                        <i class="ph ph-gift"></i>
+                        <div class="referral-status" id="referralStatus"></div>
+                        <div class="field-hint" id="referralHint"></div>
+                    </div>
+                    <div class="pill-input-group">
+                        <input type="password" id="password" placeholder="Password (min 6 characters)" required autocomplete="new-password">
+                        <i class="ph ph-lock-key"></i>
+                        <button type="button" class="eye-toggle-btn" id="togglePassword1" aria-label="Toggle password">
+                            <i class="ph ph-eye" id="eyeIconPassword"></i>
+                        </button>
+                        <div class="field-hint" id="passwordHint"></div>
+                    </div>
+                    <div class="pill-input-group">
+                        <input type="password" id="confirmPassword" placeholder="Confirm Password" required autocomplete="new-password">
+                        <i class="ph ph-lock-key"></i>
+                        <button type="button" class="eye-toggle-btn" id="togglePassword2" aria-label="Toggle password">
+                            <i class="ph ph-eye" id="eyeIconConfirm"></i>
+                        </button>
+                        <div class="field-hint" id="confirmPasswordHint"></div>
+                    </div>
+
+                    <button type="button" class="btn-pill-primary" id="signupBtn" onclick="handleSignup()">
+                        <span id="btnText">Create Your Account</span>
+                    </button>
+                </form>
+
+                <div class="signin-row">
+                    <p>Already an investor? <a href="login.html">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="elite-toast-container"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, increment, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+        const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+        window._auth=auth;window._db=db;
+        window._fbFns={doc,setDoc,getDoc,updateDoc,arrayUnion,increment,serverTimestamp,runTransaction,createUserWithEmailAndPassword};
+        window._firebaseReady=true;
+
+        async function detectReferralFromURL(){
+            const params=new URLSearchParams(window.location.search);const refFromURL=params.get('ref');
+            if(refFromURL){const code=refFromURL.trim().toUpperCase();console.log('🔍 Referral detected:',code);
+                try{const refSnap=await getDoc(doc(db,'users',code));
+                    if(refSnap.exists()){const ri=document.getElementById('referralCode'),si=document.getElementById('referralStatus'),h=document.getElementById('referralHint'),b=document.getElementById('referralBanner'),bn=document.getElementById('referralBannerName');
+                        ri.value=code;si.className='referral-status valid';si.innerHTML='<i class="ph ph-check-circle"></i>';h.textContent='✓ Verified referral code';h.className='field-hint success';b.classList.add('show');bn.textContent=code;window._detectedReferral=code;console.log('✅ Valid referral:',code)}
+                    else{console.log('⚠️ Invalid referral');window._detectedReferral=null}
+                }catch(e){console.error(e);window._detectedReferral=null}
+            }
+        }
+        detectReferralFromURL();window._detectedReferral=null;
+        console.log('✅ Firebase ready');
+    </script>
+
+    <script>
+        "use strict";
+        function notify(status,message){let c=document.getElementById('elite-toast-container');if(!c){c=document.createElement('div');c.id='elite-toast-container';document.body.appendChild(c)}const t={success:{icon:'fa-solid fa-check-double',color:'#059669',bg:'#ECFDF5',title:'Success'},error:{icon:'fa-solid fa-circle-exclamation',color:'#DC2626',bg:'#FEF2F2',title:'Error'},warning:{icon:'fa-solid fa-triangle-exclamation',color:'#EA580C',bg:'#FFF7ED',title:'Warning'},info:{icon:'fa-solid fa-bell',color:'#8B5CF6',bg:'#EDE9FE',title:'Information'}};const th=t[status]||t.info;const toast=document.createElement('div');toast.className='elite-toast';toast.style.borderLeft=`4px solid ${th.color}`;toast.innerHTML=`<div class="elite-toast-icon" style="color:${th.color};background-color:${th.bg};"><i class="${th.icon}"></i></div><div class="elite-toast-body"><div class="elite-toast-title">${th.title}</div><div class="elite-toast-message">${message}</div></div><button class="elite-toast-close" onclick="this.closest('.elite-toast').classList.remove('show');setTimeout(()=>this.closest('.elite-toast').remove(),300)"><i class="fa-solid fa-xmark"></i></button>`;c.appendChild(toast);setTimeout(()=>toast.classList.add('show'),10);setTimeout(()=>{toast.classList.remove('show');setTimeout(()=>toast.remove(),300)},5000)}
+
+        function togglePassword(inputId,iconId){
+            const input=document.getElementById(inputId);
+            const icon=document.getElementById(iconId);
+            if(input&&icon){
+                if(input.type==='password'){input.type='text';icon.className='ph ph-eye-slash'}
+                else{input.type='password';icon.className='ph ph-eye'}
+            }
+        }
+
+        document.getElementById('phone').addEventListener('input',function(){const v=this.value.trim(),h=document.getElementById('phoneHint');if(!v){h.className='field-hint';return}const valid=/^(070|080|081|090|091)\d{8}$/.test(v);h.textContent=valid?'✓ Valid Nigerian number':'Must be 11 digits starting 070/080/081/090/091';h.className=`field-hint ${valid?'success':'error'}`});
+        document.getElementById('username').addEventListener('input',function(){const v=this.value.trim(),h=document.getElementById('usernameHint');if(!v){h.className='field-hint';return}const valid=/^[a-zA-Z]{4,20}$/.test(v);h.textContent=valid?'✓ Valid username':'Letters only, 4–20 characters';h.className=`field-hint ${valid?'success':'error'}`});
+        document.getElementById('password').addEventListener('input',function(){const v=this.value,h=document.getElementById('passwordHint');if(!v){h.className='field-hint';return}h.textContent=v.length<6?'Too short (min 6)':v.length<8?'✓ Acceptable':'✓ Strong';h.className=`field-hint ${v.length>=6?'success':'error'}`});
+        document.getElementById('confirmPassword').addEventListener('input',function(){const v=this.value,pass=document.getElementById('password').value,h=document.getElementById('confirmPasswordHint');if(!v){h.className='field-hint';return}h.textContent=v===pass?'✓ Passwords match':'✗ Passwords do not match';h.className=`field-hint ${v===pass?'success':'error'}`});
+
+        function setLoading(loading){const btn=document.getElementById('signupBtn'),txt=document.getElementById('btnText');btn.disabled=loading;txt.innerHTML=loading?'<span class="spinner"></span>Creating Account…':'Create Your Account'}
+
+        async function handleSignup(){
+            if(!window._firebaseReady||!window._db||!window._auth){notify('info','App is still loading…');return}
+            const email=document.getElementById('email').value.trim(),phone=document.getElementById('phone').value.trim(),username=document.getElementById('username').value.trim().toUpperCase();
+            const refCode=(window._detectedReferral||document.getElementById('referralCode').value.trim()).toUpperCase();
+            const pass=document.getElementById('password').value,conf=document.getElementById('confirmPassword').value;
+            if(!email||!phone||!username||!pass||!conf){return notify('error','Please fill in all required fields.')}
+            if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){return notify('error','Please enter a valid email address.')}
+            if(!/^(070|080|081|090|091)\d{8}$/.test(phone)){return notify('error','Enter a valid Nigerian phone number.')}
+            if(!/^[a-zA-Z]{4,20}$/.test(username)){return notify('error','Username must be letters only, 4–20 chars.')}
+            if(pass.length<6){return notify('error','Password must be at least 6 characters.')}
+            if(pass!==conf){return notify('error','Passwords do not match.')}
+            if(refCode&&refCode===username){return notify('error','You cannot refer yourself.')}
+            setLoading(true);
+            const{doc,setDoc,getDoc,updateDoc,arrayUnion,increment,serverTimestamp,runTransaction,createUserWithEmailAndPassword}=window._fbFns;
+            const db=window._db,auth=window._auth;
+            try{
+                let finalReferrer=null;
+                if(refCode){const refSnap=await getDoc(doc(db,'users',refCode));if(!refSnap.exists()){setLoading(false);return notify('error','Referral code not found.')}finalReferrer=refCode}
+                const unameSnap=await getDoc(doc(db,'users',username));if(unameSnap.exists()){setLoading(false);return notify('error','Username already taken.')}
+                const cred=await createUserWithEmailAndPassword(auth,email,pass);const uid=cred.user.uid;
+                // 🔑 ₦500 WELCOME BONUS in deposit wallet
+                const WELCOME_BONUS=500;
+                const userData={uid,email,phone,username,ownReferralCode:username,referredBy:finalReferrer||'',depositWallet:WELCOME_BONUS,withdrawalWallet:0,balance:WELCOME_BONUS,totalDeposited:0,totalWithdrawn:0,totalEarnings:0,referralBonus:0,referralCount:0,isAdmin:false,isActive:true,accountStatus:'active',createdAt:serverTimestamp(),lastLogin:serverTimestamp(),registrationDate:new Date().toISOString()};
+                await setDoc(doc(db,'users',username),userData);
+                await setDoc(doc(db,'usersByUid',uid),{username,email,referredBy:finalReferrer||''});
+                if(finalReferrer){const refStatRef=doc(db,'referralStats',finalReferrer);await runTransaction(db,async(transaction)=>{const refStatSnap=await transaction.get(refStatRef);if(refStatSnap.exists()){transaction.update(refStatRef,{referrals:arrayUnion(username),referralCount:increment(1),lastReferralAt:serverTimestamp()})}else{transaction.set(refStatRef,{username:finalReferrer,referrals:[username],referralCount:1,totalReferralBonus:0,createdAt:serverTimestamp(),lastReferralAt:serverTimestamp()})}});await updateDoc(doc(db,'users',finalReferrer),{referralCount:increment(1)})}
+                await setDoc(doc(db,'transactionHistory',username),{username,transactions:[],createdAt:serverTimestamp()});
+                await setDoc(doc(db,'investments',username),{username,activeInvestments:[],totalInvested:0,totalReturns:0,createdAt:serverTimestamp()});
+                notify('success',finalReferrer?`🎉 Account created! ₦${WELCOME_BONUS} bonus added. Referred by ${finalReferrer}.`:`🎉 Account created! ₦${WELCOME_BONUS} welcome bonus added!`);
+                sessionStorage.setItem('userLoggedIn','true');sessionStorage.setItem('userEmail',email);sessionStorage.setItem('userUid',uid);sessionStorage.setItem('username',username);
+                sessionStorage.setItem('userData',JSON.stringify({username,email,balance:WELCOME_BONUS,depositWallet:WELCOME_BONUS,withdrawalWallet:0,referralCount:0,isAdmin:false}));
+                setTimeout(()=>{window.location.href='dashboard.html'},2000);
+            }catch(err){setLoading(false);console.error('❌ Signup error:',err);const messages={'auth/email-already-in-use':'This email is already registered.','auth/invalid-email':'Invalid email address.','auth/operation-not-allowed':'Signup is currently disabled.','auth/weak-password':'Password is too weak.','auth/network-request-failed':'Network error.'};notify('error',messages[err.code]||`Error: ${err.message}`)}
+        }
+
+        document.addEventListener('DOMContentLoaded',function(){
+            document.getElementById('signupBtn').addEventListener('click',function(e){e.preventDefault();handleSignup()});
+            document.getElementById('togglePassword1').addEventListener('click',function(){togglePassword('password','eyeIconPassword')});
+            document.getElementById('togglePassword2').addEventListener('click',function(){togglePassword('confirmPassword','eyeIconConfirm')});
+            document.getElementById('signupForm').addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();handleSignup()}});
+            console.log('✅ Signup page ready - ₦500 Welcome Bonus');
+        });
+
+        window.handleSignup=handleSignup;window.togglePassword=togglePassword;window.notify=notify;
+    </script>
+</body>
+</html>
