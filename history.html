@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – History</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#f5f5f7;--card:#ffffff;--card2:#f9f9fb;--text:#1a1a2e;--text2:#6b6b8a;
+            --border:#ebebf0;--tx-card-bg:#f9f9fb;--tx-card-border:#ececf3;
+            --filter-bg:#f0f0f5;--filter-active-bg:#ffffff;--empty-color:#aaaacc;
+            --gold:#D97706;--green:#059669;--red:#EF4444;--purple:#7C3AED;--blue:#0EA5E9;--orange:#F59E0B;
+        }
+        [data-theme="dark"]{
+            --bg:#0e0e1a;--card:#1a1a2e;--card2:#22223a;--text:#f0f0ff;--text2:#8888aa;
+            --border:#2a2a44;--tx-card-bg:#22223a;--tx-card-border:#2e2e50;
+            --filter-bg:#22223a;--filter-active-bg:#2e2e50;--empty-color:#555577;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:90px}
+        .page-header{background:linear-gradient(160deg,#2a0505 0%,#5c0f0f 45%,#7a1515 75%,#8b2020 100%);padding:16px 18px 90px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:200px;height:200px;background:rgba(200,80,20,0.15);border-radius:50%;top:-60px;right:-50px;pointer-events:none}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+        .logo-area{display:flex;align-items:center;gap:10px}
+        .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:900;box-shadow:0 4px 12px rgba(245,158,11,.4);font-family:'Oswald',sans-serif}
+        .logo-text{font-family:'Oswald',sans-serif;font-size:17px;font-weight:700;color:white;letter-spacing:.5px}
+        .top-bar-actions{display:flex;gap:10px;align-items:center}
+        .icon-btn{background:rgba(255,255,255,.15);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
+        .icon-btn:hover{background:rgba(255,255,255,.28)}
+        .header-title{text-align:center;color:white}
+        .header-title h1{font-size:26px;font-weight:900;letter-spacing:.3px;margin-bottom:4px}
+        .header-subtitle{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase}
+        .header-subtitle i{color:#F59E0B}
+        .floating-card{background:var(--card);border-radius:24px;margin:0 12px;margin-top:-70px;position:relative;z-index:5;box-shadow:0 6px 24px rgba(0,0,0,.1);overflow:hidden;transition:background .3s}
+        .filter-tabs{display:flex;gap:4px;background:var(--filter-bg);margin:12px;border-radius:50px;padding:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+        .filter-tabs::-webkit-scrollbar{display:none}
+        .filter-tab{flex-shrink:0;padding:9px 11px;font-size:10px;font-weight:800;letter-spacing:.5px;border-radius:50px;cursor:pointer;transition:all .25s;color:var(--text2);user-select:none;white-space:nowrap}
+        .filter-tab.active{background:var(--filter-active-bg);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+        .transactions-wrap{padding:8px 12px 16px;display:flex;flex-direction:column;gap:0}
+        .tx-row-outer{display:flex;align-items:stretch;gap:10px;margin-bottom:10px;animation:fadeIn .3s ease both}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .tx-dot-col{display:flex;flex-direction:column;align-items:center;padding-top:16px}
+        .tx-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+        .tx-dot.deposit{background:var(--gold);box-shadow:0 0 0 3px rgba(217,119,6,.2)}
+        .tx-dot.withdrawal{background:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.2)}
+        .tx-dot.bonus{background:var(--green);box-shadow:0 0 0 3px rgba(5,150,105,.2)}
+        .tx-dot.roi{background:var(--blue);box-shadow:0 0 0 3px rgba(14,165,233,.2)}
+        .tx-dot.referral{background:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.2)}
+        .tx-dot.purchase{background:var(--orange);box-shadow:0 0 0 3px rgba(245,158,11,.2)}
+        .tx-line{width:2px;background:var(--border);flex:1;margin-top:4px;border-radius:1px}
+        .tx-card{flex:1;background:var(--tx-card-bg);border:1px solid var(--tx-card-border);border-radius:16px;padding:12px 14px;transition:background .3s}
+        .tx-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:6px}
+        .tx-title{font-size:12px;font-weight:800;color:var(--text);line-height:1.3;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .tx-type-badge{display:inline-block;font-size:8px;font-weight:800;padding:3px 7px;border-radius:50px;text-transform:uppercase;white-space:nowrap}
+        .tx-type-badge.deposit{background:rgba(217,119,6,.15);color:var(--gold)}
+        .tx-type-badge.withdrawal{background:rgba(239,68,68,.15);color:var(--red)}
+        .tx-type-badge.bonus{background:rgba(5,150,105,.15);color:var(--green)}
+        .tx-type-badge.roi{background:rgba(14,165,233,.15);color:var(--blue)}
+        .tx-type-badge.referral{background:rgba(124,58,237,.15);color:var(--purple)}
+        .tx-type-badge.purchase{background:rgba(245,158,11,.15);color:var(--orange)}
+        .tx-amount{font-size:15px;font-weight:900;white-space:nowrap;font-family:'Oswald',sans-serif;letter-spacing:.3px}
+        .tx-amount.deposit{color:var(--gold)}.tx-amount.withdrawal{color:var(--red)}
+        .tx-amount.bonus{color:var(--green)}.tx-amount.roi{color:var(--blue)}
+        .tx-amount.referral{color:var(--purple)}.tx-amount.purchase{color:var(--orange)}
+        .tx-bottom{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+        .tx-date{display:flex;align-items:center;gap:3px;font-size:9px;font-weight:600;color:var(--text2)}
+        .tx-ref{font-size:9px;font-weight:700;color:var(--text2);font-family:'Oswald',sans-serif;letter-spacing:.3px}
+        .status-pill{margin-left:auto;display:inline-flex;align-items:center;padding:3px 8px;border-radius:50px;font-size:8px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;white-space:nowrap}
+        .status-pill.completed{background:#D1FAE5;color:var(--green)}
+        .status-pill.pending{background:#EDE9FE;color:var(--purple)}
+        .status-pill.processing{background:#FEF3C7;color:var(--gold)}
+        .empty-state{text-align:center;padding:36px 20px;color:var(--empty-color)}
+        .empty-icon{width:60px;height:60px;background:var(--filter-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:28px;color:var(--empty-color)}
+        .empty-state h3{font-size:14px;font-weight:800;margin-bottom:4px;color:var(--text)}
+        .empty-state p{font-size:11px;font-weight:600;color:var(--text2);line-height:1.5}
+        .loading-wrap{display:flex;align-items:center;justify-content:center;padding:36px 16px;gap:8px;color:var(--text2);font-size:11px;font-weight:600}
+        .spinner{width:22px;height:22px;border:3px solid var(--border);border-top-color:#D97706;border-radius:50%;animation:spin .7s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:10px 20px 24px;display:flex;justify-content:space-around;align-items:flex-end;box-shadow:0 -6px 24px rgba(0,0,0,.09);z-index:100;transition:background .3s}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-decoration:none;color:inherit;padding:4px 8px;border-radius:12px;transition:all .2s}
+        .nav-item i{font-size:22px;color:#9ca3af;transition:color .2s}
+        .nav-item span{font-size:10px;font-weight:700;color:#9ca3af;transition:color .2s}
+        .nav-item.active i,.nav-item:hover i{color:#8B5CF6}
+        .nav-item.active span,.nav-item:hover span{color:#8B5CF6}
+        .nav-center{position:relative;top:-26px}
+        .nav-center-btn{width:58px;height:58px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;box-shadow:0 6px 20px rgba(245,158,11,.4);border:4px solid var(--card);cursor:pointer;transition:all .3s}
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:400;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.12);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid #D97706}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <div class="logo-area"><div class="logo-icon">E</div><div class="logo-text">ELITEEARN</div></div>
+            <div class="top-bar-actions">
+                <button class="icon-btn" onclick="toggleTheme()"><i class="ph ph-moon" id="themeIcon"></i></button>
+            </div>
+        </div>
+        <div class="header-title"><h1>Transaction History</h1><div class="header-subtitle"><i class="ph ph-download-simple"></i> COMPLETE LEDGER</div></div>
+    </div>
+
+    <div class="floating-card">
+        <!-- 🔑 FIXED FILTER TABS - All working -->
+        <div class="filter-tabs" id="filterTabs">
+            <div class="filter-tab active" data-filter="all">📋 ALL</div>
+            <div class="filter-tab" data-filter="deposit">💰 DEPOSITS</div>
+            <div class="filter-tab" data-filter="withdrawal">💸 WITHDRAWALS</div>
+            <div class="filter-tab" data-filter="roi">📈 ROI DROPS</div>
+            <div class="filter-tab" data-filter="referral">👥 REFERRALS</div>
+            <div class="filter-tab" data-filter="bonus">🎁 BONUSES</div>
+        </div>
+        <div class="transactions-wrap" id="txWrap"><div class="loading-wrap"><div class="spinner"></div><span>Loading history...</span></div></div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><i class="ph ph-house"></i><span>Home</span></a>
+    <a href="referral.html" class="nav-item"><i class="ph ph-users"></i><span>Team</span></a>
+    <div class="nav-center"><div class="nav-center-btn" onclick="window.location.href='deposit.html'"><i class="ph ph-wallet"></i></div></div>
+    <a href="history.html" class="nav-item active"><i class="ph ph-clock-counter-clockwise"></i><span>History</span></a>
+    <a href="profile.html" class="nav-item"><i class="ph ph-user"></i><span>Profile</span></a>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+let currentUid="",currentUsername="",authChecked=false;
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)}
+function fmtDate(ts){if(!ts)return"—";let d;if(ts.toDate)d=ts.toDate();else if(ts?.seconds)d=new Date(ts.seconds*1000);else d=new Date(ts);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+
+function loadFromSession(){const d=sessionStorage.getItem('userData');if(sessionStorage.getItem('userLoggedIn')==='true'&&d){try{currentUsername=JSON.parse(d).username;return true}catch(e){}}return false}
+
+// 🔑 Fetch ALL transaction types with correct labels
+async function fetchAllTransactions(){
+    const items=[];
+    try{
+        // 💰 Deposits
+        const depSnap=await getDocs(query(collection(db,'deposits'),where('username','==',currentUsername),orderBy('createdAt','desc')));
+        depSnap.docs.forEach(d=>{
+            const data=d.data();
+            items.push({id:d.id,type:'deposit',amount:data.amount||0,status:data.status||'pending',createdAt:data.createdAt,reference:data.referenceCode||d.id.slice(0,12).toUpperCase(),title:'Bank Deposit'});
+        });
+        // 💸 Withdrawals
+        const witSnap=await getDocs(query(collection(db,'withdrawals'),where('username','==',currentUsername),orderBy('createdAt','desc')));
+        witSnap.docs.forEach(d=>{
+            const data=d.data();
+            items.push({id:d.id,type:'withdrawal',amount:data.netAmount||data.amount||0,status:data.status||'pending',createdAt:data.createdAt,reference:data.referenceCode||d.id.slice(0,12).toUpperCase(),title:'Withdrawal to Bank'});
+        });
+        // 📈 ROI Drops
+        const roiSnap=await getDocs(query(collection(db,'roiDrops'),where('username','==',currentUsername),orderBy('droppedAt','desc')));
+        roiSnap.docs.forEach(d=>{
+            const data=d.data();
+            items.push({id:d.id,type:'roi',amount:data.amount||0,status:'completed',createdAt:data.droppedAt,reference:'ROI',title:`Day ${data.dayNumber||'?'} ROI · ${data.planName||'Plan'}`});
+        });
+        // 👥 Referral Bonuses (from notifications with 'Bonus' in title)
+        const notifSnap=await getDocs(query(collection(db,'notifications'),where('username','==',currentUsername),orderBy('timestamp','desc')));
+        notifSnap.docs.forEach(d=>{
+            const data=d.data();
+            if(data.title&&(data.title.includes('Bonus')||data.title.includes('Referral')||data.title.includes('Commission'))){
+                const amtMatch=data.msg?.match(/₦([\d,]+\.?\d*)/);
+                const amount=amtMatch?parseFloat(amtMatch[1].replace(/,/g,'')):0;
+                if(amount>0)items.push({id:d.id,type:'referral',amount,status:'completed',createdAt:data.timestamp,reference:'REF',title:data.title.replace('🎉','').replace('💰','').replace('💎','').trim()});
+            }
+        });
+    }catch(e){console.error(e)}
+    
+    // 🎁 Welcome Bonus
+    try{
+        const userSnap=await getDoc(doc(db,'users',currentUsername));
+        if(userSnap.exists()){
+            const uData=userSnap.data();
+            if(uData.registrationDate){
+                items.push({id:'welcome-'+currentUsername,type:'bonus',amount:300,status:'completed',createdAt:{seconds:new Date(uData.registrationDate).getTime()/1000},reference:'WELCOME',title:'🎉 Welcome Bonus'});
+            }
+        }
+    }catch(e){}
+
+    // 🔑 Also check adminFunded
+    try{
+        const userSnap=await getDoc(doc(db,'users',currentUsername));
+        if(userSnap.exists()){
+            const uData=userSnap.data();
+            if(uData.adminFunded&&uData.adminFunded>0){
+                // Check if already added
+                const exists=items.find(i=>i.type==='bonus'&&i.reference==='ADMIN-FUND');
+                if(!exists)items.push({id:'adminfund-'+currentUsername,type:'bonus',amount:uData.adminFunded,status:'completed',createdAt:uData.registrationDate?{seconds:new Date(uData.registrationDate).getTime()/1000+86400}:{seconds:Date.now()/1000},reference:'ADMIN',title:'💰 Admin Funded Bonus'});
+            }
+        }
+    }catch(e){}
+
+    // Sort by date newest first
+    items.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    return items;
+}
+
+// 🔑 RENDER FUNCTION - Now properly exposed
+async function renderTx(filter){
+    const wrap=document.getElementById('txWrap');
+    if(!wrap)return;
+    wrap.innerHTML='<div class="loading-wrap"><div class="spinner"></div><span>Loading...</span></div>';
+    try{
+        let items=await fetchAllTransactions();
+        
+        // Apply filter
+        if(filter==='deposit')items=items.filter(i=>i.type==='deposit');
+        else if(filter==='withdrawal')items=items.filter(i=>i.type==='withdrawal');
+        else if(filter==='roi')items=items.filter(i=>i.type==='roi');
+        else if(filter==='referral')items=items.filter(i=>i.type==='referral');
+        else if(filter==='bonus')items=items.filter(i=>i.type==='bonus');
+
+        if(!items.length){wrap.innerHTML=`<div class="empty-state"><div class="empty-icon"><i class="ph ph-inbox"></i></div><h3>No transactions found</h3><p>Your ${filter==='all'?'':filter} history will appear here</p></div>`;return}
+
+        wrap.innerHTML=items.map((tx,i)=>{
+            const dc=tx.type;
+            const prefix=tx.type==='withdrawal'?'-':'+';
+            const fa=fmt(tx.amount);
+            const typeLabels={deposit:'DEPOSIT',withdrawal:'WITHDRAW',bonus:'BONUS',roi:'ROI',referral:'REFERRAL'};
+            const title=tx.title||typeLabels[tx.type]||'Transaction';
+            const sc=tx.status==='completed'?'completed':tx.status==='pending'?'pending':'processing';
+            const sl=tx.status==='completed'?'DONE':tx.status==='pending'?'PENDING':'ACTIVE';
+            return`<div class="tx-row-outer" style="animation-delay:${i*.03}s"><div class="tx-dot-col"><div class="tx-dot ${dc}"></div>${i<items.length-1?'<div class="tx-line"></div>':''}</div><div class="tx-card"><div class="tx-top"><span class="tx-title"><span class="tx-type-badge ${dc}">${typeLabels[tx.type]||tx.type.toUpperCase()}</span>${title}</span><span class="tx-amount ${dc}">${prefix}₦${fa}</span></div><div class="tx-bottom"><span class="tx-date"><i class="ph ph-clock"></i>${fmtDate(tx.createdAt)}</span><span class="tx-ref">#${(tx.reference||'—').slice(0,10)}</span><span class="status-pill ${sc}">${sl}</span></div></div></div>`;
+        }).join('');
+    }catch(e){console.error(e);wrap.innerHTML='<div class="empty-state"><div class="empty-icon"><i class="ph ph-warning-circle"></i></div><h3>Error loading</h3><p>Please try refreshing</p></div>'}
+}
+
+// Expose renderTx globally
+window.renderTx=renderTx;
+
+const hasSession=loadFromSession();
+onAuthStateChanged(auth,async(user)=>{
+    authChecked=true;
+    if(!user){if(!hasSession&&!sessionStorage.getItem('userLoggedIn')){sessionStorage.clear();window.location.href='login.html';return}return}
+    currentUid=user.uid;
+    try{const s=await getDoc(doc(db,'usersByUid',user.uid));if(s.exists())currentUsername=s.data().username||'User'}catch(e){}
+    sessionStorage.setItem('userLoggedIn','true');
+    sessionStorage.setItem('userData',JSON.stringify({username:currentUsername}));
+    await renderTx('all');
+});
+setTimeout(()=>{if(!authChecked&&hasSession)console.log('⚠️ Auth timeout')},2000);
+</script>
+
+<script>
+const st=localStorage.getItem('elite_theme')||'light';applyTheme(st);
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const i=document.getElementById('themeIcon');if(i)i.className=t==='dark'?'ph ph-sun':'ph ph-moon';localStorage.setItem('elite_theme',t)}
+function toggleTheme(){const c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';applyTheme(n);showToast(n==='dark'?'🌙 Dark mode on':'☀️ Light mode on','info')}
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},4000)}
+
+// 🔑 FIXED FILTER TABS - Properly working
+let currentFilter='all';
+document.getElementById('filterTabs').addEventListener('click',async(e)=>{
+    const tab=e.target.closest('.filter-tab');
+    if(!tab)return;
+    const f=tab.getAttribute('data-filter');
+    if(f===currentFilter)return;
+    currentFilter=f;
+    // Update active tab
+    document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    // Render filtered transactions
+    if(typeof window.renderTx==='function')await window.renderTx(f);
+});
+
+console.log('✅ History page ready - All tabs working');
+</script>
+</body>
+</html>
