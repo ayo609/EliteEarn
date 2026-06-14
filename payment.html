@@ -149,9 +149,9 @@
 
         <div class="card">
             <div class="card-section-title"><i class="ph ph-bank"></i>BANK DETAILS</div>
-            <div class="detail-row"><span class="detail-label">BANK NAME</span><div class="detail-right"><span class="detail-value">PALMPAY</span></div></div>
+            <div class="detail-row"><span class="detail-label">BANK NAME</span><div class="detail-right"><span class="detail-value">KUDA</span></div></div>
             <div class="detail-row"><span class="detail-label">ACCOUNT NAME</span><div class="detail-right"><span class="detail-value">Taufeek Muftau</span><button class="copy-pill" data-copy="Taufeek Muftau">COPY</button></div></div>
-            <div class="detail-row"><span class="detail-label">ACCOUNT NUMBER</span><div class="detail-right"><span class="detail-value">9167378733</span><button class="copy-pill" data-copy="9167378733">COPY</button></div></div>
+            <div class="detail-row"><span class="detail-label">ACCOUNT NUMBER</span><div class="detail-right"><span class="detail-value">2084865441</span><button class="copy-pill" data-copy="2084865441">COPY</button></div></div>
             <div class="detail-row"><span class="detail-label">AMOUNT TO PAY</span><div class="detail-right"><span class="detail-value gold" id="amountDisplay">₦0.00</span><button class="copy-pill" id="copyAmountBtn">COPY</button></div></div>
             <div class="detail-row"><span class="detail-label">REQUIRED REF / NARRATION</span><div class="detail-right" style="flex-direction:column;align-items:flex-end;gap:8px"><span class="ref-value" id="refDisplay">—</span><button class="copy-pill" id="copyRefBtn">COPY</button></div></div>
         </div>
@@ -256,7 +256,7 @@ proofFile.addEventListener('change',(e)=>{
 });
 
 async function submitDeposit(senderName,base64Image){
-    await addDoc(collection(db,'deposits'),{userId:currentUid,username:currentUsername,amount:depositAmount,referenceCode:depositRef,senderName,proofImage:base64Image,bankName:'PALMPAY',accountName:'Taufeek Muftau',accountNumber:'9167378733',status:'pending',createdAt:serverTimestamp()});
+    await addDoc(collection(db,'deposits'),{userId:currentUid,username:currentUsername,amount:depositAmount,referenceCode:depositRef,senderName,proofImage:base64Image,bankName:'KUDA',accountName:'Taufeek Muftau',accountNumber:'2084865441',status:'pending',createdAt:serverTimestamp()});
 }
 
 document.getElementById('confirmBtn').addEventListener('click',async()=>{
