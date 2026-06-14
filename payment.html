@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Complete Payment</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#f0f0f5;--card:#ffffff;--card2:#f8f8fc;--text:#1a1a2e;--text2:#6b6b8a;
+            --border:#e8e8f0;--header-bg:linear-gradient(160deg,#3a0a0a 0%,#6b1111 50%,#8b2020 100%);
+            --gold:#B8860B;--gold-light:#D4A017;--gold-bg:#FFF8E7;--copy-bg:#f0f0f5;
+            --input-bg:#f5f5fa;--red:#EF4444;--green:#059669;
+        }
+        [data-theme="dark"]{
+            --bg:#0d0d1a;--card:#1a1a2e;--card2:#22223a;--text:#f0f0ff;--text2:#8888aa;
+            --border:#2a2a44;--gold:#D4A017;--gold-light:#F0C030;--gold-bg:#1e1a08;
+            --copy-bg:#2a2a44;--input-bg:#22223a;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+        .page-header{background:var(--header-bg);padding:16px 18px 70px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:240px;height:240px;background:rgba(212,160,23,0.1);border-radius:50%;top:-80px;right:-60px;pointer-events:none}
+        .header-top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+        .back-btn{background:rgba(255,255,255,0.15);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
+        .header-title-area{text-align:center;flex:1}
+        .header-title-area h1{font-size:20px;font-weight:800;color:white}
+        .secure-badge{display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,.7);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+        .hdr-btn{background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;cursor:pointer;transition:all .2s}
+        .content-scroll{padding:0 12px 30px;margin-top:-50px;position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+        .card{background:var(--card);border-radius:22px;padding:18px 16px;box-shadow:0 4px 16px rgba(0,0,0,0.06);transition:background .3s}
+        .timer-card{background:var(--card);border-radius:22px;padding:22px 16px 20px;box-shadow:0 4px 16px rgba(0,0,0,0.06);display:flex;flex-direction:column;align-items:center;gap:12px}
+        .timer-ring-wrap{position:relative;width:130px;height:130px}
+        .timer-svg{width:130px;height:130px;transform:rotate(-90deg)}
+        .timer-track{fill:none;stroke:var(--border);stroke-width:7}
+        .timer-fill{fill:none;stroke:var(--gold);stroke-width:7;stroke-linecap:round;stroke-dasharray:330;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .5s}
+        .timer-fill.danger{stroke:var(--red)}
+        .timer-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .timer-digits{font-size:28px;font-weight:900;color:var(--text);letter-spacing:2px;font-family:'Oswald',sans-serif}
+        .timer-label{font-size:9px;font-weight:700;color:var(--text2);text-transform:uppercase;margin-top:2px}
+        .timer-status{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase}
+        .timer-status.active{color:var(--green)}.timer-status.danger{color:var(--red)}
+        .card-section-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--text);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+        .card-section-title i{color:var(--gold);font-size:18px}
+        .detail-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+        .detail-row:last-child{border-bottom:none}
+        .detail-label{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase}
+        .detail-right{display:flex;align-items:center;gap:8px}
+        .detail-value{font-size:13px;font-weight:800;color:var(--text);font-family:'Oswald',sans-serif}
+        .detail-value.gold{color:var(--gold-light);font-size:15px}
+        .copy-pill{background:var(--copy-bg);border:1px solid var(--border);border-radius:50px;padding:4px 12px;font-size:10px;font-weight:800;color:var(--text);cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;white-space:nowrap}
+        .copy-pill:hover{background:var(--gold);color:white;border-color:var(--gold)}
+        .copy-pill.copied{background:var(--green);color:white;border-color:var(--green)}
+        .ref-value{font-size:11px;font-weight:900;color:var(--text);font-family:'Oswald',sans-serif;word-break:break-all;text-align:right;max-width:160px}
+        .form-label{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;display:block;margin-bottom:6px}
+        .form-input{width:100%;background:var(--input-bg);border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;font-size:13px;font-weight:600;color:var(--text);font-family:'Montserrat',sans-serif;outline:none;transition:all .2s;margin-bottom:14px}
+        .form-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,134,11,0.1)}
+        .file-upload-area{background:var(--input-bg);border:2px dashed var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .2s;position:relative;margin-bottom:4px}
+        .file-upload-area:hover{border-color:var(--gold)}
+        .file-upload-area.has-file{border-color:var(--green);border-style:solid;background:rgba(5,150,105,0.05)}
+        .file-upload-area input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer}
+        .file-upload-icon{width:44px;height:44px;background:var(--gold-bg);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:22px}
+        .file-upload-area.has-file .file-upload-icon{background:rgba(5,150,105,0.1);color:var(--green)}
+        .file-upload-text{font-size:12px;font-weight:700;color:var(--text)}
+        .file-upload-sub{font-size:10px;color:var(--text2);font-weight:600}
+        .file-preview{width:100%;border-radius:10px;max-height:140px;object-fit:cover;display:none;margin-top:6px}
+        .file-preview.show{display:block}
+        .file-name-display{font-size:10px;color:var(--text2);font-weight:600;text-align:center;margin-top:3px}
+        .confirm-btn{width:100%;background:linear-gradient(135deg,#3a0a0a 0%,#6b1111 50%,#8b2020 100%);border:none;border-radius:50px;padding:15px 20px;font-size:14px;font-weight:900;color:white;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-top:16px;transition:all .3s;box-shadow:0 6px 20px rgba(58,10,10,.3);text-transform:uppercase;font-family:'Montserrat',sans-serif}
+        .confirm-btn:hover{transform:translateY(-2px)}
+        .confirm-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+        .instruction-step{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+        .instruction-step:last-child{border-bottom:none}
+        .step-num{width:28px;height:28px;min-width:28px;background:var(--input-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--text2);font-family:'Oswald',sans-serif}
+        .step-body{flex:1}
+        .step-title{font-size:12px;font-weight:800;color:var(--text);margin-bottom:3px}
+        .step-desc{font-size:10px;color:var(--text2);font-weight:600;line-height:1.5}
+        .warning-box{background:#FFF0F0;border-left:3px solid var(--red);border-radius:0 12px 12px 0;padding:10px 12px;margin-top:4px}
+        [data-theme="dark"] .warning-box{background:#2a1010}
+        .warning-box p{font-size:10px;font-weight:700;color:#991B1B;line-height:1.5}
+        [data-theme="dark"] .warning-box p{color:#FCA5A5}
+        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:10px 20px 24px;display:flex;justify-content:space-around;align-items:flex-end;box-shadow:0 -6px 24px rgba(0,0,0,.09);z-index:100;transition:background .3s}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-decoration:none;color:inherit;padding:4px 8px;border-radius:12px;transition:all .2s}
+        .nav-item i{font-size:22px;color:#9ca3af}.nav-item span{font-size:10px;font-weight:700;color:#9ca3af}
+        .nav-item:hover i,.nav-item.active i{color:#8B5CF6}
+        .nav-center{position:relative;top:-26px}
+        .nav-center-btn{width:58px;height:58px;background:linear-gradient(135deg,var(--gold) 0%,#8B6914 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;box-shadow:0 6px 20px rgba(184,134,11,.4);border:4px solid var(--card);cursor:pointer;transition:all .3s}
+        .toast-wrap{position:fixed;top:16px;left:16px;z-index:400;display:flex;flex-direction:column;gap:6px}
+        .toast{background:var(--card);border-radius:12px;padding:11px 14px;box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:12px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:260px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}
+        .spinner{width:18px;height:18px;border:3px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .success-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+        .success-overlay.show{opacity:1;pointer-events:all}
+        .success-box{background:var(--card);border-radius:28px;padding:32px 24px;text-align:center;max-width:290px;width:90%;transform:scale(.8);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+        .success-overlay.show .success-box{transform:scale(1)}
+        .success-icon-ring{width:80px;height:80px;background:rgba(5,150,105,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:38px;color:var(--green);animation:pop .5s .2s both}
+        @keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+        .success-box h2{font-size:20px;font-weight:900;color:var(--text);margin-bottom:8px}
+        .success-box p{font-size:12px;color:var(--text2);font-weight:600;line-height:1.5;margin-bottom:20px}
+        .success-redirect{background:linear-gradient(135deg,var(--green),#047857);color:white;border:none;border-radius:50px;padding:12px 26px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Montserrat',sans-serif}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="header-top-bar">
+            <button class="back-btn" id="backBtn"><i class="ph ph-arrow-left"></i></button>
+            <div class="header-title-area"><h1>Complete Payment</h1><div class="secure-badge"><i class="ph ph-lock-simple"></i> SECURE CHECKOUT</div></div>
+            <button class="hdr-btn" id="themeBtn"><i class="ph ph-moon" id="themeIcon"></i></button>
+        </div>
+    </div>
+
+    <div class="content-scroll" style="padding-bottom:110px">
+        <div class="timer-card">
+            <div class="timer-ring-wrap">
+                <svg class="timer-svg" viewBox="0 0 130 130"><circle class="timer-track" cx="65" cy="65" r="52"/><circle class="timer-fill" id="timerArc" cx="65" cy="65" r="52"/></svg>
+                <div class="timer-center"><div class="timer-digits" id="timerDigits">10:00</div><div class="timer-label">minutes</div></div>
+            </div>
+            <div class="timer-status active" id="timerStatus">PAYMENT WINDOW ACTIVE</div>
+        </div>
+
+        <div class="card">
+            <div class="card-section-title"><i class="ph ph-bank"></i>BANK DETAILS</div>
+            <div class="detail-row"><span class="detail-label">BANK NAME</span><div class="detail-right"><span class="detail-value">KUDA</span></div></div>
+            <div class="detail-row"><span class="detail-label">ACCOUNT NAME</span><div class="detail-right"><span class="detail-value">Taufeek Muftau</span><button class="copy-pill" data-copy="Taufeek Muftau">COPY</button></div></div>
+            <div class="detail-row"><span class="detail-label">ACCOUNT NUMBER</span><div class="detail-right"><span class="detail-value">2084865441</span><button class="copy-pill" data-copy="2084865441">COPY</button></div></div>
+            <div class="detail-row"><span class="detail-label">AMOUNT TO PAY</span><div class="detail-right"><span class="detail-value gold" id="amountDisplay">₦0.00</span><button class="copy-pill" id="copyAmountBtn">COPY</button></div></div>
+            <div class="detail-row"><span class="detail-label">NARRATION / REF</span><div class="detail-right" style="flex-direction:column;align-items:flex-end;gap:6px"><span class="ref-value" id="refDisplay">—</span><button class="copy-pill" id="copyRefBtn">COPY</button></div></div>
+        </div>
+
+        <div class="card">
+            <div class="card-section-title"><i class="ph ph-seal-check"></i>PAYMENT PROOF</div>
+            <label class="form-label">SENDER NAME</label>
+            <input type="text" id="senderName" class="form-input" placeholder="Enter the name on your bank account" autocomplete="off">
+            <label class="form-label">UPLOAD SCREENSHOT</label>
+            <div class="file-upload-area" id="fileUploadArea">
+                <input type="file" id="proofFile" accept="image/*">
+                <div class="file-upload-icon" id="fileIcon"><i class="ph ph-image"></i></div>
+                <div class="file-upload-text" id="fileText">TAP TO UPLOAD</div>
+                <div class="file-upload-sub" id="fileSub">JPG, PNG only (max 3MB)</div>
+            </div>
+            <img class="file-preview" id="filePreview" alt="Proof">
+            <div class="file-name-display" id="fileNameDisplay">No file chosen</div>
+            <button class="confirm-btn" id="confirmBtn">CONFIRM PAYMENT <i class="ph ph-arrow-right"></i></button>
+        </div>
+
+        <div class="card">
+            <div class="card-section-title"><i class="ph ph-info"></i>INSTRUCTIONS</div>
+            <div class="instruction-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Transfer Funds</div><div class="step-desc">Transfer the <strong>EXACT amount</strong> to the Kuda account above.</div></div></div>
+            <div class="instruction-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Use the Reference</div><div class="step-desc">Copy and paste the <strong>Reference Code</strong> as narration.</div></div></div>
+            <div class="instruction-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Upload Proof</div><div class="step-desc">Upload a <strong>clear screenshot</strong> and click Confirm Payment.</div></div></div>
+            <div class="warning-box" style="margin-top:12px"><p>⚠️ <strong>Do NOT send without generating a new order.</strong> Wrong amounts may be voided by the audit desk.</p></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item"><i class="ph ph-house"></i><span>Home</span></a>
+        <a href="referral.html" class="nav-item"><i class="ph ph-users"></i><span>Team</span></a>
+        <div class="nav-center"><div class="nav-center-btn" onclick="window.location.href='deposit.html'"><i class="ph ph-wallet"></i></div></div>
+        <a href="history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i><span>History</span></a>
+        <a href="profile.html" class="nav-item"><i class="ph ph-user"></i><span>Profile</span></a>
+    </div>
+</div>
+
+<div class="success-overlay" id="successOverlay">
+    <div class="success-box"><div class="success-icon-ring">✅</div><h2>Payment Submitted!</h2><p>Your deposit is being reviewed. Funds will be credited within <strong>24 hours</strong>.</p><button class="success-redirect" id="successRedirectBtn">VIEW HISTORY →</button></div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+let currentUid="",currentUsername="",depositAmount=0,depositRef="",countdownInterval=null,authChecked=false;
+const TOTAL_SECS=600,CIRCUMFERENCE=2*Math.PI*52;
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)}
+
+function getIntent(){
+    const p=new URLSearchParams(window.location.search);
+    const amt=p.get('amount'),ref=p.get('ref');
+    if(amt&&ref)return{amount:parseFloat(amt),reference:ref};
+    const stored=sessionStorage.getItem('elite_deposit_intent');
+    if(stored){try{return JSON.parse(stored)}catch(e){}}
+    return null;
+}
+
+function startCountdown(){
+    const expiryTime=Date.now()+TOTAL_SECS*1000;
+    const arc=document.getElementById('timerArc'),digits=document.getElementById('timerDigits'),status=document.getElementById('timerStatus');
+    arc.style.strokeDasharray=CIRCUMFERENCE;
+    function tick(){
+        const remaining=Math.max(0,Math.floor((expiryTime-Date.now())/1000));
+        const mins=Math.floor(remaining/60),secs=remaining%60;
+        digits.textContent=`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+        arc.style.strokeDashoffset=CIRCUMFERENCE*(1-remaining/TOTAL_SECS);
+        if(remaining<=60){arc.classList.add('danger');status.className='timer-status danger';status.textContent='EXPIRING!'}
+        else{arc.classList.remove('danger');status.className='timer-status active';status.textContent='WINDOW ACTIVE'}
+        if(remaining<=0){clearInterval(countdownInterval);showToast('⏰ Expired!','error');setTimeout(()=>window.location.href='deposit.html',2000)}
+    }
+    tick();countdownInterval=setInterval(tick,1000);
+}
+
+function initPage(intent){
+    depositAmount=intent.amount;depositRef=intent.reference;
+    document.getElementById('amountDisplay').textContent='₦'+depositAmount.toLocaleString('en-NG',{minimumFractionDigits:2});
+    document.getElementById('refDisplay').textContent=depositRef;
+    document.getElementById('copyAmountBtn').setAttribute('data-copy',String(depositAmount));
+    startCountdown();
+}
+
+// 🔑 FILE UPLOAD HANDLER
+const proofFile=document.getElementById('proofFile'),fileArea=document.getElementById('fileUploadArea'),filePreview=document.getElementById('filePreview'),fileNameDisplay=document.getElementById('fileNameDisplay');
+proofFile.addEventListener('change',(e)=>{
+    const file=e.target.files[0];if(!file)return;
+    if(file.size>3*1024*1024){showToast('❌ File too large (max 3MB)','error');proofFile.value='';return}
+    if(!file.type.startsWith('image/')){showToast('❌ Only images allowed','error');proofFile.value='';return}
+    fileNameDisplay.textContent=file.name;fileArea.classList.add('has-file');
+    document.getElementById('fileIcon').innerHTML='<i class="ph ph-check-circle"></i>';
+    document.getElementById('fileText').textContent='FILE SELECTED';
+    document.getElementById('fileSub').textContent=(file.size/1024).toFixed(0)+' KB';
+    const reader=new FileReader();
+    reader.onload=(ev)=>{filePreview.src=ev.target.result;filePreview.classList.add('show')};
+    reader.readAsDataURL(file);
+});
+
+// 🔑 SUBMIT DEPOSIT - FIXED
+async function submitDeposit(senderName,base64Image){
+    console.log('📤 Submitting deposit:',{username:currentUsername,amount:depositAmount,ref:depositRef});
+    const docRef=await addDoc(collection(db,'deposits'),{
+        userId:currentUid,
+        username:currentUsername,
+        amount:depositAmount,
+        referenceCode:depositRef,
+        senderName:senderName,
+        proofImage:base64Image,
+        bankName:'KUDA',
+        accountName:'Taufeek Muftau',
+        accountNumber:'2084865441',
+        status:'pending',
+        createdAt:serverTimestamp(),
+        reviewedAt:null,
+        reviewedBy:null
+    });
+    console.log('✅ Deposit saved:',docRef.id);
+    return docRef.id;
+}
+
+// 🔑 CONFIRM BUTTON - FIXED
+document.getElementById('confirmBtn').addEventListener('click',async()=>{
+    const senderName=document.getElementById('senderName').value.trim();
+    if(!senderName){showToast('❌ Enter sender name','error');return}
+    const file=proofFile.files[0];
+    if(!file){showToast('❌ Upload payment screenshot','error');return}
+    if(file.size>3*1024*1024){showToast('❌ File too large (max 3MB)','error');return}
+    if(!file.type.startsWith('image/')){showToast('❌ Only images allowed','error');return}
+    
+    const btn=document.getElementById('confirmBtn');
+    btn.disabled=true;btn.innerHTML='<div class="spinner"></div> SUBMITTING...';
+    
+    try{
+        // Convert file to base64
+        const base64=await new Promise((resolve,reject)=>{
+            const reader=new FileReader();
+            reader.onload=()=>resolve(reader.result);
+            reader.onerror=()=>reject(new Error('Failed to read file'));
+            reader.readAsDataURL(file);
+        });
+        
+        console.log('📸 File converted to base64, size:',Math.round(base64.length/1024)+'KB');
+        
+        // Submit to Firestore
+        await submitDeposit(senderName,base64);
+        
+        // Clean up
+        sessionStorage.removeItem('elite_deposit_intent');
+        clearInterval(countdownInterval);
+        
+        // Show success
+        document.getElementById('successOverlay').classList.add('show');
+        showToast('✅ Deposit submitted!','success');
+        
+    }catch(err){
+        console.error('❌ Submit error:',err);
+        showToast('❌ Submission failed: '+(err.message||'Try again'),'error');
+        btn.disabled=false;
+        btn.innerHTML='CONFIRM PAYMENT <i class="ph ph-arrow-right"></i>';
+    }
+});
+
+// Success redirect
+document.getElementById('successRedirectBtn').addEventListener('click',()=>{window.location.href='history.html'});
+document.getElementById('backBtn').addEventListener('click',()=>{window.location.href='deposit.html'});
+document.getElementById('copyRefBtn').addEventListener('click',()=>{copyText(depositRef,document.getElementById('copyRefBtn'))});
+
+// Auth
+const hasSession=!!sessionStorage.getItem('userLoggedIn');
+onAuthStateChanged(auth,async(user)=>{
+    authChecked=true;
+    if(!user){if(!hasSession){sessionStorage.clear();window.location.href='login.html';return}console.log('⚠️ No auth but session');return}
+    currentUid=user.uid;
+    try{const s=await getDoc(doc(db,'usersByUid',user.uid));if(s.exists())currentUsername=s.data().username||'User'}catch(e){currentUsername='User'}
+    console.log('✅ User:',currentUsername);
+    const intent=getIntent();
+    if(!intent||!intent.amount||intent.amount<1000){showToast('❌ Invalid deposit session','error');setTimeout(()=>window.location.href='deposit.html',2000);return}
+    initPage(intent);
+});
+setTimeout(()=>{if(!authChecked&&hasSession)console.log('⚠️ Auth timeout')},3000);
+</script>
+
+<script>
+const st=localStorage.getItem('elite_theme')||'light';document.documentElement.setAttribute('data-theme',st);
+document.getElementById('themeIcon').className=st==='dark'?'ph ph-sun':'ph ph-moon';
+document.getElementById('themeBtn').addEventListener('click',()=>{
+    const c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',n);localStorage.setItem('elite_theme',n);
+    document.getElementById('themeIcon').className=n==='dark'?'ph ph-sun':'ph ph-moon';
+    showToast(n==='dark'?'🌙 Dark mode':'☀️ Light mode','info');
+});
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),300)},4000)}
+window.showToast=showToast;
+function copyText(text,btn){if(!text)return;navigator.clipboard.writeText(text).then(()=>{const o=btn.textContent;btn.textContent='✓ COPIED';btn.classList.add('copied');showToast('✅ Copied!','success');setTimeout(()=>{btn.textContent='COPY';btn.classList.remove('copied')},2000)}).catch(()=>showToast('❌ Copy failed','error'))}
+document.querySelectorAll('.copy-pill[data-copy]').forEach(b=>{b.addEventListener('click',()=>copyText(b.getAttribute('data-copy'),b))});
+console.log('✅ Payment page ready');
+</script>
+</body>
+</html>
