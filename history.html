@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EliteEarn – Transaction History</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#f5f5f7;--card:#ffffff;--card2:#f9f9fb;--text:#1a1a2e;--text2:#6b6b8a;
+            --border:#ebebf0;--tx-bg:#f9f9fb;--tx-border:#ececf3;
+            --filter-bg:#f0f0f5;--empty-color:#aaaacc;
+            --gold:#D97706;--green:#059669;--red:#EF4444;--purple:#7C3AED;--blue:#0EA5E9;--orange:#F59E0B;
+            --header:linear-gradient(160deg,#2a0505 0%,#5c0f0f 45%,#7a1515 75%,#8b2020 100%);
+        }
+        [data-theme="dark"]{
+            --bg:#0e0e1a;--card:#1a1a2e;--card2:#22223a;--text:#f0f0ff;--text2:#8888aa;
+            --border:#2a2a44;--tx-bg:#22223a;--tx-border:#2e2e50;
+            --filter-bg:#22223a;--empty-color:#555577;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:100px}
+
+        /* Header */
+        .page-header{background:var(--header);padding:16px 18px 90px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(200,80,20,0.12) 0%,transparent 70%);top:-60px;right:-50px;pointer-events:none}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+        .logo-area{display:flex;align-items:center;gap:10px}
+        .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:900;box-shadow:0 4px 12px rgba(245,158,11,.4);font-family:'Oswald',sans-serif}
+        .logo-text{font-family:'Oswald',sans-serif;font-size:17px;font-weight:700;color:white;letter-spacing:.5px}
+        .top-actions{display:flex;gap:8px}
+        .icon-btn{background:rgba(255,255,255,.15);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
+        .icon-btn:hover{background:rgba(255,255,255,.28)}
+        .header-title{text-align:center;color:white}
+        .header-title h1{font-size:26px;font-weight:900;margin-bottom:4px}
+        .header-subtitle{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase}
+        .header-subtitle i{color:#F59E0B}
+
+        /* Main Card */
+        .main-card{background:var(--card);border-radius:24px;margin:0 12px;margin-top:-70px;position:relative;z-index:5;box-shadow:0 6px 24px rgba(0,0,0,.1);overflow:hidden;transition:background .3s}
+
+        /* Filter Tabs */
+        .filter-row{display:flex;gap:4px;background:var(--filter-bg);margin:12px;border-radius:50px;padding:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+        .filter-row::-webkit-scrollbar{display:none}
+        .filter-btn{flex-shrink:0;padding:9px 12px;font-size:10px;font-weight:800;border-radius:50px;cursor:pointer;transition:all .25s;color:var(--text2);user-select:none;white-space:nowrap;border:none;background:transparent;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:4px}
+        .filter-btn.active{background:var(--card);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+        .filter-count{font-size:8px;font-weight:900;background:rgba(0,0,0,.08);color:inherit;padding:1px 5px;border-radius:50px;min-width:16px;text-align:center}
+        .filter-btn.active .filter-count{background:linear-gradient(135deg,#B8960A,#D4A800);color:white}
+
+        /* Stats Summary */
+        .stats-mini{display:flex;gap:8px;padding:0 12px 8px}
+        .stat-chip{flex:1;background:var(--card2);border-radius:10px;padding:10px 8px;text-align:center;border:1px solid var(--border)}
+        .stat-chip-val{font-size:14px;font-weight:900;font-family:'Oswald',sans-serif;color:var(--text)}
+        .stat-chip-lbl{font-size:8px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+        /* Transaction List */
+        .tx-list{padding:4px 12px 16px}
+        .tx-item{display:flex;align-items:stretch;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);animation:slideIn .3s ease both}
+        .tx-item:last-child{border-bottom:none}
+        @keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+        /* Timeline */
+        .tx-dot-col{display:flex;flex-direction:column;align-items:center;padding-top:2px}
+        .tx-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+        .tx-dot.deposit{background:var(--gold);box-shadow:0 0 0 3px rgba(217,119,6,.15)}
+        .tx-dot.withdrawal{background:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.15)}
+        .tx-dot.roi{background:var(--blue);box-shadow:0 0 0 3px rgba(14,165,233,.15)}
+        .tx-dot.referral{background:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+        .tx-dot.bonus{background:var(--green);box-shadow:0 0 0 3px rgba(5,150,105,.15)}
+        .tx-dot.purchase{background:var(--orange);box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+        .tx-line{width:2px;background:var(--border);flex:1;margin-top:3px;min-height:20px}
+
+        /* Content */
+        .tx-content{flex:1;min-width:0}
+        .tx-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;gap:8px}
+        .tx-type-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .tx-badge{display:inline-block;padding:3px 7px;border-radius:50px;font-size:8px;font-weight:800;text-transform:uppercase;white-space:nowrap;letter-spacing:.3px}
+        .tx-badge.deposit{background:rgba(217,119,6,.12);color:var(--gold)}
+        .tx-badge.withdrawal{background:rgba(239,68,68,.12);color:var(--red)}
+        .tx-badge.roi{background:rgba(14,165,233,.12);color:var(--blue)}
+        .tx-badge.referral{background:rgba(124,58,237,.12);color:var(--purple)}
+        .tx-badge.bonus{background:rgba(5,150,105,.12);color:var(--green)}
+        .tx-badge.purchase{background:rgba(245,158,11,.12);color:var(--orange)}
+        .tx-name{font-size:12px;font-weight:700;color:var(--text)}
+        .tx-amount{font-size:15px;font-weight:900;font-family:'Oswald',sans-serif;white-space:nowrap}
+        .tx-amount.plus{color:var(--green)}.tx-amount.minus{color:var(--red)}
+        .tx-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:3px}
+        .tx-date{font-size:9px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:3px}
+        .tx-date i{font-size:10px}
+        .tx-ref{font-size:9px;font-weight:700;color:var(--text2);font-family:'Oswald',sans-serif;letter-spacing:.3px}
+        .tx-status{font-size:8px;font-weight:800;padding:2px 6px;border-radius:50px;text-transform:uppercase;margin-left:auto}
+        .tx-status.done{background:#D1FAE5;color:var(--green)}
+        .tx-status.pending{background:#EDE9FE;color:var(--purple)}
+        .tx-status.processing{background:#FEF3C7;color:var(--gold)}
+        .tx-status.failed{background:#FEE2E2;color:var(--red)}
+        .tx-desc{font-size:9px;color:var(--text2);font-weight:500;margin-top:3px;line-height:1.4}
+
+        /* Empty */
+        .empty-state{text-align:center;padding:40px 20px;color:var(--empty-color)}
+        .empty-icon{width:60px;height:60px;background:var(--filter-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:28px;color:var(--empty-color)}
+        .empty-state h3{font-size:14px;font-weight:800;margin-bottom:4px;color:var(--text)}
+        .empty-state p{font-size:11px;font-weight:600;color:var(--text2)}
+
+        /* Loading */
+        .loading-wrap{display:flex;align-items:center;justify-content:center;padding:40px;gap:10px;color:var(--text2);font-size:11px;font-weight:600;flex-direction:column}
+        .spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:#D97706;border-radius:50%;animation:spin .7s linear infinite}
+        .loading-text{font-size:11px;font-weight:600;color:var(--text2)}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* Error banner */
+        .error-banner{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:10px 14px;margin:8px 12px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--red);display:none}
+        .error-banner i{font-size:16px;flex-shrink:0}
+
+        /* Bottom Nav */
+        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:10px 20px 24px;display:flex;justify-content:space-around;align-items:flex-end;box-shadow:0 -6px 24px rgba(0,0,0,.09);z-index:100;transition:background .3s}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-decoration:none;color:inherit;padding:4px 8px;border-radius:12px;transition:all .2s}
+        .nav-item i{font-size:22px;color:#9ca3af}.nav-item span{font-size:10px;font-weight:700;color:#9ca3af}
+        .nav-item.active i,.nav-item:hover i{color:#8B5CF6}.nav-item.active span,.nav-item:hover span{color:#8B5CF6}
+        .nav-center{position:relative;top:-26px}
+        .nav-center-btn{width:58px;height:58px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;box-shadow:0 6px 20px rgba(245,158,11,.4);border:4px solid var(--card);cursor:pointer;transition:all .3s}
+
+        /* Toast */
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:400;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.12);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid #D97706}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <div class="logo-area"><div class="logo-icon">E</div><div class="logo-text">ELITEEARN</div></div>
+            <div class="top-actions"><button class="icon-btn" id="themeBtn"><i class="ph ph-moon" id="themeIcon"></i></button></div>
+        </div>
+        <div class="header-title">
+            <h1>Transactions</h1>
+            <div class="header-subtitle"><i class="ph ph-download-simple"></i> COMPLETE LEDGER</div>
+        </div>
+    </div>
+
+    <div class="main-card">
+        <!-- Filter Tabs — counts injected by JS -->
+        <div class="filter-row" id="filterRow">
+            <button class="filter-btn active" data-filter="all">📋 All <span class="filter-count" id="cnt-all">0</span></button>
+            <button class="filter-btn" data-filter="deposit">💰 Deposits <span class="filter-count" id="cnt-deposit">0</span></button>
+            <button class="filter-btn" data-filter="withdrawal">💸 Withdrawals <span class="filter-count" id="cnt-withdrawal">0</span></button>
+            <button class="filter-btn" data-filter="roi">📈 ROI <span class="filter-count" id="cnt-roi">0</span></button>
+            <button class="filter-btn" data-filter="referral">👥 Referrals <span class="filter-count" id="cnt-referral">0</span></button>
+            <button class="filter-btn" data-filter="bonus">🎁 Bonuses <span class="filter-count" id="cnt-bonus">0</span></button>
+        </div>
+
+        <div class="error-banner" id="errorBanner"><i class="ph ph-warning-circle"></i><span id="errorMsg">Some transactions could not be loaded.</span></div>
+
+        <!-- Stats -->
+        <div class="stats-mini">
+            <div class="stat-chip"><div class="stat-chip-val" id="totalCredits">₦0</div><div class="stat-chip-lbl">Total Credits</div></div>
+            <div class="stat-chip"><div class="stat-chip-val" style="color:var(--red)" id="totalDebits">₦0</div><div class="stat-chip-lbl">Total Debits</div></div>
+            <div class="stat-chip"><div class="stat-chip-val" id="txCount">0</div><div class="stat-chip-lbl">Transactions</div></div>
+        </div>
+
+        <div class="tx-list" id="txList">
+            <div class="loading-wrap">
+                <div class="spinner"></div>
+                <div class="loading-text">Loading your transactions…</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><i class="ph ph-house"></i><span>Home</span></a>
+    <a href="referral.html" class="nav-item"><i class="ph ph-users"></i><span>Team</span></a>
+    <div class="nav-center"><div class="nav-center-btn" onclick="window.location.href='deposit.html'"><i class="ph ph-wallet"></i></div></div>
+    <a href="history.html" class="nav-item active"><i class="ph ph-clock-counter-clockwise"></i><span>History</span></a>
+    <a href="profile.html" class="nav-item"><i class="ph ph-user"></i><span>Profile</span></a>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ✅ SINGLE MODULE SCRIPT -->
+<script type="module">
+import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+    getFirestore, collection, query, where,
+    getDocs, doc, getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ── Firebase ───────────────────────────────────────── */
+const firebaseConfig = {
+    apiKey: "AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",
+    authDomain: "earnelite-94a5e.firebaseapp.com",
+    projectId: "earnelite-94a5e",
+    storageBucket: "earnelite-94a5e.firebasestorage.app",
+    messagingSenderId: "343677058789",
+    appId: "1:343677058789:web:776faceb824158042fde0c"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ── State ──────────────────────────────────────────── */
+let currentUid      = '';
+let currentUsername = '';
+let allTransactions = [];
+let currentFilter   = 'all';
+
+/* ── Helpers ────────────────────────────────────────── */
+const fmt = n => new Intl.NumberFormat('en-NG', { minimumFractionDigits:2, maximumFractionDigits:2 }).format(n || 0);
+
+function fmtShort(n) {
+    if (n >= 1_000_000) return '₦' + (n / 1_000_000).toFixed(1) + 'M';
+    if (n >= 1_000)     return '₦' + (n / 1_000).toFixed(1) + 'K';
+    return '₦' + fmt(n);
+}
+
+function toDate(ts) {
+    if (!ts) return null;
+    if (ts.toDate)    return ts.toDate();
+    if (ts?.seconds)  return new Date(ts.seconds * 1000);
+    if (typeof ts === 'string' || typeof ts === 'number') return new Date(ts);
+    return null;
+}
+
+function fmtDate(ts) {
+    const d = toDate(ts);
+    if (!d || isNaN(d)) return '—';
+    const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+// Sort key — newest first
+const tsSeconds = ts => {
+    if (!ts) return 0;
+    if (ts.seconds) return ts.seconds;
+    const d = toDate(ts);
+    return d ? d.getTime() / 1000 : 0;
+};
+
+function showToast(msg, type = 'info') {
+    const wrap = document.getElementById('toastWrap');
+    const el   = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.textContent = msg;
+    wrap.appendChild(el);
+    setTimeout(() => el.classList.add('show'), 10);
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 350); }, 4000);
+}
+
+function showError(msg) {
+    const b = document.getElementById('errorBanner');
+    document.getElementById('errorMsg').textContent = msg;
+    b.style.display = 'flex';
+}
+
+/* ── Theme ──────────────────────────────────────────── */
+function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('themeIcon').className = t === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
+    localStorage.setItem('elite_theme', t);
+}
+applyTheme(localStorage.getItem('elite_theme') || 'light');
+document.getElementById('themeBtn').addEventListener('click', () => {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+/* ── Fetch all transactions ─────────────────────────── */
+async function fetchAllTransactions() {
+    const txns   = [];
+    const errors = [];
+
+    /* 1 ── DEPOSITS ──────────────────────────────────── */
+    try {
+        // ✅ NO orderBy — avoids composite index requirement; we sort in JS
+        const snap = await getDocs(
+            query(collection(db, 'deposits'), where('username', '==', currentUsername))
+        );
+        snap.forEach(d => {
+            const data = d.data();
+            txns.push({
+                id:     d.id,
+                type:   'deposit',
+                amount: data.amount || 0,
+                status: data.status || 'pending',
+                date:   data.createdAt || data.timestamp || null,
+                ref:    data.referenceCode || d.id.slice(0, 10).toUpperCase(),
+                title:  'Bank Deposit',
+                desc:   [data.senderName ? `Sender: ${data.senderName}` : '', data.bankName || ''].filter(Boolean).join(' · ')
+            });
+        });
+    } catch (e) {
+        console.error('❌ Deposits fetch:', e);
+        errors.push('deposits');
+    }
+
+    /* 2 ── WITHDRAWALS ──────────────────────────────── */
+    try {
+        const snap = await getDocs(
+            query(collection(db, 'withdrawals'), where('username', '==', currentUsername))
+        );
+        snap.forEach(d => {
+            const data    = d.data();
+            const tax     = data.tax || 0;
+            const gross   = data.amount || 0;
+            const net     = data.netAmount || (gross > 0 ? gross - tax : 0);
+            txns.push({
+                id:     d.id,
+                type:   'withdrawal',
+                amount: net,
+                status: data.status || 'pending',
+                date:   data.createdAt || data.timestamp || null,
+                ref:    data.referenceCode || d.id.slice(0, 10).toUpperCase(),
+                title:  'Withdrawal to Bank',
+                desc:   [data.bankName ? `Bank: ${data.bankName}` : '', tax > 0 ? `Tax: ₦${fmt(tax)}` : ''].filter(Boolean).join(' · ')
+            });
+        });
+    } catch (e) {
+        console.error('❌ Withdrawals fetch:', e);
+        errors.push('withdrawals');
+    }
+
+    /* 3 ── ROI DROPS ────────────────────────────────── */
+    try {
+        const snap = await getDocs(
+            query(collection(db, 'roiDrops'), where('username', '==', currentUsername))
+        );
+        snap.forEach(d => {
+            const data = d.data();
+            txns.push({
+                id:     d.id,
+                type:   'roi',
+                amount: data.amount || 0,
+                status: 'completed',
+                date:   data.droppedAt || data.timestamp || null,
+                ref:    'ROI-D' + (data.dayNumber || d.id.slice(0, 6)),
+                title:  `Day ${data.dayNumber || '?'} ROI`,
+                desc:   (data.planName || 'Investment Plan') + ' · Auto-credited'
+            });
+        });
+    } catch (e) {
+        console.error('❌ ROI drops fetch:', e);
+        errors.push('ROI drops');
+    }
+
+    /* 4 ── REFERRAL BONUSES ─────────────────────────── */
+    // ✅ Query notifications by UID (not username) — that's how they're stored
+    // ✅ No orderBy — sort in JS to avoid composite index
+    try {
+        if (currentUid) {
+            const snap = await getDocs(
+                query(collection(db, 'notifications'), where('uid', '==', currentUid))
+            );
+            snap.forEach(d => {
+                const data = d.data();
+                const title = data.title || '';
+                // Only pick referral/commission notifications
+                if (!title.includes('Bonus') && !title.includes('Referral') && !title.includes('Commission') && !title.includes('Level')) return;
+
+                // Extract amount from message (e.g. "You earned ₦500.00 (20%)")
+                const amtMatch = (data.msg || '').match(/₦([\d,]+\.?\d*)/);
+                const amt = amtMatch ? parseFloat(amtMatch[1].replace(/,/g, '')) : 0;
+                if (amt <= 0) return;
+
+                txns.push({
+                    id:     d.id,
+                    type:   'referral',
+                    amount: amt,
+                    status: 'completed',
+                    date:   data.timestamp || null,
+                    ref:    'REF-' + d.id.slice(0, 6).toUpperCase(),
+                    title:  title.replace(/[🎉💰💎🏆]/g, '').trim() || 'Referral Bonus',
+                    desc:   data.msg || ''
+                });
+            });
+        }
+    } catch (e) {
+        console.error('❌ Referral notifications fetch:', e);
+        errors.push('referral bonuses');
+    }
+
+    /* 5 ── BONUS: Welcome + Admin Fund ─────────────── */
+    try {
+        const userSnap = await getDoc(doc(db, 'users', currentUsername));
+        if (userSnap.exists()) {
+            const uData = userSnap.data();
+
+            // Welcome bonus (₦500 — only if registration date exists)
+            const regDate = uData.registrationDate || uData.createdAt || null;
+            if (regDate) {
+                txns.push({
+                    id:     'welcome-bonus-' + currentUsername,
+                    type:   'bonus',
+                    amount: 500,
+                    status: 'completed',
+                    date:   typeof regDate === 'string' ? { seconds: new Date(regDate).getTime() / 1000 } : regDate,
+                    ref:    'WELCOME',
+                    title:  'Welcome Bonus',
+                    desc:   'New account registration bonus — ₦500'
+                });
+            }
+
+            // Admin-funded wallet (show only the amount beyond the ₦500 welcome bonus)
+            const adminFunded = uData.adminFunded || 0;
+            if (adminFunded > 500) {
+                txns.push({
+                    id:     'admin-fund-' + currentUsername,
+                    type:   'bonus',
+                    amount: adminFunded - 500,
+                    status: 'completed',
+                    date:   regDate
+                        ? typeof regDate === 'string'
+                            ? { seconds: new Date(regDate).getTime() / 1000 - 3600 }
+                            : { seconds: (regDate.seconds || 0) - 3600 }
+                        : null,
+                    ref:    'ADMIN-FUND',
+                    title:  'Admin Wallet Funding',
+                    desc:   'Wallet credited by admin'
+                });
+            }
+        }
+    } catch (e) {
+        console.error('❌ User bonus fetch:', e);
+    }
+
+    // ✅ Sort all transactions newest-first in JS (no Firestore orderBy needed)
+    txns.sort((a, b) => tsSeconds(b.date) - tsSeconds(a.date));
+
+    if (errors.length) {
+        showError(`⚠️ Could not load: ${errors.join(', ')}. Other records shown.`);
+    }
+
+    console.log(`✅ Fetched ${txns.length} total transactions`);
+    return txns;
+}
+
+/* ── Update filter counts ───────────────────────────── */
+function updateCounts(txns) {
+    const counts = { all: txns.length, deposit: 0, withdrawal: 0, roi: 0, referral: 0, bonus: 0 };
+    txns.forEach(t => { if (counts[t.type] !== undefined) counts[t.type]++; });
+    Object.entries(counts).forEach(([k, v]) => {
+        const el = document.getElementById('cnt-' + k);
+        if (el) el.textContent = v;
+    });
+}
+
+/* ── Render ─────────────────────────────────────────── */
+const TYPE_LABELS = { deposit:'DEPOSIT', withdrawal:'WITHDRAWAL', roi:'ROI DROP', referral:'REFERRAL', bonus:'BONUS' };
+const TYPE_ICONS  = { deposit:'💰', withdrawal:'💸', roi:'📈', referral:'👥', bonus:'🎁' };
+
+function renderTransactions(filter) {
+    const list = document.getElementById('txList');
+    if (!list) return;
+
+    // Filter
+    let txns = allTransactions;
+    if (filter !== 'all') txns = txns.filter(t => t.type === filter);
+
+    // Stats
+    const credits = txns.filter(t => t.type !== 'withdrawal').reduce((s, t) => s + (t.amount || 0), 0);
+    const debits  = txns.filter(t => t.type === 'withdrawal').reduce((s, t) => s + (t.amount || 0), 0);
+    document.getElementById('totalCredits').textContent = fmtShort(credits);
+    document.getElementById('totalDebits').textContent  = fmtShort(debits);
+    document.getElementById('txCount').textContent      = txns.length;
+
+    // Empty state
+    if (!txns.length) {
+        const label = filter === 'all' ? '' : (TYPE_LABELS[filter] || filter);
+        list.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon"><i class="ph ph-inbox"></i></div>
+                <h3>No ${label} transactions yet</h3>
+                <p>Your ${label || 'transaction'} history will appear here</p>
+            </div>`;
+        return;
+    }
+
+    list.innerHTML = txns.map((tx, i) => {
+        const isDebit     = tx.type === 'withdrawal';
+        const amtClass    = isDebit ? 'minus' : 'plus';
+        const prefix      = isDebit ? '−' : '+';
+        const rawStatus   = (tx.status || 'pending').toLowerCase();
+        const statusClass = rawStatus === 'completed' || rawStatus === 'approved' || rawStatus === 'done'
+            ? 'done' : rawStatus === 'pending' ? 'pending'
+            : rawStatus === 'failed' || rawStatus === 'rejected' ? 'failed' : 'processing';
+        const statusLabel = statusClass === 'done' ? 'DONE'
+            : statusClass === 'pending' ? 'PENDING'
+            : statusClass === 'failed'  ? 'FAILED' : 'ACTIVE';
+
+        return `
+        <div class="tx-item" style="animation-delay:${i * 0.02}s">
+            <div class="tx-dot-col">
+                <div class="tx-dot ${tx.type}"></div>
+                ${i < txns.length - 1 ? '<div class="tx-line"></div>' : ''}
+            </div>
+            <div class="tx-content">
+                <div class="tx-header">
+                    <div class="tx-type-row">
+                        <span class="tx-badge ${tx.type}">${TYPE_ICONS[tx.type] || ''} ${TYPE_LABELS[tx.type] || tx.type.toUpperCase()}</span>
+                        <span class="tx-name">${tx.title || '—'}</span>
+                    </div>
+                    <span class="tx-amount ${amtClass}">${prefix}₦${fmt(tx.amount)}</span>
+                </div>
+                ${tx.desc ? `<div class="tx-desc">${tx.desc}</div>` : ''}
+                <div class="tx-meta">
+                    <span class="tx-date"><i class="ph ph-clock"></i>${fmtDate(tx.date)}</span>
+                    <span class="tx-ref">#${(tx.ref || '—').slice(0, 12)}</span>
+                    <span class="tx-status ${statusClass}">${statusLabel}</span>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+/* ── Filter tab clicks ──────────────────────────────── */
+document.getElementById('filterRow').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    const filter = btn.dataset.filter;
+    if (filter === currentFilter) return;
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTransactions(filter);
+});
+
+/* ── Session helper ─────────────────────────────────── */
+function loadFromSession() {
+    try {
+        const stored = JSON.parse(sessionStorage.getItem('userData') || '{}');
+        if (sessionStorage.getItem('userLoggedIn') === 'true' && stored.username) {
+            currentUsername = stored.username;
+            return true;
+        }
+    } catch (_) {}
+    return false;
+}
+
+/* ── Auth ───────────────────────────────────────────── */
+const hasSession = loadFromSession();
+
+onAuthStateChanged(auth, async user => {
+    if (!user) {
+        if (!hasSession && sessionStorage.getItem('userLoggedIn') !== 'true') {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+        return;
+    }
+
+    currentUid = user.uid;
+
+    // Always re-fetch username from Firestore so it's reliable
+    try {
+        const uidSnap = await getDoc(doc(db, 'usersByUid', user.uid));
+        if (uidSnap.exists()) {
+            currentUsername = uidSnap.data().username || currentUsername;
+        }
+    } catch (e) {
+        console.warn('⚠️ usersByUid lookup failed, using session username:', currentUsername);
+    }
+
+    if (!currentUsername) {
+        showError('Could not identify user account. Please log out and back in.');
+        document.getElementById('txList').innerHTML =
+            `<div class="empty-state"><div class="empty-icon"><i class="ph ph-warning"></i></div><h3>Account error</h3><p>Please log out and log in again</p></div>`;
+        return;
+    }
+
+    sessionStorage.setItem('userLoggedIn', 'true');
+    sessionStorage.setItem('userData', JSON.stringify({ username: currentUsername }));
+
+    console.log('✅ Auth OK | uid:', currentUid, '| username:', currentUsername);
+
+    allTransactions = await fetchAllTransactions();
+    updateCounts(allTransactions);
+    renderTransactions('all');
+});
+</script>
+</body>
+</html>
