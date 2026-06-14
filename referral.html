@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>EliteEarn – Referral</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{--bg:#f2f2f7;--card:#ffffff;--card2:#f8f8fc;--text:#0f0f1e;--text2:#6b6b8a;--border:#e4e4ef;--gold:#C49A00;--gold2:#E8B800;--header:linear-gradient(150deg,#1a0505 0%,#5a0e0e 40%,#8b1a1a 70%,#a52020 100%);--lv-a:#059669;--lv-b:#7C3AED;--lv-c:#D97706;--input-bg:#f5f5fa}
+        [data-theme="dark"]{--bg:#0c0c18;--card:#181830;--card2:#20203a;--text:#f0f0ff;--text2:#8888aa;--border:#2a2a44;--input-bg:#20203a}
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:110px}
+        .page-header{background:var(--header);padding:16px 18px 90px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:260px;height:260px;background:radial-gradient(circle,rgba(196,154,0,0.15) 0%,transparent 70%);top:-80px;right:-60px}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+        .logo-area{display:flex;align-items:center;gap:10px}
+        .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:900;box-shadow:0 4px 12px rgba(245,158,11,.4);font-family:'Oswald',sans-serif}
+        .logo-text{font-family:'Oswald',sans-serif;font-size:17px;font-weight:700;color:white}
+        .top-actions{display:flex;gap:8px}
+        .icon-btn{background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
+        .header-title{text-align:center;color:white}
+        .header-title h1{font-size:26px;font-weight:900;margin-bottom:4px}
+        .header-subtitle{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase}
+        .content{padding:0 12px 20px;margin-top:-66px;position:relative;z-index:2;display:flex;flex-direction:column;gap:10px}
+        .ref-link-card{background:var(--card);border-radius:22px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,0.08);transition:background .3s}
+        .card-label{font-size:9px;font-weight:800;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+        .card-label i{font-size:12px;color:var(--gold)}
+        .link-box{display:flex;align-items:center;gap:6px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:12px;padding:8px 10px;margin-bottom:10px}
+        .link-text{flex:1;font-size:9px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Oswald',sans-serif}
+        .copy-btn{background:var(--gold);border:none;border-radius:8px;padding:6px 10px;font-size:9px;font-weight:800;color:white;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'Montserrat',sans-serif}
+        .copy-btn:hover{background:var(--gold2)}.copy-btn.copied{background:#059669}
+        .social-row{display:flex;gap:6px;flex-wrap:wrap}
+        .social-btn{flex:1;min-width:55px;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 5px;border-radius:10px;border:none;font-size:9px;font-weight:800;color:white;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif}
+        .social-btn i{font-size:13px}.btn-wa{background:#25D366}.btn-tg{background:#229ED9}.btn-fb{background:#1877F2}.btn-tw{background:#000000}
+        .qr-card{background:var(--card);border-radius:22px;padding:16px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.06)}
+        .qr-wrap{background:white;border-radius:16px;padding:12px;display:inline-block;border:3px solid var(--border);margin:8px 0}
+        #qrCanvas{display:block}.qr-sub{font-size:9px;font-weight:700;color:var(--text2);text-transform:uppercase}
+        .save-qr-btn{display:inline-flex;align-items:center;gap:5px;margin-top:8px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:50px;padding:7px 14px;font-size:10px;font-weight:800;color:var(--text);cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif}
+        .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+        .stat-card{background:var(--card);border-radius:16px;padding:12px 8px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.05)}
+        .stat-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:16px}
+        .stat-icon.s1{background:rgba(5,150,105,.1);color:#059669}.stat-icon.s2{background:rgba(124,58,237,.1);color:#7C3AED}.stat-icon.s3{background:rgba(217,119,6,.1);color:#D97706}
+        .stat-val{font-size:15px;font-weight:900;color:var(--text);font-family:'Oswald',sans-serif}
+        .stat-lbl{font-size:8px;font-weight:700;color:var(--text2);text-transform:uppercase;margin-top:2px}
+        .level-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+        .level-summary-card{background:var(--card);border-radius:16px;padding:12px 8px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.04);border-top:3px solid}
+        .level-summary-card.lvl-a{border-top-color:var(--lv-a)}.level-summary-card.lvl-b{border-top-color:var(--lv-b)}.level-summary-card.lvl-c{border-top-color:var(--lv-c)}
+        .lsc-val{font-size:14px;font-weight:900;color:var(--text);font-family:'Oswald',sans-serif}
+        .lsc-lbl{font-size:7px;font-weight:700;color:var(--text2);text-transform:uppercase;margin-top:1px}
+        .lsc-sub{font-size:8px;font-weight:700;color:var(--text2);margin-top:3px;display:flex;flex-direction:column;gap:1px}
+        .lsc-sub span{font-size:8px}.lsc-sub .green{color:#059669}.lsc-sub .purple{color:#7C3AED}.lsc-sub .gold{color:var(--gold)}
+        .level-tabs{display:flex;gap:0;background:var(--card);border-radius:16px;padding:3px;box-shadow:0 3px 10px rgba(0,0,0,.05)}
+        .level-tab{flex:1;text-align:center;padding:9px 4px;font-size:10px;font-weight:800;border-radius:14px;cursor:pointer;transition:all .2s;color:var(--text2);user-select:none}
+        .level-tab.active-a{background:rgba(5,150,105,.15);color:var(--lv-a)}.level-tab.active-b{background:rgba(124,58,237,.15);color:var(--lv-b)}.level-tab.active-c{background:rgba(217,119,6,.15);color:var(--lv-c)}
+        .team-section{background:var(--card);border-radius:18px;padding:14px;box-shadow:0 3px 12px rgba(0,0,0,.05)}
+        .team-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+        .team-header-left{display:flex;align-items:center;gap:7px}
+        .team-level-dot{width:9px;height:9px;border-radius:50%}
+        .team-count-badge{background:var(--input-bg);border:1px solid var(--border);border-radius:50px;padding:2px 9px;font-size:9px;font-weight:800;color:var(--text2)}
+        .member-card{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;transition:all .2s}
+        .member-card:last-child{margin-bottom:0}
+        .member-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+        .member-avatar{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:white;font-family:'Oswald',sans-serif;flex-shrink:0}
+        .member-meta{flex:1;min-width:0}
+        .member-name{font-size:12px;font-weight:800;color:var(--text);margin-bottom:1px}
+        .member-id{font-size:9px;color:var(--text2);font-weight:600;font-family:'Oswald',sans-serif}
+        .commission-amt{font-size:14px;font-weight:900;color:#059669;font-family:'Oswald',sans-serif}
+        .commission-lbl{font-size:8px;color:var(--text2);font-weight:600}
+        .member-details-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+        .detail-chip{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 8px}
+        .detail-chip-lbl{font-size:7px;font-weight:800;color:var(--text2);text-transform:uppercase;margin-bottom:2px}
+        .detail-chip-val{font-size:10px;font-weight:800;color:var(--text)}
+        .detail-chip-val.green{color:#059669}.detail-chip-val.purple{color:#7C3AED}
+        .member-status{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:50px;font-size:8px;font-weight:800;margin-top:6px}
+        .status-active{background:rgba(5,150,105,.1);color:#059669}.status-inactive{background:rgba(107,107,138,.1);color:var(--text2)}
+        .empty-team{text-align:center;padding:24px 14px;color:var(--text2)}
+        .empty-team-icon{width:50px;height:50px;background:var(--input-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:24px;color:var(--text2)}
+        .empty-team h3{font-size:13px;font-weight:800;color:var(--text);margin-bottom:3px}
+        .empty-team p{font-size:10px;font-weight:600}
+        .loading-row{display:flex;align-items:center;justify-content:center;gap:6px;padding:20px;color:var(--text2);font-size:11px;font-weight:600}
+        .spin{width:18px;height:18px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:10px 20px 24px;display:flex;justify-content:space-around;align-items:flex-end;box-shadow:0 -6px 24px rgba(0,0,0,.09);z-index:100}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-decoration:none;color:inherit;padding:4px 8px;border-radius:12px;transition:all .2s}
+        .nav-item i{font-size:22px;color:#9ca3af}.nav-item span{font-size:10px;font-weight:700;color:#9ca3af}
+        .nav-item.active i,.nav-item:hover i{color:#8B5CF6}.nav-item.active span,.nav-item:hover span{color:#8B5CF6}
+        .nav-center{position:relative;top:-26px}
+        .nav-center-btn{width:58px;height:58px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;box-shadow:0 6px 20px rgba(245,158,11,.4);border:4px solid var(--card);cursor:pointer;transition:all .3s}
+        .toast-wrap{position:fixed;top:16px;left:16px;z-index:400;display:flex;flex-direction:column;gap:6px}
+        .toast{background:var(--card);border-radius:12px;padding:11px 14px;box-shadow:0 8px 24px rgba(0,0,0,.1);font-size:12px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:250px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:#059669}.toast.error{border-left-color:#EF4444}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar"><div class="logo-area"><div class="logo-icon">E</div><div class="logo-text">ELITEEARN</div></div><div class="top-actions"><button class="icon-btn" id="themeBtn"><i class="ph ph-moon" id="themeIcon"></i></button></div></div>
+        <div class="header-title"><h1>Referral Program</h1><div class="header-subtitle"><i class="ph ph-users-three"></i> EARN FROM YOUR TEAM</div></div>
+    </div>
+
+    <div class="content">
+        <div class="ref-link-card">
+            <div class="card-label"><i class="ph ph-link"></i> YOUR REFERRAL LINK</div>
+            <div class="link-box"><span class="link-text" id="refLinkText">Loading...</span><button class="copy-btn" id="copyLinkBtn">COPY</button></div>
+            <div class="card-label" style="margin-top:4px"><i class="ph ph-share-network"></i> SHARE</div>
+            <div class="social-row">
+                <button class="social-btn btn-wa" id="shareWA"><i class="ph ph-whatsapp-logo"></i>WhatsApp</button>
+                <button class="social-btn btn-tg" id="shareTG"><i class="ph ph-telegram-logo"></i>Telegram</button>
+                <button class="social-btn btn-fb" id="shareFB"><i class="ph ph-facebook-logo"></i>FB</button>
+                <button class="social-btn btn-tw" id="shareTW"><i class="ph ph-x-logo"></i>X</button>
+            </div>
+        </div>
+
+        <div class="qr-card">
+            <div class="card-label" style="justify-content:center"><i class="ph ph-qr-code"></i> SCAN TO JOIN</div>
+            <div class="qr-wrap"><div id="qrCanvas"></div></div>
+            <div class="qr-sub">Share QR code to invite</div>
+            <button class="save-qr-btn" id="saveQR">📥 Save QR</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon s1"><i class="ph ph-users"></i></div><div class="stat-val" id="totalTeamSize">0</div><div class="stat-lbl">Total Team</div></div>
+            <div class="stat-card"><div class="stat-icon s2"><i class="ph ph-activity"></i></div><div class="stat-val" id="activeTeamSize">0</div><div class="stat-lbl">Active</div></div>
+            <div class="stat-card"><div class="stat-icon s3"><i class="ph ph-coins"></i></div><div class="stat-val" id="totalReferralIncome">₦0</div><div class="stat-lbl">Total Earned</div></div>
+        </div>
+
+        <div class="level-summary-grid">
+            <div class="level-summary-card lvl-a"><div class="lsc-val" id="lvlACount">0</div><div class="lsc-lbl">Level A</div><div class="lsc-sub"><span>Invested: <b class="green" id="lvlAInvested">₦0</b></span><span>Earned: <b class="gold" id="lvlAEarned">₦0</b></span></div></div>
+            <div class="level-summary-card lvl-b"><div class="lsc-val" id="lvlBCount">0</div><div class="lsc-lbl">Level B</div><div class="lsc-sub"><span>Invested: <b class="green" id="lvlBInvested">₦0</b></span><span>Earned: <b class="gold" id="lvlBEarned">₦0</b></span></div></div>
+            <div class="level-summary-card lvl-c"><div class="lsc-val" id="lvlCCount">0</div><div class="lsc-lbl">Level C</div><div class="lsc-sub"><span>Invested: <b class="green" id="lvlCInvested">₦0</b></span><span>Earned: <b class="gold" id="lvlCEarned">₦0</b></span></div></div>
+        </div>
+
+        <div class="stat-card" style="padding:14px">
+            <div class="card-label" style="margin-bottom:8px"><i class="ph ph-chart-bar"></i> COMMISSION EARNED</div>
+            <div style="display:flex;justify-content:space-around;text-align:center">
+                <div><div style="font-size:9px;font-weight:700;color:var(--text2)">Level A (20%)</div><div style="font-size:15px;font-weight:900;color:var(--lv-a);font-family:'Oswald',sans-serif" id="incomeA">₦0</div></div>
+                <div><div style="font-size:9px;font-weight:700;color:var(--text2)">Level B (2%)</div><div style="font-size:15px;font-weight:900;color:var(--lv-b);font-family:'Oswald',sans-serif" id="incomeB">₦0</div></div>
+                <div><div style="font-size:9px;font-weight:700;color:var(--text2)">Level C (1%)</div><div style="font-size:15px;font-weight:900;color:var(--lv-c);font-family:'Oswald',sans-serif" id="incomeC">₦0</div></div>
+            </div>
+            <div style="text-align:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px;font-weight:800;color:var(--gold)">Total: <span id="incomeTotal" style="font-size:17px">₦0</span></div>
+        </div>
+
+        <div class="level-tabs" id="levelTabs">
+            <div class="level-tab active-a" data-level="A">Level A (20%)</div>
+            <div class="level-tab" data-level="B">Level B (2%)</div>
+            <div class="level-tab" data-level="C">Level C (1%)</div>
+        </div>
+
+        <div class="team-section" id="teamSection">
+            <div class="team-header">
+                <div class="team-header-left"><div class="team-level-dot" id="teamDot" style="background:var(--lv-a)"></div><span style="font-size:11px;font-weight:800;color:var(--text)" id="teamTitle">Level A Members</span></div>
+                <div class="team-count-badge" id="teamCountBadge">0 members</div>
+            </div>
+            <div id="memberList"><div class="loading-row"><div class="spin"></div> Loading team...</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><i class="ph ph-house"></i><span>Home</span></a>
+    <a href="referral.html" class="nav-item active"><i class="ph ph-users"></i><span>Team</span></a>
+    <div class="nav-center"><div class="nav-center-btn" onclick="window.location.href='deposit.html'"><i class="ph ph-wallet"></i></div></div>
+    <a href="history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i><span>History</span></a>
+    <a href="profile.html" class="nav-item"><i class="ph ph-user"></i><span>Profile</span></a>
+</div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+let currentUid="",currentUsername="",authChecked=false;
+const COMMISSION={A:0.20,B:0.02,C:0.01};
+// 🔑 Store teams separately to avoid overwrites
+let teamA=[],teamB=[],teamC=[];
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)}
+function fmtShort(n){return n>=1000000?'₦'+(n/1000000).toFixed(1)+'M':n>=1000?'₦'+(n/1000).toFixed(1)+'K':'₦'+fmt(n)}
+function fmtDate(ts){if(!ts)return'—';let d;if(ts.toDate)d=ts.toDate();else if(ts?.seconds)d=new Date(ts.seconds*1000);else d=new Date(ts);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()}`}
+function getBaseUrl(){const loc=window.location;return loc.protocol+'//'+loc.host}
+
+function loadFromSession(){
+    const d=sessionStorage.getItem('userData');
+    if(sessionStorage.getItem('userLoggedIn')==='true'&&d){try{const p=JSON.parse(d);currentUsername=p.username;const refLink=`${getBaseUrl()}/index.html?ref=${p.username}`;document.getElementById('refLinkText').textContent=refLink;generateQR(refLink);return true}catch(e){}}return false;
+}
+
+// 🔑 Fetch ALL level data separately
+async function fetchTeamLevel(level){
+    let members=[];
+    try{
+        if(level==='A'){
+            const q=query(collection(db,'users'),where('referredBy','==',currentUsername));
+            const s=await getDocs(q);
+            members=s.docs.map(d=>({id:d.id,...d.data()}));
+        }else if(level==='B'){
+            const qA=query(collection(db,'users'),where('referredBy','==',currentUsername));
+            const sA=await getDocs(qA);
+            const aNames=sA.docs.map(d=>d.id);
+            for(let i=0;i<aNames.length;i+=10){
+                const chunk=aNames.slice(i,i+10);
+                const qB=query(collection(db,'users'),where('referredBy','in',chunk));
+                const sB=await getDocs(qB);
+                sB.docs.forEach(d=>members.push({id:d.id,...d.data()}));
+            }
+        }else{ // Level C
+            const qA=query(collection(db,'users'),where('referredBy','==',currentUsername));
+            const sA=await getDocs(qA);
+            const aNames=sA.docs.map(d=>d.id);
+            let bNames=[];
+            for(let i=0;i<aNames.length;i+=10){
+                const chunk=aNames.slice(i,i+10);
+                const qB=query(collection(db,'users'),where('referredBy','in',chunk));
+                const sB=await getDocs(qB);
+                sB.docs.forEach(d=>bNames.push(d.id));
+            }
+            for(let i=0;i<bNames.length;i+=10){
+                const chunk=bNames.slice(i,i+10);
+                const qC=query(collection(db,'users'),where('referredBy','in',chunk));
+                const sC=await getDocs(qC);
+                sC.docs.forEach(d=>members.push({id:d.id,...d.data()}));
+            }
+        }
+    }catch(e){console.error(`Level ${level} error:`,e)}
+    return members;
+}
+
+// 🔑 Calculate and update ALL stats
+function updateAllStats(){
+    const totalTeam=teamA.length+teamB.length+teamC.length;
+    const activeTeam=[...teamA,...teamB,...teamC].filter(m=>(m.totalDeposited||m.depositWallet||0)>0).length;
+
+    // Per-level calculations
+    const calcLevel=(members,rate)=>{
+        const count=members.length;
+        const invested=members.reduce((s,m)=>s+(m.totalDeposited||0),0);
+        const deposits=members.reduce((s,m)=>s+(m.depositWallet||0),0);
+        const adminFunded=members.reduce((s,m)=>s+(m.adminFunded||0),0);
+        // 🔑 Commission based on TOTAL INVESTED (plan purchases)
+        const commission=members.reduce((s,m)=>s+(m.totalDeposited||0)*rate,0);
+        return{count,invested,deposits,adminFunded,commission};
+    };
+
+    const statsA=calcLevel(teamA,COMMISSION.A);
+    const statsB=calcLevel(teamB,COMMISSION.B);
+    const statsC=calcLevel(teamC,COMMISSION.C);
+    const totalCommission=statsA.commission+statsB.commission+statsC.commission;
+
+    // Update overall stats
+    document.getElementById('totalTeamSize').textContent=totalTeam;
+    document.getElementById('activeTeamSize').textContent=activeTeam;
+    document.getElementById('totalReferralIncome').textContent=fmtShort(totalCommission);
+
+    // Update level summary cards
+    for(const[lvl,stats]of[['A',statsA],['B',statsB],['C',statsC]]){
+        document.getElementById(`lvl${lvl}Count`).textContent=stats.count;
+        document.getElementById(`lvl${lvl}Invested`).textContent='₦'+fmtShort(stats.invested);
+        document.getElementById(`lvl${lvl}Earned`).textContent='₦'+fmtShort(stats.commission);
+    }
+
+    // Update commission display
+    document.getElementById('incomeA').textContent='₦'+fmtShort(statsA.commission);
+    document.getElementById('incomeB').textContent='₦'+fmtShort(statsB.commission);
+    document.getElementById('incomeC').textContent='₦'+fmtShort(statsC.commission);
+    document.getElementById('incomeTotal').textContent='₦'+fmtShort(totalCommission);
+}
+
+// 🔑 RENDER TEAM - Fixed
+function renderTeam(level){
+    const members=level==='A'?teamA:level==='B'?teamB:teamC;
+    const pct={A:20,B:2,C:1},dc={A:'var(--lv-a)',B:'var(--lv-b)',C:'var(--lv-c)'};
+    const dotColors={A:'#059669',B:'#7C3AED',C:'#D97706'};
+
+    document.getElementById('teamDot').style.background=dotColors[level];
+    document.getElementById('teamTitle').textContent=`Level ${level} Members`;
+    document.getElementById('teamCountBadge').textContent=`${members.length} member${members.length!==1?'s':''}`;
+
+    const list=document.getElementById('memberList');
+    if(!members.length){
+        list.innerHTML=`<div class="empty-team"><div class="empty-team-icon"><i class="ph ph-users"></i></div><h3>No Level ${level} Members Yet</h3><p>Share your referral link to build your Level ${level} team and earn ${pct[level]}% commission.</p></div>`;
+        return;
+    }
+
+    const bc=['#7C3AED','#059669','#D97706','#EF4444','#0EA5E9','#8B5CF6','#F59E0B'];
+    list.innerHTML=members.map((m,i)=>{
+        const name=m.fullName||m.username||'Anonymous';
+        const init=name.slice(0,1).toUpperCase();
+        const invested=m.totalDeposited||0;
+        const deposits=m.depositWallet||0;
+        const adminFunded=m.adminFunded||0;
+        // 🔑 Commission = invested × commission rate
+        const comm=invested*(pct[level]/100);
+        const plan=m.activePlan||m.currentPlan||'No Plan';
+        const isActive=invested>0||deposits>0;
+        const joinDate=fmtDate(m.createdAt);
+
+        return`<div class="member-card">
+            <div class="member-top">
+                <div class="member-avatar" style="background:${bc[i%7]}">${init}</div>
+                <div class="member-meta">
+                    <div class="member-name">${name}</div>
+                    <div class="member-id">@${(m.username||'unknown').toUpperCase()}</div>
+                </div>
+                <div style="text-align:right">
+                    <div class="commission-amt">+₦${fmt(comm)}</div>
+                    <div class="commission-lbl">Your ${pct[level]}%</div>
+                </div>
+            </div>
+            <div class="member-details-grid">
+                <div class="detail-chip"><div class="detail-chip-lbl">Invested</div><div class="detail-chip-val green">₦${fmt(invested)}</div></div>
+                <div class="detail-chip"><div class="detail-chip-lbl">Deposits</div><div class="detail-chip-val purple">₦${fmt(deposits)}</div></div>
+                <div class="detail-chip"><div class="detail-chip-lbl">Plan</div><div class="detail-chip-val">${plan}</div></div>
+                <div class="detail-chip"><div class="detail-chip-lbl">Joined</div><div class="detail-chip-val">${joinDate}</div></div>
+            </div>
+            ${adminFunded>0?`<div style="font-size:8px;font-weight:700;color:#D97706;margin-top:5px">🛡️ Admin Funded: ₦${fmt(adminFunded)}</div>`:''}
+            <span class="member-status ${isActive?'status-active':'status-inactive'}"><i class="ph ph-${isActive?'check-circle':'clock'}"></i>${isActive?'Active':'Inactive'}</span>
+        </div>`;
+    }).join('');
+}
+
+// 🔑 MAIN LOAD FUNCTION
+async function loadAllData(uid){
+    try{
+        const us=await getDoc(doc(db,'usersByUid',uid));
+        if(!us.exists())return;
+        currentUsername=us.data().username||'';
+        const refLink=`${getBaseUrl()}/index.html?ref=${currentUsername}`;
+        document.getElementById('refLinkText').textContent=refLink;
+        generateQR(refLink);
+        sessionStorage.setItem('userLoggedIn','true');
+
+        // 🔑 Fetch ALL three levels
+        [teamA,teamB,teamC]=await Promise.all([
+            fetchTeamLevel('A'),
+            fetchTeamLevel('B'),
+            fetchTeamLevel('C')
+        ]);
+        console.log(`📊 Team: A=${teamA.length}, B=${teamB.length}, C=${teamC.length}`);
+
+        // Update all stats and render
+        updateAllStats();
+        renderTeam('A');
+
+    }catch(e){console.error(e)}
+}
+
+// 🔑 Tab clicks - now properly use the global team arrays
+let currentLevel='A';
+document.getElementById('levelTabs').addEventListener('click',(e)=>{
+    const tab=e.target.closest('.level-tab');
+    if(!tab)return;
+    const level=tab.getAttribute('data-level');
+    if(level===currentLevel)return;
+    currentLevel=level;
+    // Update tab styles
+    document.querySelectorAll('.level-tab').forEach(t=>{t.className='level-tab'});
+    tab.classList.add(`active-${level.toLowerCase()}`);
+    // Render the correct team
+    renderTeam(level);
+});
+
+// Auth
+const hasSession=loadFromSession();
+onAuthStateChanged(auth,async(user)=>{
+    authChecked=true;
+    if(!user){if(!hasSession&&!sessionStorage.getItem('userLoggedIn')){sessionStorage.clear();window.location.href='login.html';return}return}
+    currentUid=user.uid;
+    await loadAllData(user.uid);
+});
+setTimeout(()=>{if(!authChecked&&hasSession)console.log('⚠️ Auth timeout')},2000);
+</script>
+
+<script>
+const st=localStorage.getItem('elite_theme')||'light';applyTheme(st);
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const i=document.getElementById('themeIcon');if(i)i.className=t==='dark'?'ph ph-sun':'ph ph-moon';localStorage.setItem('elite_theme',t)}
+document.getElementById('themeBtn').addEventListener('click',()=>{const c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';applyTheme(n);showToast(n==='dark'?'🌙 Dark mode':'☀️ Light mode','info')});
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),300)},4000)}
+function generateQR(url){const el=document.getElementById('qrCanvas');el.innerHTML='';new QRCode(el,{text:url,width:180,height:180,colorDark:'#0f0f1e',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}
+
+// Copy, share, QR buttons
+document.getElementById('copyLinkBtn').addEventListener('click',()=>{const l=document.getElementById('refLinkText').textContent;if(!l||l==='Loading...'){showToast('Link not ready','error');return}navigator.clipboard.writeText(l).then(()=>{const b=document.getElementById('copyLinkBtn');b.textContent='✓ COPIED';b.classList.add('copied');showToast('✅ Link copied!','success');setTimeout(()=>{b.textContent='COPY';b.classList.remove('copied')},2000)}).catch(()=>showToast('❌ Copy failed','error'))});
+document.getElementById('saveQR').addEventListener('click',()=>{const c=document.querySelector('#qrCanvas canvas');if(!c){showToast('QR not ready','error');return}const a=document.createElement('a');a.download='EliteEarn-QR.png';a.href=c.toDataURL();a.click();showToast('✅ QR saved!','success')});
+function shareOn(p){const l=document.getElementById('refLinkText').textContent;if(!l||l==='Loading...'){showToast('Link not ready','error');return}const m=encodeURIComponent(`💰 Join EliteEarn and earn daily! Use my link:\n${l}`);const u={whatsapp:`https://wa.me/?text=${m}`,telegram:`https://t.me/share/url?url=${encodeURIComponent(l)}&text=${encodeURIComponent('💰 Join EliteEarn!')}`,facebook:`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(l)}`,twitter:`https://twitter.com/intent/tweet?text=${m}`};if(u[p])window.open(u[p],'_blank')}
+document.getElementById('shareWA').addEventListener('click',()=>shareOn('whatsapp'));
+document.getElementById('shareTG').addEventListener('click',()=>shareOn('telegram'));
+document.getElementById('shareFB').addEventListener('click',()=>shareOn('facebook'));
+document.getElementById('shareTW').addEventListener('click',()=>shareOn('twitter'));
+
+console.log('✅ Referral page ready - All levels properly separated');
+</script>
+</body>
+</html>
