@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>EliteEarn – Withdraw Funds</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg:#f2f2f7;--card:#ffffff;--card2:#f8f8fc;--text:#0f0f1e;--text2:#6b6b8a;
+            --border:#e4e4ef;--gold:#B8960A;--gold2:#D4A800;--gold3:#F0C000;
+            --header:linear-gradient(150deg,#1a0505 0%,#5a0e0e 40%,#8b1a1a 70%,#a52020 100%);
+            --fund-card:linear-gradient(135deg,#1e0505 0%,#3a0a0a 40%,#4a0f0f 70%,#5a1515 100%);
+            --input-bg:#f5f5fa;--overlay:rgba(0,0,0,0.65);--modal-bg:#ffffff;--notif-bg:#ffffff;
+        }
+        [data-theme="dark"]{
+            --bg:#0c0c18;--card:#181830;--card2:#20203a;--text:#f0f0ff;--text2:#8888aa;
+            --border:#2a2a44;--input-bg:#20203a;--modal-bg:#181830;--notif-bg:#181830;
+        }
+        html,body{font-family:'Montserrat',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+        body{display:flex;flex-direction:column}
+        .wrapper{width:100%;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;padding-bottom:110px}
+        .page-header{background:var(--header);padding:16px 18px 90px;position:relative;overflow:hidden}
+        .page-header::before{content:'';position:absolute;width:240px;height:240px;background:radial-gradient(circle,rgba(196,154,0,.15) 0%,transparent 70%);top:-60px;right:-50px;pointer-events:none}
+        .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+        .logo-area{display:flex;align-items:center;gap:10px}
+        .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:900;box-shadow:0 4px 12px rgba(245,158,11,.4);font-family:'Oswald',sans-serif}
+        .logo-text{font-family:'Oswald',sans-serif;font-size:17px;font-weight:700;color:white;letter-spacing:.5px}
+        .top-actions{display:flex;gap:8px}
+        .icon-btn{background:rgba(255,255,255,.15);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
+        .icon-btn:active{background:rgba(255,255,255,.28)}
+        .header-title{text-align:center;color:white}
+        .header-title h1{font-size:26px;font-weight:900;margin-bottom:4px}
+        .header-subtitle{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase}
+        .header-subtitle i{color:var(--gold3)}
+        .content{padding:0 14px 20px;margin-top:-66px;position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+        .withdraw-card{background:var(--card);border-radius:24px;box-shadow:0 6px 24px rgba(0,0,0,.1);overflow:hidden;transition:background .3s}
+        .fund-display{background:var(--fund-card);padding:22px 20px 24px;position:relative;overflow:hidden;min-height:150px}
+        .fund-display::before{content:'';position:absolute;right:-20px;top:50%;transform:translateY(-50%);width:140px;height:140px;background:radial-gradient(circle,rgba(255,255,255,.04) 0%,transparent 60%);border-radius:50%}
+        .fund-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.55);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;position:relative;z-index:1}
+        .fund-amount-row{display:flex;align-items:baseline;gap:8px;position:relative;z-index:1}
+        .fund-amount{font-size:40px;font-weight:900;color:white;font-family:'Oswald',sans-serif;line-height:1;letter-spacing:-1px}
+        .fund-ngn{font-size:16px;font-weight:700;color:var(--gold3);letter-spacing:2px;font-family:'Oswald',sans-serif}
+        .bank-mini{position:absolute;bottom:14px;right:18px;text-align:right;z-index:1}
+        .bank-mini-name{font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase}
+        .bank-mini-acct{font-size:12px;font-weight:800;color:rgba(255,255,255,.8);font-family:'Oswald',sans-serif;letter-spacing:1px}
+        .amount-section{padding:20px 18px 16px}
+        .amount-input-row{display:flex;align-items:baseline;gap:6px;margin-bottom:12px}
+        .amount-symbol{font-size:28px;font-weight:900;color:var(--gold2);font-family:'Oswald',sans-serif}
+        .amount-input{flex:1;border:none;background:transparent;font-size:36px;font-weight:900;color:var(--text2);outline:none;font-family:'Oswald',sans-serif;letter-spacing:1px;min-width:0;transition:color .3s}
+        .amount-input::placeholder{color:var(--border)}
+        .amount-input:focus{color:var(--text)}
+        .amount-divider{height:1px;background:repeating-linear-gradient(90deg,var(--border) 0,var(--border) 4px,transparent 4px,transparent 8px);margin-bottom:12px}
+        .tax-preview{display:flex;justify-content:space-between;align-items:center;background:rgba(184,150,10,.07);border:1px solid rgba(184,150,10,.15);border-radius:10px;padding:8px 12px;margin-bottom:14px}
+        .tax-preview-lbl{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:.5px}
+        .tax-preview-val{font-size:12px;font-weight:900;color:var(--gold);font-family:'Oswald',sans-serif}
+        .quick-amounts{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+        .quick-amt-btn{flex:1;min-width:60px;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:10px 4px;font-size:11px;font-weight:800;color:var(--text);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;text-align:center}
+        .quick-amt-btn:active{border-color:var(--gold);color:var(--gold)}
+        .quick-amt-btn:disabled{opacity:.4;cursor:not-allowed;border-color:var(--border);color:var(--text2)}
+        .payout-btn{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:50px;padding:14px;font-size:14px;font-weight:900;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .3s;font-family:'Montserrat',sans-serif;letter-spacing:1px;text-transform:uppercase}
+        .payout-btn.active{background:linear-gradient(135deg,#1e0505,#4a0f0f);color:white;border-color:transparent;box-shadow:0 6px 20px rgba(58,10,10,.3)}
+        .payout-btn.active:active{transform:translateY(-2px);box-shadow:0 10px 26px rgba(58,10,10,.4)}
+        .payout-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+        .info-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .info-chip{background:var(--card);border-radius:14px;padding:12px;display:flex;align-items:center;gap:8px;box-shadow:0 3px 10px rgba(0,0,0,.05);transition:background .3s}
+        .info-chip.full{grid-column:1/-1}
+        .info-chip i{font-size:18px;flex-shrink:0}
+        .info-chip i.gold{color:var(--gold)}
+        .info-chip i.red{color:#EF4444}
+        .chip-txt{font-size:11px;font-weight:700;color:var(--text);line-height:1.3}
+        .chip-txt span{color:#EF4444;font-weight:900}
+        .chip-txt .highlight{color:var(--gold);font-weight:900}
+        .instructions-card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 3px 12px rgba(0,0,0,.05);transition:background .3s}
+        .instr-title{font-size:11px;font-weight:800;color:var(--text2);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+        .instr-item{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)}
+        .instr-item:last-child{border-bottom:none;padding-bottom:0}
+        .instr-num{width:24px;height:24px;min-width:24px;background:var(--input-bg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--text2)}
+        .instr-text{font-size:11px;font-weight:600;color:var(--text2);line-height:1.5}
+        .instr-text strong{color:var(--text);font-weight:800}
+        .instr-text .red{color:#EF4444;font-weight:800}
+        .instr-text .gold{color:var(--gold);font-weight:800}
+        .warning-box{background:rgba(239,68,68,.06);border:1.5px solid rgba(239,68,68,.2);border-radius:16px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+        .warning-box i{font-size:20px;color:#EF4444;flex-shrink:0;margin-top:1px}
+        .warning-text{font-size:11px;font-weight:700;color:#EF4444;line-height:1.5}
+        .pin-overlay{position:fixed;inset:0;background:var(--overlay);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s}
+        .pin-overlay.open{opacity:1;pointer-events:all}
+        .pin-modal{background:var(--modal-bg);border-radius:28px 28px 0 0;width:100%;max-width:480px;padding:0 0 36px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:0 -10px 36px rgba(0,0,0,.2)}
+        .pin-overlay.open .pin-modal{transform:translateY(0)}
+        .drag-h{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+        .pin-modal-hdr{padding:16px 20px 8px;text-align:center}
+        .pin-modal-icon{width:60px;height:60px;background:linear-gradient(135deg,#1e0505,#5a1515);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;color:var(--gold3);box-shadow:0 6px 20px rgba(30,5,5,.35);animation:pop .5s cubic-bezier(.34,1.56,.64,1) both}
+        @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+        .pin-modal-hdr h2{font-size:18px;font-weight:900;color:var(--text);margin-bottom:3px}
+        .pin-modal-hdr p{font-size:12px;color:var(--text2);font-weight:600}
+        .pin-amount-preview{margin:8px 16px;padding:10px 14px;background:rgba(184,150,10,.08);border:1px solid rgba(184,150,10,.2);border-radius:12px;text-align:center}
+        .pin-amount-preview .pa-lbl{font-size:9px;font-weight:700;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
+        .pin-amount-preview .pa-val{font-size:20px;font-weight:900;color:var(--gold);font-family:'Oswald',sans-serif}
+        .pin-dots-row{display:flex;justify-content:center;gap:14px;padding:14px 0 4px}
+        .pin-dot{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--border);background:transparent;transition:all .2s cubic-bezier(.34,1.56,.64,1)}
+        .pin-dot.filled{background:var(--gold);border-color:var(--gold);transform:scale(1.15);box-shadow:0 0 0 3px rgba(184,150,10,.2)}
+        .pin-dot.error{background:#EF4444;border-color:#EF4444;animation:shake .4s ease}
+        .pin-dot.success{background:#059669;border-color:#059669}
+        @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+        .pin-error-msg{text-align:center;font-size:11px;font-weight:700;min-height:18px;padding:3px 0 6px}
+        .pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 24px 0}
+        .pin-key{height:56px;border-radius:14px;border:none;background:var(--card2);font-size:20px;font-weight:700;color:var(--text);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+        .pin-key:active{transform:scale(.92);background:var(--border)}
+        .pin-key.del{font-size:18px;color:var(--text2)}
+        .pin-key.empty{background:transparent;box-shadow:none;cursor:default}
+        .pin-cancel{display:block;width:100%;margin-top:8px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;padding:8px;text-align:center}
+        .success-overlay{position:fixed;inset:0;background:var(--overlay);z-index:400;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+        .success-overlay.open{opacity:1;pointer-events:all}
+        .success-box{background:var(--modal-bg);border-radius:28px;padding:32px 24px;max-width:300px;width:90%;text-align:center;transform:scale(.85);transition:transform .4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 16px 40px rgba(0,0,0,.18)}
+        .success-overlay.open .success-box{transform:scale(1)}
+        .success-icon{width:80px;height:80px;background:rgba(5,150,105,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:38px;color:#059669;animation:pop .5s .1s both}
+        .success-box h2{font-size:20px;font-weight:900;color:var(--text);margin-bottom:8px}
+        .success-box p{font-size:12px;color:var(--text2);font-weight:600;line-height:1.5;margin-bottom:6px}
+        .success-ref{font-size:10px;font-weight:800;color:var(--gold);letter-spacing:1px;margin-bottom:20px;background:rgba(184,150,10,.08);padding:6px 14px;border-radius:50px;display:inline-block}
+        .success-ok-btn{background:linear-gradient(135deg,#059669,#047857);color:white;border:none;border-radius:50px;padding:12px 28px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s}
+        .success-ok-btn:active{transform:translateY(-2px)}
+        .block-card{background:var(--card);border-radius:20px;padding:28px 20px;text-align:center;box-shadow:0 3px 14px rgba(0,0,0,.06)}
+        .block-icon{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px}
+        .block-icon.red{background:rgba(239,68,68,.1);color:#EF4444}
+        .block-icon.gold{background:rgba(184,150,10,.1);color:var(--gold)}
+        .block-icon.orange{background:rgba(245,158,11,.1);color:var(--orange)}
+        .block-card h3{font-size:16px;font-weight:900;color:var(--text);margin-bottom:6px}
+        .block-card p{font-size:12px;color:var(--text2);font-weight:600;line-height:1.5;margin-bottom:16px}
+        .block-cta{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:white;border:none;border-radius:50px;padding:10px 24px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Montserrat',sans-serif;text-decoration:none;transition:all .2s}
+        .block-cta:active{transform:translateY(-2px)}
+        /* 🔑 PENDING BANNER */
+        .pending-banner{background:rgba(245,158,11,.08);border:1.5px solid rgba(245,158,11,.3);border-radius:16px;padding:16px 18px;text-align:center;margin-bottom:12px}
+        .pending-banner .pb-icon{width:56px;height:56px;background:rgba(245,158,11,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;color:#F59E0B}
+        .pending-banner h3{font-size:15px;font-weight:900;color:var(--orange);margin-bottom:4px}
+        .pending-banner p{font-size:11px;color:var(--text2);font-weight:600;line-height:1.5;margin-bottom:4px}
+        .pending-banner .pb-ref{font-size:10px;font-weight:800;color:var(--gold);background:rgba(184,150,10,.1);padding:4px 12px;border-radius:50px;display:inline-block;margin-bottom:4px}
+        .pending-banner .pb-time{font-size:10px;color:var(--text2);font-weight:600}
+        .pending-banner .pb-time i{color:var(--orange)}
+        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:10px 20px 24px;display:flex;justify-content:space-around;align-items:flex-end;box-shadow:0 -6px 24px rgba(0,0,0,.09);z-index:100;transition:background .3s}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-decoration:none;color:inherit;padding:4px 8px;border-radius:12px;transition:all .2s}
+        .nav-item i{font-size:22px;color:#9ca3af;transition:color .2s}
+        .nav-item span{font-size:10px;font-weight:700;color:#9ca3af;transition:color .2s}
+        .nav-item.active i,.nav-item:active i{color:#8B5CF6}
+        .nav-item.active span,.nav-item:active span{color:#8B5CF6}
+        .nav-center{position:relative;top:-26px}
+        .nav-center-btn{width:58px;height:58px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;box-shadow:0 6px 20px rgba(245,158,11,.4);border:4px solid var(--card);cursor:pointer;transition:all .3s}
+        .toast-wrap{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--card);border-radius:14px;padding:13px 18px;box-shadow:0 10px 30px rgba(0,0,0,.12);font-size:13px;font-weight:700;color:var(--text);transform:translateX(-130%);transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);max-width:280px;border-left:4px solid var(--gold)}
+        .toast.show{transform:translateX(0)}.toast.success{border-left-color:#059669}.toast.error{border-left-color:#EF4444}
+        .btn-sp{width:18px;height:18px;border:3px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="page-header">
+        <div class="top-bar">
+            <div class="logo-area"><div class="logo-icon">E</div><div class="logo-text">ELITEEARN</div></div>
+            <div class="top-actions">
+                <button class="icon-btn" onclick="toggleTheme()"><i class="ph ph-moon" id="themeIcon"></i></button>
+            </div>
+        </div>
+        <div class="header-title"><h1>Withdraw Funds</h1><div class="header-subtitle"><i class="ph ph-bank"></i> SECURE PAYOUT</div></div>
+    </div>
+    <div class="content" id="mainContent"><div style="text-align:center;padding:36px;color:var(--text2)"><div style="width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px"></div><div style="font-size:12px;font-weight:600">Loading your account...</div></div></div>
+</div>
+
+<div class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><i class="ph ph-house"></i><span>Home</span></a>
+    <a href="referral.html" class="nav-item"><i class="ph ph-users"></i><span>Team</span></a>
+    <div class="nav-center"><div class="nav-center-btn" onclick="window.location.href='deposit.html'"><i class="ph ph-wallet"></i></div></div>
+    <a href="history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i><span>History</span></a>
+    <a href="profile.html" class="nav-item"><i class="ph ph-user"></i><span>Profile</span></a>
+</div>
+
+<div class="pin-overlay" id="pinOverlay" onclick="if(event.target===this)closePinModal()">
+    <div class="pin-modal">
+        <div class="drag-h"></div>
+        <div class="pin-modal-hdr"><div class="pin-modal-icon"><i class="ph ph-lock-key"></i></div><h2>Enter Withdrawal PIN</h2><p>Confirm your identity to proceed</p></div>
+        <div class="pin-amount-preview"><div class="pa-lbl">WITHDRAWAL AMOUNT (AFTER 15% TAX)</div><div class="pa-val" id="pinAmtPreview">₦0.00</div></div>
+        <div class="pin-dots-row" id="pinDotsRow"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+        <div class="pin-error-msg" id="pinErrorMsg"></div>
+        <div class="pin-keypad">
+            <button class="pin-key" onclick="pinKey('1')">1</button><button class="pin-key" onclick="pinKey('2')">2</button><button class="pin-key" onclick="pinKey('3')">3</button>
+            <button class="pin-key" onclick="pinKey('4')">4</button><button class="pin-key" onclick="pinKey('5')">5</button><button class="pin-key" onclick="pinKey('6')">6</button>
+            <button class="pin-key" onclick="pinKey('7')">7</button><button class="pin-key" onclick="pinKey('8')">8</button><button class="pin-key" onclick="pinKey('9')">9</button>
+            <button class="pin-key empty"></button><button class="pin-key" onclick="pinKey('0')">0</button><button class="pin-key del" onclick="pinDelete()"><i class="ph ph-backspace"></i></button>
+        </div>
+        <button class="pin-cancel" onclick="closePinModal()">Cancel</button>
+    </div>
+</div>
+
+<div class="success-overlay" id="successOverlay">
+    <div class="success-box"><div class="success-icon">✅</div><h2>Request Submitted!</h2><p>Your withdrawal is being processed. Funds will be sent within <strong>24 hours</strong>.</p><div class="success-ref" id="successRef">REF: —</div><button class="success-ok-btn" onclick="window.location.href='history.html'">VIEW HISTORY →</button></div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, query, where, getDocs, serverTimestamp, increment, Timestamp, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDMmFqRjoZC0jbp3z_uiL6l2553YsdWjzk",authDomain:"earnelite-94a5e.firebaseapp.com",projectId:"earnelite-94a5e",storageBucket:"earnelite-94a5e.firebasestorage.app",messagingSenderId:"343677058789",appId:"1:343677058789:web:776faceb824158042fde0c"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+let currentUid="",currentUsername="",userData={},authChecked=false;
+// 🔑 15% tax, ₦1,000 minimum
+const TAX_RATE=0.15,MIN_WITHDRAW=1000;
+
+function fmt(n){return new Intl.NumberFormat('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)}
+function fmtDate(ts){if(!ts)return'—';let d;if(ts.toDate)d=ts.toDate();else if(ts?.seconds)d=new Date(ts.seconds*1000);else d=new Date(ts);const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+
+function loadFromSession(){
+    const d=sessionStorage.getItem('userData');
+    if(sessionStorage.getItem('userLoggedIn')==='true'&&d){
+        try{const p=JSON.parse(d);currentUsername=p.username;window._balance=p.withdrawalWallet||0;return true}catch(e){}
+    }
+    return false;
+}
+
+async function loadPage(uid){
+    try{
+        const u=await getDoc(doc(db,'usersByUid',uid));if(!u.exists())return;
+        currentUsername=u.data().username||'';
+        const s=await getDoc(doc(db,'users',currentUsername));
+        userData=s.exists()?s.data():{};
+        const balance=userData.withdrawalWallet||0;
+        const bank=userData.bankDetails||null;
+        const hasPin=!!(userData.withdrawalPin);
+        const plan=userData.activePlan||null;
+        
+        // 🔑 CHECK FOR PENDING WITHDRAWAL - this is the key new check
+        const pq=query(collection(db,'withdrawals'),where('username','==',currentUsername),where('status','==','pending'),limit(1));
+        const ps=await getDocs(pq);
+        const hasPending=!ps.empty;
+        let pendingData=null;
+        if(hasPending){pendingData={id:ps.docs[0].id,...ps.docs[0].data()}}
+        
+        // 🔑 Check if user already withdrew TODAY (approved or pending)
+        const today=new Date();today.setHours(0,0,0,0);
+        const dq=query(collection(db,'withdrawals'),where('username','==',currentUsername),where('createdAt','>=',Timestamp.fromDate(today)),limit(5));
+        const ds=await getDocs(dq);
+        const todayWithdrawals=[];ds.docs.forEach(d=>todayWithdrawals.push({id:d.id,...d.data()}));
+        const hasApprovedToday=todayWithdrawals.some(d=>d.status==='approved');
+        const withinHours=new Date().getHours()>=9&&new Date().getHours()<17;
+        
+        window._balance=balance;window._bankDetails=bank;window._hasPin=hasPin;
+        window._activePlan=plan;window._hasPending=hasPending;window._pendingData=pendingData;
+        window._hasApprovedToday=hasApprovedToday;window._todayWithdrawals=todayWithdrawals;
+        
+        sessionStorage.setItem('userLoggedIn','true');
+        sessionStorage.setItem('userData',JSON.stringify({username:currentUsername,depositWallet:userData.depositWallet||0,withdrawalWallet:balance}));
+        renderPage(balance,bank,hasPin,plan,hasPending,pendingData,hasApprovedToday,withinHours);
+    }catch(e){console.error(e);document.getElementById('mainContent').innerHTML='<div class="block-card"><div class="block-icon red"><i class="ph ph-warning-circle"></i></div><h3>Error</h3><p>Failed to load account. Please refresh.</p></div>'}
+}
+
+function renderPage(balance,bank,hasPin,plan,hasPending,pendingData,hasApprovedToday,withinHours){
+    const c=document.getElementById('mainContent');
+    
+    // 🔑 BLOCK 1: No bank account
+    if(!bank||!bank.accountNumber){
+        c.innerHTML=`<div class="block-card"><div class="block-icon gold"><i class="ph ph-bank"></i></div><h3>No Bank Account</h3><p>Add your bank details before withdrawing.</p><a href="settlement.html" class="block-cta"><i class="ph ph-bank"></i> ADD BANK ACCOUNT</a></div>${infoChips()}${instructions()}`;return
+    }
+    // 🔑 BLOCK 2: No PIN
+    if(!hasPin){
+        c.innerHTML=`<div class="block-card"><div class="block-icon red"><i class="ph ph-lock-open"></i></div><h3>PIN Not Set</h3><p>Set a 4-digit withdrawal PIN in Bank Settlement.</p><a href="settlement.html" class="block-cta"><i class="ph ph-lock-key"></i> SET PIN</a></div>${infoChips()}${instructions()}`;return
+    }
+    // 🔑 BLOCK 3: No active plan
+    if(!plan){
+        c.innerHTML=`<div class="block-card"><div class="block-icon gold"><i class="ph ph-chart-line-up"></i></div><h3>No Active Plan</h3><p>You need an active investment plan to withdraw.</p><a href="plans.html" class="block-cta"><i class="ph ph-rocket-launch"></i> VIEW PLANS</a></div>${infoChips()}${instructions()}`;return
+    }
+    // 🔑 BLOCK 4: PENDING WITHDRAWAL EXISTS (NEW!)
+    if(hasPending&&pendingData){
+        const amt=pendingData.netAmount||pendingData.amount||0;
+        const ref=pendingData.referenceCode||pendingData.id?.slice(0,10)||'—';
+        c.innerHTML=`
+            <div class="pending-banner">
+                <div class="pb-icon"><i class="ph ph-hourglass-high"></i></div>
+                <h3>Withdrawal Pending</h3>
+                <p>You have a pending withdrawal of <strong style="color:var(--orange)">₦${fmt(amt)}</strong> awaiting admin approval.</p>
+                <div class="pb-ref">Ref: ${ref.toUpperCase()}</div>
+                <div class="pb-time"><i class="ph ph-info"></i> You cannot submit another withdrawal until this is approved or rejected.</div>
+            </div>
+            <div class="block-card" style="margin-top:8px">
+                <div class="block-icon orange"><i class="ph ph-timer"></i></div>
+                <h3>Please Wait</h3>
+                <p>Our team processes withdrawals within 24 hours. Your funds will be sent once approved.</p>
+                <a href="history.html" class="block-cta"><i class="ph ph-clock-counter-clockwise"></i> VIEW HISTORY</a>
+            </div>
+            ${infoChips()}${instructions()}
+        `;return
+    }
+    // 🔑 BLOCK 5: Already approved today
+    if(hasApprovedToday){
+        c.innerHTML=`<div class="block-card"><div class="block-icon red"><i class="ph ph-check-circle"></i></div><h3>Already Paid Today</h3><p>You've already received a payout today. Come back tomorrow.</p><a href="history.html" class="block-cta"><i class="ph ph-clock-counter-clockwise"></i> VIEW HISTORY</a></div>${infoChips()}${instructions()}`;return
+    }
+    // 🔑 BLOCK 6: Outside hours
+    if(!withinHours){
+        c.innerHTML=`<div class="block-card"><div class="block-icon red"><i class="ph ph-clock-afternoon"></i></div><h3>Outside Hours</h3><p>Withdrawals: 9AM–5PM daily.</p><a href="dashboard.html" class="block-cta"><i class="ph ph-house"></i> GO HOME</a></div>${infoChips()}${instructions()}`;return
+    }
+    
+    // ✅ ALL CLEAR - Show withdrawal form
+    const mac=bank.accountNumber.slice(0,3)+' •••• '+bank.accountNumber.slice(-3);
+    const quickAmounts=[1000,2000,5000,10000,20000,50000];
+    c.innerHTML=`<div class="withdraw-card"><div class="fund-display"><div class="fund-label">AVAILABLE FUNDS</div><div class="fund-amount-row"><div class="fund-amount" id="fundAmt">${Math.floor(balance).toLocaleString()}</div><div class="fund-ngn">NGN</div></div><div class="bank-mini"><div class="bank-mini-name">${bank.bankName||''}</div><div class="bank-mini-acct">${mac}</div></div></div><div class="amount-section"><div class="amount-input-row"><div class="amount-symbol">₦</div><input type="number" id="withdrawAmount" class="amount-input" placeholder="0.00" min="${MIN_WITHDRAW}" max="${balance}" oninput="onAmountInput(this.value)"></div><div class="amount-divider"></div><div class="tax-preview" id="taxPreview" style="display:none"><div><div class="tax-preview-lbl">After 15% tax deduction</div><div class="tax-preview-lbl" id="taxBreakdown" style="margin-top:2px;font-size:9px"></div></div><div class="tax-preview-val" id="afterTaxVal">₦0.00</div></div><div class="quick-amounts">${quickAmounts.map(a=>balance>=a?`<button class="quick-amt-btn" onclick="setAmount(${a})">₦${(a/1000).toFixed(0)}K</button>`:`<button class="quick-amt-btn" disabled>₦${(a/1000).toFixed(0)}K</button>`).join('')}</div><button class="payout-btn" id="payoutBtn" onclick="initiatePayout()" disabled>PROCESS PAYOUT →</button></div></div>${infoChips()}${instructions()}`;
+}
+
+function infoChips(){return`<div class="info-chips"><div class="info-chip"><i class="ph ph-clock gold"></i><div class="chip-txt">Hours: <span class="highlight">9AM–5PM</span></div></div><div class="info-chip"><i class="ph ph-coins gold"></i><div class="chip-txt">Min: <span class="highlight">₦1,000</span></div></div><div class="info-chip full"><i class="ph ph-receipt red"></i><div class="chip-txt">Tax: <span>15%</span> · One pending at a time</div></div></div>`}
+function instructions(){return`<div class="instructions-card"><div class="instr-title">WITHDRAWAL RULES</div><div class="instr-item"><div class="instr-num">1</div><div class="instr-text">Daily withdrawal hours are <strong>9:00 AM – 5:00 PM</strong> (Mon–Sun).</div></div><div class="instr-item"><div class="instr-num">2</div><div class="instr-text">Minimum withdrawal is <strong class="gold">₦1,000</strong>.</div></div><div class="instr-item"><div class="instr-num">3</div><div class="instr-text">A <strong class="red">15% system tax</strong> is applied to every withdrawal.</div></div><div class="instr-item"><div class="instr-num">4</div><div class="instr-text">Only <strong class="red">one pending withdrawal</strong> at a time. You must wait for admin approval/rejection.</div></div><div class="instr-item"><div class="instr-num">5</div><div class="instr-text">Funds are sent to your <strong>registered bank account</strong>.</div></div><div class="instr-item"><div class="instr-num">6</div><div class="instr-text">You must have an <strong>active investment plan</strong> to withdraw.</div></div></div><div class="warning-box"><i class="ph ph-warning-circle"></i><div class="warning-text"><strong>Important:</strong> You can only have <strong>one pending withdrawal at a time</strong>. If you already have a pending request, you must wait for it to be processed before submitting another.</div></div>`}
+
+window.onAmountInput=function(v){
+    const a=parseFloat(v)||0,b=window._balance||0,at=a*(1-TAX_RATE),tx=a*TAX_RATE;
+    const tp=document.getElementById('taxPreview'),btn=document.getElementById('payoutBtn');
+    if(a>0){tp.style.display='flex';document.getElementById('afterTaxVal').textContent='₦'+fmt(at);document.getElementById('taxBreakdown').textContent=`Tax: ₦${fmt(tx)}`}else{tp.style.display='none'}
+    btn.disabled=!(a>=MIN_WITHDRAW&&a<=b);btn.className=a>=MIN_WITHDRAW&&a<=b?'payout-btn active':'payout-btn';
+};
+window.setAmount=function(a){const i=document.getElementById('withdrawAmount');if(i){i.value=a;window.onAmountInput(a)}};
+
+// 🔑 INITIATE PAYOUT - double-check pending before proceeding
+window.initiatePayout=async function(){
+    const a=parseFloat(document.getElementById('withdrawAmount')?.value)||0;
+    if(a<MIN_WITHDRAW){showToast('❌ Minimum withdrawal is ₦1,000','error');return}
+    if(a>window._balance){showToast('❌ Insufficient balance','error');return}
+    
+    // 🔑 RE-CHECK for pending withdrawal before opening PIN modal
+    try{
+        const pq=query(collection(db,'withdrawals'),where('username','==',currentUsername),where('status','==','pending'),limit(1));
+        const ps=await getDocs(pq);
+        if(!ps.empty){showToast('❌ You already have a pending withdrawal','error');loadPage(currentUid);return}
+    }catch(e){console.error(e)}
+    
+    window._pendingAmount=a;
+    document.getElementById('pinAmtPreview').textContent='₦'+fmt(a*(1-TAX_RATE));
+    resetPinDots();pinEntry='';document.getElementById('pinErrorMsg').textContent='';
+    document.getElementById('pinOverlay').classList.add('open');
+};
+
+async function submitWithdrawal(amount){
+    const at=amount*(1-TAX_RATE),tx=amount*TAX_RATE,ref='EW'+Math.random().toString(36).substring(2,10).toUpperCase(),bd=window._bankDetails||{};
+    await addDoc(collection(db,'withdrawals'),{userId:currentUid,username:currentUsername,amount,tax:tx,netAmount:at,taxRate:TAX_RATE,bankName:bd.bankName||'',accountNumber:bd.accountNumber||'',accountName:bd.accountName||'',referenceCode:ref,status:'pending',activePlan:window._activePlan||'',createdAt:serverTimestamp(),adminNote:'',processedAt:null,processedBy:''});
+    await updateDoc(doc(db,'users',currentUsername),{withdrawalWallet:increment(-amount),lastWithdrawal:serverTimestamp(),totalWithdrawn:increment(amount)});
+    await addDoc(collection(db,'notifications'),{uid:currentUid,username:currentUsername,type:'withdrawal',title:'Withdrawal Submitted ✅',msg:`₦${fmt(at)} being processed to ${bd.bankName}. Ref: ${ref}`,timestamp:serverTimestamp(),read:false});
+    return ref;
+}
+
+window._verifyPin=async function(pin){
+    try{const s=await getDoc(doc(db,'users',currentUsername));const stored=s.data()?.withdrawalPin||'';return stored===btoa(pin+currentUsername+'elite_salt')}catch(e){return false}
+};
+window._submitWithdrawal=submitWithdrawal;
+
+const hasSession=loadFromSession();
+onAuthStateChanged(auth,async(user)=>{
+    authChecked=true;
+    if(!user){if(!hasSession&&!sessionStorage.getItem('userLoggedIn')){sessionStorage.clear();window.location.href='login.html';return}return}
+    currentUid=user.uid;await loadPage(user.uid);
+});
+setTimeout(()=>{if(!authChecked&&hasSession)console.log('⚠️ Auth timeout')},2000);
+</script>
+
+<script>
+const st=localStorage.getItem('elite_theme')||'light';applyTheme(st);
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const i=document.getElementById('themeIcon');if(i)i.className=t==='dark'?'ph ph-sun':'ph ph-moon';localStorage.setItem('elite_theme',t)}
+function toggleTheme(){const c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';applyTheme(n);showToast(n==='dark'?'🌙 Dark mode on':'☀️ Light mode on','info')}
+function showToast(m,t='info'){const w=document.getElementById('toastWrap'),e=document.createElement('div');e.className=`toast ${t}`;e.innerHTML=m;w.appendChild(e);setTimeout(()=>e.classList.add('show'),10);setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},4000)}
+window.showToast=showToast;
+
+let pinEntry='',pinAttempts=0;
+function resetPinDots(s=''){for(let i=0;i<4;i++)document.getElementById('pd'+i).className='pin-dot'+(s?' '+s:'')}
+function updatePinDots(l){for(let i=0;i<4;i++)document.getElementById('pd'+i).className='pin-dot'+(i<l?' filled':'')}
+function pinKey(d){if(pinEntry.length>=4)return;pinEntry+=d;updatePinDots(pinEntry.length);if(pinEntry.length===4)setTimeout(()=>processPinVerify(),180)}
+function pinDelete(){if(!pinEntry.length)return;pinEntry=pinEntry.slice(0,-1);updatePinDots(pinEntry.length);document.getElementById('pinErrorMsg').textContent=''}
+async function processPinVerify(){
+    const e=pinEntry;pinEntry='';const ok=await window._verifyPin(e);
+    if(ok){resetPinDots('success');document.getElementById('pinErrorMsg').style.color='#059669';document.getElementById('pinErrorMsg').textContent='✓ Verified!';pinAttempts=0;
+        try{const ref=await window._submitWithdrawal(window._pendingAmount||0);setTimeout(()=>{closePinModal();document.getElementById('successRef').textContent='REF: '+ref;document.getElementById('successOverlay').classList.add('open')},700)}catch(err){showToast('❌ Failed','error');resetPinDots()}
+    }else{pinAttempts++;resetPinDots('error');document.getElementById('pinErrorMsg').style.color='#EF4444';
+        if(pinAttempts>=3){document.getElementById('pinErrorMsg').textContent='Too many attempts.';setTimeout(()=>closePinModal(),1500);pinAttempts=0}
+        else{document.getElementById('pinErrorMsg').textContent=`Wrong PIN. ${3-pinAttempts} left.`;setTimeout(()=>{resetPinDots();document.getElementById('pinErrorMsg').textContent=''},1200)}
+    }
+}
+function closePinModal(){document.getElementById('pinOverlay').classList.remove('open');pinEntry='';resetPinDots();document.getElementById('pinErrorMsg').textContent=''}
+console.log('✅ Withdraw page ready - Min ₦1,000 | Tax 15% | Pending lock active');
+</script>
+</body>
+</html>
